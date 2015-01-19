@@ -2,16 +2,12 @@
     "name":"glTF-webgl-viewer",
     "version":"0.1.0",
     "dependencies": {
-        "montage": "~0.14.11",
         "digit": "0.5.1",
         "matte": "~0.2.0",
-        "mjs-volume": "git://github.com/fabrobinet/mjs-volume.git"
+		"path": "*",
+		"recursive-readdir": "*"
     },
     "devDependencies": {
         "express": "3.4.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/fabrobinet/glTF-webgl-viewer.git"
     }
 }

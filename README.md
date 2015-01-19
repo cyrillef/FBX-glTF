@@ -1,5 +1,6 @@
 <p align="center">
-<img src="https://github.com/KhronosGroup/glTF/specification/figures/glTF_300.jpg" />
+<img src="docs/FBX.png" />
+<img src="https://github.com/KhronosGroup/glTF/blob/master/specification/figures/glTF_300.jpg" />
 </p>
 
 glTF is the runtime asset format for WebGL, OpenGL ES, and OpenGL.

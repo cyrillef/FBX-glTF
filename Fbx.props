@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <FBX_SDK>D:\__sdk\FBX\2015.1</FBX_SDK>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="FBX_SDK">
+      <Value>$(FBX_SDK)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

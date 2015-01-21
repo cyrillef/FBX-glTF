@@ -92,7 +92,7 @@ web::json::value gltfWriter::WriteLight (FbxNode *pNode) {
 		case FbxLight::EType::eVolume:
 		default: // ambient - https://github.com/KhronosGroup/glTF/blob/master/specification/lightAmbient.schema.json
 			_ASSERTE (false) ;
-			return (web::json::value::object ({{}})) ;
+			return (web::json::value::object ()) ;
 			break ;
 	}
 
@@ -108,16 +108,16 @@ web::json::value gltfWriter::WriteAmbientLight (FbxScene &pScene) {
 	static const FbxDouble3 defaultLightColor (1., 1., 1.) ;
 	FbxColor color (pScene.GetGlobalSettings ().GetAmbientColor ()) ;
 	if ( !color.mRed && !color.mGreen && !color.mBlue )
-		return (web::json::value::object ({{}})) ;
+		return (web::json::value::object ()) ;
 	if ( !_writeDefaults && color == defaultLightColor )
-		return (web::json::value::object ({{}})) ;
+		return (web::json::value::object ()) ;
 	lightDef [U("color")] =web::json::value::array () ;
 	lightDef [U("color")] [0] =static_cast<float> (color.mRed) ;
 	lightDef [U("color")] [1] =static_cast<float> (color.mGreen) ;
 	lightDef [U("color")] [2] =static_cast<float> (color.mBlue) ;
 	light [U("type")] =web::json::value::string (U("ambient")) ;
 	light [U("ambient")] =lightDef ;
-	return (web::json::value::object ({ { nodeId (utility::string_t (U("defaultambient")), 0x00), light } })) ;
+	return (web::json::value::object ({ { nodeId (U("defaultambient"), 0x00), light } })) ;
 }
 
 }

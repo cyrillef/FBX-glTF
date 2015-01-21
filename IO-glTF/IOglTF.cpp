@@ -51,6 +51,14 @@ namespace _IOglTF_NS_ {
 
 FBXSDK_PLUGIN_IMPLEMENT(IOglTF) ;
 
+bool IOglTF::SpecificInitialize () {
+	int registeredCount =0 ;
+	int gltfReaderId =0, gltfWriterId =0 ;
+	GetData ().mSDKManager->GetIOPluginRegistry ()->RegisterWriter (gltfWriter::Create_gltfWriter, gltfWriter::gltfFormatInfo, gltfWriterId, registeredCount, gltfWriter::FillIOSettings) ;
+	GetData ().mSDKManager->GetIOPluginRegistry ()->RegisterReader (gltfReader::Create_gltfReader, gltfReader::gltfFormatInfo, gltfReaderId, registeredCount, gltfReader::FillIOSettings) ;
+	return (true) ;
+}
+
 //-----------------------------------------------------------------------------
 
 /*static*/ const char *IOglTF::PLUGIN_NAME ="IO-glTF" ;

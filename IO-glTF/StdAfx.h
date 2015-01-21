@@ -40,15 +40,13 @@
 #include <memory>
 #include <map>
 #include <limits>
+#include <fstream>
 
 // C++ REST SDK (codename "Casablanca")
 // https://casablanca.codeplex.com/
-//#include <cpprest/http_client.h>
-#include <cpprest/basic_types.h>
 #include <cpprest/filestream.h>
 #include <cpprest/json.h>					// JSON library
 #include <cpprest/uri.h>                    // URI library
-//#include <cpprest/http_helpers.h>
 typedef web::json::value JsonValue ;
 typedef web::json::value::value_type JsonValueType ;
 
@@ -60,11 +58,11 @@ typedef web::json::value::value_type JsonValueType ;
 //#pragma comment (lib, "libfbxsdk-md.lib")
 //#include "webgl-idl.h"
 #include "glTF.h"
-#include "wtypes.h"
 
 #include "ns_exports.h"
 #include "string_t_utils.h"
 #include "memoryStream.h"
+#include "IOglTF.h"
 #include "gltfReader.h"
 #include "gltfWriter.h"
-#include "IOglTF.h"
+

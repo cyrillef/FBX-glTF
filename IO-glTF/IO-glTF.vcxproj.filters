@@ -100,12 +100,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="glTF-0-8-defaults.json">
       <Filter>Source Files</Filter>
     </None>
     <None Include="glTF-0-8.json">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

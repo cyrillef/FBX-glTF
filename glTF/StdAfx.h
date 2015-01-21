@@ -30,9 +30,8 @@
 
 // C++ REST SDK (codename "Casablanca")
 // https://casablanca.codeplex.com/
-#include <cpprest/basic_types.h>
 #include <cpprest/filestream.h>
-#include <cpprest/json.h>
+#include <cpprest/json.h>					// JSON library
 typedef web::json::value JsonValue ;
 typedef web::json::value::value_type JsonValueType ;
 

@@ -52,7 +52,7 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 		return (web::json::value::string (materialName)) ;
 
 	web::json::value material =web::json::value::object () ;
-	material [U ("name")] =web::json::value::string (materialName) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	material [U("name")] =web::json::value::string (materialName) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
 
 	// Look if this material is already in the materials library.
 	web::json::value ret =web::json::value::null () ;

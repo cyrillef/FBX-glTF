@@ -20,8 +20,6 @@
 //
 #pragma once
 
-#include <fstream>
-
 namespace _IOglTF_NS_ {
 
 class gltfReader : public FbxReader {

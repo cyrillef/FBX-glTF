@@ -61,8 +61,8 @@ utility::string_t GetJsonObjectKeyAt (web::json::value &a, int i) {
 } ;
 
 //-----------------------------------------------------------------------------
-gltfWriter::gltfWriter (FbxManager &pManager, int pID)
-	: FbxWriter(pManager, pID, FbxStatusGlobal::GetRef ()),
+gltfWriter::gltfWriter (FbxManager &pManager, int id)
+	: FbxWriter(pManager, id, FbxStatusGlobal::GetRef ()),
 	  _fileName(), _triangulate(false), _writeDefaults(true)
 { 
 	_samplingPeriod =1. / 30. ;
@@ -183,11 +183,11 @@ bool gltfWriter::InitNodes (FbxNode *pNode) {
 	return (true) ;
 }
 
-bool gltfWriter::PreprocessScene (FbxScene &pScene) {
+bool gltfWriter::PreprocessScene (FbxScene &scene) {
 	//FbxSceneRenamer renamer (&pScene) ; // Rename ALL the nodes from FBX to Collada since GLTF is mainly based on Collada
 	//renamer.RenameFor (FbxSceneRenamer::eFBX_TO_DAE) ;
 
-	FbxNode *pRootNode =pScene.GetRootNode () ;
+	FbxNode *pRootNode =scene.GetRootNode () ;
 	PreprocessNodeRecursive (pRootNode) ;
 
 	/*if ( mSingleMatrix ) {
@@ -275,7 +275,7 @@ void gltfWriter::PreprocessNodeRecursive (FbxNode *pNode) {
 //	FbxGeometryConverter lConverter (pSdkManager);
 //	pMesh =FbxCast<FbxMesh> (lConverter.Triangulate (pMesh, true));
 
-bool gltfWriter::PostprocessScene (FbxScene &pScene) {
+bool gltfWriter::PostprocessScene (FbxScene &scene) {
 	/*web::json::value val =WriteAmbientLight (pScene) ;
 	for ( const auto &iter : val.as_object () )
 		_json [U("lights")] [iter.first] =iter.second ;
@@ -291,15 +291,15 @@ bool gltfWriter::PostprocessScene (FbxScene &pScene) {
 }
 
 // Create our own writer - And your writer will get a pPluginID and pSubID. 
-/*static*/ FbxWriter *gltfWriter::Create_gltfWriter (FbxManager &pManager, FbxExporter &pExporter, int pSubID, int pPluginID) {
-	FbxWriter *writer =FbxNew<gltfWriter> (pManager, pPluginID) ; // Use FbxNew instead of new, since FBX will take charge its deletion
-	writer->SetIOSettings (pExporter.GetIOSettings ()) ;
+/*static*/ FbxWriter *gltfWriter::Create_gltfWriter (FbxManager &manager, FbxExporter &exporter, int subID, int pluginID) {
+	FbxWriter *writer =FbxNew<gltfWriter> (manager, pluginID) ; // Use FbxNew instead of new, since FBX will take charge its deletion
+	writer->SetIOSettings (exporter.GetIOSettings ()) ;
 	return (writer) ;
 }
 
 // Get extension, description or version info about MyOwnWriter
-/*static*/ void *gltfWriter::gltfFormatInfo (FbxWriter::EInfoRequest pRequest, int pId) {
-	return (_IOglTF_NS_::_gltfFormatInfo (pRequest, pId)) ;
+/*static*/ void *gltfWriter::gltfFormatInfo (FbxWriter::EInfoRequest request, int id) {
+	return (_IOglTF_NS_::_gltfFormatInfo (request, id)) ;
 }
 
 /*static*/ void gltfWriter::FillIOSettings (FbxIOSettings &pIOS) {
@@ -345,12 +345,17 @@ bool gltfWriter::isIdRegistered (utility::string_t id) {
 	return (std::find (_registeredIDs.begin (), _registeredIDs.end (), id) != _registeredIDs.end ()) ;
 }
 
-utility::string_t gltfWriter::nodeId (utility::string_t &type, FbxUInt64 id) {
+utility::string_t gltfWriter::nodeId (utility::string_t type, FbxUInt64 id) {
 	TCHAR buffer [255] ;
 	_ui64tot_s (id, buffer, 255, 10) ;
 	utility::string_t uid (type) ;
 	uid +=U("_") + utility::conversions::to_string_t (buffer) ;
 	return (uid) ;
+}
+
+utility::string_t gltfWriter::nodeId (const utility::char_t *pszType, FbxUInt64 id) {
+	utility::string_t st (pszType) ;
+	return (nodeId (st, id)) ;
 }
 
 utility::string_t gltfWriter::nodeId (FbxNode *pNode) {
@@ -363,7 +368,7 @@ utility::string_t gltfWriter::nodeId (FbxNode *pNode) {
 	//return (utility::conversions::to_string_t (szID.Buffer ())) ;
 }
 
-utility::string_t gltfWriter::createUniqueId (utility::string_t &type, FbxUInt64 id) {
+utility::string_t gltfWriter::createUniqueId (utility::string_t type, FbxUInt64 id) {
 	for ( ;; id++ ) {
 		utility::string_t uid =nodeId (type, id) ;
 		if ( !isIdRegistered (uid) )

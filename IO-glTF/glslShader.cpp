@@ -72,7 +72,11 @@ void glslShader::appendCode (const char *format, ...) {
 	char buffer [1000] ;
 	va_list args ;
 	va_start (args, format) ;
+#if defined(_WIN32) || defined(_WIN64)
 	vsprintf_s (buffer, format, args) ;
+#else
+	vsprintf (buffer, format, args) ;
+#endif
 	_body +=utility::conversions::to_string_t (buffer) ;
 	va_end (args) ;
 }

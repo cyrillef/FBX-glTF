@@ -22,7 +22,6 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <fstream>
 
 #define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v0.1")
 //#define FBX_GLTF_COMMONPROFILE U("COLLADA-1.4.1/commonProfile")
@@ -62,7 +61,7 @@ private:
 	std::map<utility::string_t, utility::string_t> _uvSets ;
 
 public:
-	gltfWriter (FbxManager &pManager, int pID) ;
+	gltfWriter (FbxManager &pManager, int id) ;
 	virtual ~gltfWriter () ;
 
 	virtual bool FileCreate (char *pFileName) ;
@@ -70,12 +69,12 @@ public:
 	virtual bool IsFileOpen () ;
 	virtual void GetWriteOptions () ;
 	virtual bool Write (FbxDocument *pDocument) ;
-	virtual bool PreprocessScene (FbxScene &pScene) ;
-	virtual bool PostprocessScene (FbxScene &pScene) ;
+	virtual bool PreprocessScene (FbxScene &scene) ;
+	virtual bool PostprocessScene (FbxScene &scene) ;
 
-	static FbxWriter *Create_gltfWriter (FbxManager &pManager, FbxExporter &pExporter, int pSubID, int pPluginID) ;
-	static void *gltfFormatInfo (FbxWriter::EInfoRequest pRequest, int pId) ;
-	static void FillIOSettings (FbxIOSettings &pIOS) ;
+	static FbxWriter *Create_gltfWriter (FbxManager &manager, FbxExporter &exporter, int subID, int pluginID) ;
+	static void *gltfFormatInfo (FbxWriter::EInfoRequest request, int id) ;
+	static void FillIOSettings (FbxIOSettings &ios) ;
 
 protected:
 	void PrepareForSerialization () ;
@@ -83,9 +82,10 @@ protected:
 	utility::string_t registerId (utility::string_t id) ;
 	bool isIdRegistered (utility::string_t id) ;
 public:
-	utility::string_t nodeId (utility::string_t &type, FbxUInt64 id) ;
+	utility::string_t nodeId (utility::string_t type, FbxUInt64 id) ;
+	utility::string_t nodeId (const utility::char_t *pszType, FbxUInt64 id) ;
 	utility::string_t nodeId (FbxNode *pNode) ;
-	utility::string_t createUniqueId (utility::string_t &type, FbxUInt64 id) ;
+	utility::string_t createUniqueId (utility::string_t type, FbxUInt64 id) ;
 	utility::string_t createUniqueId (FbxNode *pNode) ;
 	inline utility::string_t createSamplerName (FbxString &szname) { return (U ("sampler_") + utility::conversions::to_string_t (szname.Buffer ())) ; }
 	inline utility::string_t createSamplerName (const char *pszName) { return (U ("sampler_") + utility::conversions::to_string_t (pszName)) ; }
@@ -177,9 +177,14 @@ template<class Type>
 web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxNode *pNode, const utility::char_t *suffix) {
 	std::ofstream::pos_type offset =_bin.tellg () ;
 	//std::copy (data.begin (), data.end (), std::ostream_iterator<Type> (_bin)) ;
+#ifdef __APPLE__
+	typedef typename std::vector<Type>::iterator iteratorType ;
+	for ( iteratorType iter =data.begin () ; iter != data.end () ; iter++ )
+		_bin.write ((uint8_t *)&(*iter), sizeof (Type)) ;
+#else
 	for ( std::vector<Type>::iterator iter =data.begin () ; iter != data.end () ; iter++ )
 		_bin.write ((uint8_t *)&(*iter), sizeof (Type)) ;
-
+#endif
 	// bufferView - https://github.com/KhronosGroup/glTF/blob/master/specification/bufferView.schema.json
 	web::json::value viewDef =web::json::value::object () ;
 	FbxString filename =FbxPathUtils::GetFileName (utility::conversions::to_utf8string (_fileName).c_str (), false) ;

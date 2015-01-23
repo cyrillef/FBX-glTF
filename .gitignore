@@ -17,6 +17,7 @@
 [Dd]ebug/
 [Rr]elease/
 x64/
+[Cc]make/
 *_i.c
 *_p.c
 *.ilk

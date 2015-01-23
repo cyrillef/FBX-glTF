@@ -139,7 +139,7 @@ static const char *_getopt_initialize_a (const char *optstring, struct _getopt_d
 	errno_t err =pValue != nullptr ;
 #else
 	size_t len ;
-	errno_t err =_wdupenv_s (&pValue, &len, L"POSIXLY_CORRECT") ;
+	errno_t err =_dupenv_s (&pValue, &len, "POSIXLY_CORRECT") ;
 	free (pValue) ;
 #endif
 	d->__posixly_correct = posixly_correct | !err;

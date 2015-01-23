@@ -353,7 +353,7 @@ bool gltfWriter::isIdRegistered (utility::string_t id) {
 }
 
 utility::string_t gltfWriter::nodeId (utility::string_t type, FbxUInt64 id) {
-	utility::string_t buffer =utility::conversions::to_string_t (id) ;
+	utility::string_t buffer =utility::conversions::to_string_t ((int)id) ;
 	utility::string_t uid (type) ;
 	uid +=U("_") + buffer ;
 	return (uid) ;

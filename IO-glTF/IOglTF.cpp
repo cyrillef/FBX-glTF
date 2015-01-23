@@ -64,6 +64,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const char *IOglTF::PLUGIN_NAME ="IO-glTF" ;
 /*static*/ const char *IOglTF::PLUGIN_VERSION ="0.1.0" ;
 
+#ifdef _APPLE_
 /*static*/ const unsigned int IOglTF::BYTE ;
 /*static*/ const unsigned int IOglTF::UNSIGNED_BYTE ;
 /*static*/ const unsigned int IOglTF::SHORT ;
@@ -91,6 +92,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const unsigned int IOglTF::SAMPLER_CUBE ;
 /*static*/ const unsigned int IOglTF::FRAGMENT_SHADER ;
 /*static*/ const unsigned int IOglTF::VERTEX_SHADER ;
+#endif
 /*static*/ const utility::char_t *IOglTF::szSCALAR =U("SCALAR") ;
 /*static*/ const utility::char_t *IOglTF::szFLOAT =U("FLOAT") ;
 /*static*/ const utility::char_t *IOglTF::szVEC2 =U("VEC2") ;
@@ -107,6 +109,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const utility::char_t *IOglTF::szMAT2 =U("MAT2") ;
 /*static*/ const utility::char_t *IOglTF::szMAT3 =U("MAT3") ;
 /*static*/ const utility::char_t *IOglTF::szMAT4 =U("MAT4") ;
+#ifdef _APPLE_
 /*static*/ const unsigned int IOglTF::ARRAY_BUFFER ;
 /*static*/ const unsigned int IOglTF::ELEMENT_ARRAY_BUFFER ;
 /*static*/ const unsigned int IOglTF::POINTS ;
@@ -137,6 +140,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const unsigned int IOglTF::CLAMP_TO_EDGE ;
 /*static*/ const unsigned int IOglTF::MIRRORED_REPEAT ;
 /*static*/ const unsigned int IOglTF::REPEAT ;
+#endif
 /*static*/ const web::json::value IOglTF::Identity2 =web::json::value::array ({ { 1., 0., 0., 1. } }) ;
 /*static*/ const web::json::value IOglTF::Identity3 =web::json::value::array ({ { 1., 0., 0., 0., 1., 0., 0., 0., 1. } }) ;
 /*static*/ const web::json::value IOglTF::Identity4 =web::json::value::array ({{ 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1. }}) ;

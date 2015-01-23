@@ -64,7 +64,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const char *IOglTF::PLUGIN_NAME ="IO-glTF" ;
 /*static*/ const char *IOglTF::PLUGIN_VERSION ="0.1.0" ;
 
-#ifdef _APPLE_
+#ifdef __APPLE__
 /*static*/ const unsigned int IOglTF::BYTE ;
 /*static*/ const unsigned int IOglTF::UNSIGNED_BYTE ;
 /*static*/ const unsigned int IOglTF::SHORT ;
@@ -109,7 +109,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const utility::char_t *IOglTF::szMAT2 =U("MAT2") ;
 /*static*/ const utility::char_t *IOglTF::szMAT3 =U("MAT3") ;
 /*static*/ const utility::char_t *IOglTF::szMAT4 =U("MAT4") ;
-#ifdef _APPLE_
+#ifdef __APPLE__
 /*static*/ const unsigned int IOglTF::ARRAY_BUFFER ;
 /*static*/ const unsigned int IOglTF::ELEMENT_ARRAY_BUFFER ;
 /*static*/ const unsigned int IOglTF::POINTS ;

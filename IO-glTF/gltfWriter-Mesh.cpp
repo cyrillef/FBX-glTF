@@ -85,9 +85,9 @@ public:
 protected:
 	size_t AddPolygonVertex (int polygonId, int vertex,
 							 int vertexID, FbxVector4 &position,
-							 int normalIndex =-1, FbxVector4 &normal =FbxVector4 (),
-							 int uvIndex =-1, FbxVector2 &uv =FbxVector2 (),
-							 int vcolorIndex =-1, FbxColor &vcolor =FbxColor (1., 1., 1.)
+							 int normalIndex =-1, const FbxVector4 &normal =FbxVector4 (),
+							 int uvIndex =-1, const FbxVector2 &uv =FbxVector2 (),
+							 int vcolorIndex =-1, const FbxColor &vcolor =FbxColor (1., 1., 1.)
 							) ;
 	static FbxArray<FbxVector4> GetVertexPositions (FbxMesh *pMesh, bool bInGeometry, bool bExportControlPoints =true) ;
 
@@ -181,9 +181,9 @@ IndicesDeindexer::IndicesDeindexer (FbxMesh *pMesh, int layerIndex /*=0*/, bool 
 size_t IndicesDeindexer::AddPolygonVertex (
 	int polygonId, int vertex,
 	int vertexID, FbxVector4 &position,
-	int normalIndex/*=-1*/, FbxVector4 &normal /*=FbxVector4 ()*/,
-	int uvIndex/*=-1*/, FbxVector2 &uv /*=FbxVector2 ()*/,
-	int vcolorIndex /*=-1*/, FbxColor &vcolor /*=FbxColor (1., 1., 1.)*/
+	int normalIndex/*=-1*/, const FbxVector4 &normal /*=FbxVector4 ()*/,
+	int uvIndex/*=-1*/, const FbxVector2 &uv /*=FbxVector2 ()*/,
+	int vcolorIndex /*=-1*/, const FbxColor &vcolor /*=FbxColor (1., 1., 1.)*/
 ) {
 	VertexKey key (
 		vertexID, normalIndex, uvIndex, vcolorIndex

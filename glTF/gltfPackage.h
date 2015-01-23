@@ -69,6 +69,7 @@ public:
 
 	static utility::string_t filename (const utility::string_t &path) ;
 	static utility::string_t pathname (const utility::string_t &filename) ;
+	
 protected:
 	bool LoadScene (const utility::string_t &fn) ;
 	bool WriteScene (const utility::string_t &outdir) ;

@@ -45,7 +45,11 @@ EXPRESSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef __APPLE__
+#include <malloc/malloc.h>
+#else
 #include <malloc.h>
+#endif
 #include "getopt.h"
 
 #ifdef __cplusplus
@@ -91,7 +95,11 @@ static void exchange_a(char **argv, struct _getopt_data_a *d)
 		if (top - middle > middle - bottom)
 		{
 			int len = middle - bottom;
+#ifdef __APPLE__
+			int i;
+#else
 			register int i;
+#endif
 			for (i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
@@ -103,7 +111,11 @@ static void exchange_a(char **argv, struct _getopt_data_a *d)
 		else
 		{
 			int len = top - middle;
+#ifdef __APPLE__
+			int i;
+#else
 			register int i;
+#endif
 			for (i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
@@ -122,9 +134,14 @@ static const char *_getopt_initialize_a (const char *optstring, struct _getopt_d
 	d->__nextchar = NULL;
 	//d->__posixly_correct = posixly_correct | !!getenv("POSIXLY_CORRECT");
 	char *pValue ;
+#ifdef __APPLE__
+	pValue =getenv ("POSIXLY_CORRECT") ;
+	errno_t err =pValue != nullptr ;
+#else
 	size_t len ;
-	errno_t err =_dupenv_s (&pValue, &len, "POSIXLY_CORRECT") ;
+	errno_t err =_wdupenv_s (&pValue, &len, L"POSIXLY_CORRECT") ;
 	free (pValue) ;
+#endif
 	d->__posixly_correct = posixly_correct | !err;
 	if (optstring[0] == '-')
 	{
@@ -556,7 +573,11 @@ static void exchange_w(wchar_t **argv, struct _getopt_data_w *d)
 		if (top - middle > middle - bottom)
 		{
 			int len = middle - bottom;
+#ifdef __APPLE__
+			int i;
+#else
 			register int i;
+#endif
 			for (i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
@@ -568,7 +589,11 @@ static void exchange_w(wchar_t **argv, struct _getopt_data_w *d)
 		else
 		{
 			int len = top - middle;
+#ifdef __APPLE__
+			int i;
+#else
 			register int i;
+#endif
 			for (i = 0; i < len; i++)
 			{
 				tem = argv[bottom + i];
@@ -586,10 +611,16 @@ static const wchar_t *_getopt_initialize_w (const wchar_t *optstring, struct _ge
 	d->__first_nonopt = d->__last_nonopt = d->optind;
 	d->__nextchar = NULL;
 	//d->__posixly_correct = posixly_correct | !!_wgetenv(L"POSIXLY_CORRECT");
+#ifdef __APPLE__
+	char *pValue ;
+	pValue =getenv ("POSIXLY_CORRECT") ;
+	errno_t err =pValue != nullptr ;
+#else
 	wchar_t *pValue ;
 	size_t len ;
 	errno_t err =_wdupenv_s (&pValue, &len, L"POSIXLY_CORRECT") ;
 	free (pValue) ;
+#endif
 	d->__posixly_correct = posixly_correct | !err;
 	if (optstring[0] == L'-')
 	{

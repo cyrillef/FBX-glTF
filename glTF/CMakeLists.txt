@@ -1,0 +1,21 @@
+
+set (GLTF_MAJOR_VERSION 0)
+set (GLTF_MINOR_VERSION 1)
+set (GLTF_PATCH_VERSION 0)
+set (GLTF_VERSION ${GLTF_MAJOR_VERSION}.${GLTF_MINOR_VERSION}.${GLTF_PATCH_VERSION})
+
+# glTF executable
+file (GLOB_RECURSE glTF-src ../glTF/*.cpp)
+include_directories (
+	${CASABLANCA_INCLUDES}
+	${FBX_SDK_INCLUDES}
+	/usr/local/include
+	../IO-glTF
+)
+add_executable (glTF ${glTF-src})
+target_link_libraries (
+	glTF
+	${FBX_SDK_LIBS}/${FBX_SDK_LIBRARY}.dylib
+	${CASABLANCA_LIBS}/${CASABLANCA_LIBRARY}.dylib
+	${Boost_LIBRARIES} ${Boost_FRAMEWORK}
+)

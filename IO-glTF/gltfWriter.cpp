@@ -22,19 +22,18 @@
 #include "gltfWriter.h"
 
 #include <stdlib.h>
-#include <tchar.h>
 
 namespace _IOglTF_NS_ {
 
 //-----------------------------------------------------------------------------
-web::json::value &MergeJsonObjects (web::json::value &a, web::json::value &b) {
+web::json::value &MergeJsonObjects (web::json::value &a, const web::json::value &b) {
 	if ( b.is_null () || !b.is_object () )
 		return (a) ;
 	for ( const auto &iter : b.as_object () ) {
 		if ( !a.has_field (iter.first) ) {
 			a [iter.first] =iter.second ;
 		} else {
-			MergeJsonObjects (a [iter.first], b [iter.first]) ;
+			MergeJsonObjects (a [iter.first], b.at (iter.first)) ;
 		}
 	}
 	return (a) ;
@@ -97,7 +96,11 @@ bool gltfWriter::FileClose () {
 	// If media saved in file, gltfWriter::PostprocessScene / gltfWriter::WriteBuffer should have embed the data already
 	if ( !GetIOSettings ()->GetBoolProp (IOSN_FBX_GLTF_EMBEDMEDIA, false) ) {
 		FbxString fileName (utility::conversions::to_utf8string (_fileName).c_str ()) ;
+#if defined(_WIN32) || defined(_WIN64)
 		fileName =FbxPathUtils::GetFolderName (fileName) + "\\" + FbxPathUtils::GetFileName (fileName, false) + ".bin" ;
+#else
+		fileName =FbxPathUtils::GetFolderName (fileName) + "/" + FbxPathUtils::GetFileName (fileName, false) + ".bin" ;
+#endif
 		std::ofstream binFile =std::ofstream (fileName, std::ios::out | std::ofstream::binary) ;
 		//_bin.seekg (0, std::ios_base::beg) ;
 		binFile.write ((const char *)_bin.rdbuf (), _bin.vec ().size ()) ;
@@ -281,7 +284,11 @@ bool gltfWriter::PostprocessScene (FbxScene &scene) {
 		_json [U("lights")] [iter.first] =iter.second ;
 	*/
 	//if ( GetIOSettings ()->GetBoolProp (IOSN_FBX_GLTF_COPYMEDIA, false) ) {
+	//#if defined(_WIN32) || defined(_WIN64)
 	//	FbxString path =FbxPathUtils::GetFolderName (utility::conversions::to_utf8string (_fileName).c_str ()) + "\\" ;
+	//#else
+	//	FbxString path =FbxPathUtils::GetFolderName (utility::conversions::to_utf8string (_fileName).c_str ()) + "/" ;
+	//#endif
 	//	for ( const auto &iter : _json [U("images")].as_object () ) {
 	//	}
 	//		
@@ -346,10 +353,9 @@ bool gltfWriter::isIdRegistered (utility::string_t id) {
 }
 
 utility::string_t gltfWriter::nodeId (utility::string_t type, FbxUInt64 id) {
-	TCHAR buffer [255] ;
-	_ui64tot_s (id, buffer, 255, 10) ;
+	utility::string_t buffer =utility::conversions::to_string_t (id) ;
 	utility::string_t uid (type) ;
-	uid +=U("_") + utility::conversions::to_string_t (buffer) ;
+	uid +=U("_") + buffer ;
 	return (uid) ;
 }
 

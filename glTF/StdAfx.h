@@ -20,10 +20,16 @@
 //
 #pragma once
 
+//#if defined(_WIN32) || defined(_WIN64)
+//#elif defined (__linux)
+//#elif defined (__APPLE__)
+//#endif
+
+#if defined(_WIN32) || defined(_WIN64)
 #include "targetver.h"
+#endif
 
 #include <stdio.h>
-#include <tchar.h>
 
 #include <memory>
 #include <map>
@@ -31,7 +37,7 @@
 // C++ REST SDK (codename "Casablanca")
 // https://casablanca.codeplex.com/
 #include <cpprest/filestream.h>
-#include <cpprest/json.h>					// JSON library
+#include <cpprest/json.h>
 typedef web::json::value JsonValue ;
 typedef web::json::value::value_type JsonValueType ;
 
@@ -42,7 +48,7 @@ typedef web::json::value::value_type JsonValueType ;
 #pragma comment (lib, "libfbxsdk.lib")
 //#pragma comment (lib, "libfbxsdk-md.lib")
 
-#include "gltf.h"
+//#include "gltf.h"
 #include "gltfPackage.h"
 
 #define STATIC_GETOPT

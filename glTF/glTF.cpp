@@ -20,7 +20,9 @@
 //
 #include "StdAfx.h"
 #include "getopt.h"
-#include <io.h>
+#if defined(_WIN32) || defined(_WIN64)
+#include "tchar.h"
+#endif
 
 	//{ U("n"), U("a"), required_argument, U("-a -> export animations, argument [bool], default:true") },
 	//{ U("n"), U("g"), required_argument, U("-g -> [experimental] GLSL version to output in generated shaders") },
@@ -56,7 +58,11 @@ static struct option long_options [] ={
 	{ ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL }
 } ;
 
+#if defined(_WIN32) || defined(_WIN64)
 int _tmain (int argc, _TCHAR *argv []) {
+#else
+int main (int argc, char *argv []) {
+#endif
 	bool bLoop =true ;
 	utility::string_t inFile ;
 	utility::string_t outDir ;
@@ -74,7 +80,7 @@ int _tmain (int argc, _TCHAR *argv []) {
 		// Check for end of operation or error
 		if ( c == -1 )
 			break ;
-
+		
 		// Handle options
 		switch ( c ) {
 			case 0:
@@ -88,7 +94,7 @@ int _tmain (int argc, _TCHAR *argv []) {
 			default:
 				bLoop =false ;
 				break ;
-
+				
 			case U('h'): // help message
 				usage () ;
 				return (0) ;
@@ -115,13 +121,23 @@ int _tmain (int argc, _TCHAR *argv []) {
 				break ;
 		}
 	}
+#if defined(_WIN32) || defined(_WIN64)
 	if ( inFile.length () == 0  || _taccess_s (inFile.c_str (), 0) == ENOENT )
 		return (-1) ;
+#else
+	if ( inFile.length () == 0  || access (inFile.c_str (), 0) == ENOENT )
+		return (-1) ;
+#endif
 	if ( outDir.length () == 0 )
 		outDir =utility::conversions::to_string_t (FbxPathUtils::GetFolderName (utility::conversions::to_utf8string (inFile).c_str ()).Buffer ()) ;
+#if defined(_WIN32) || defined(_WIN64)
 	if ( outDir [outDir.length () - 1] != U('\\') )
 		outDir +=U('\\') ;
-
+#else
+	if ( outDir [outDir.length () - 1] != U('/') )
+		outDir +=U('/') ;
+#endif
+	
 	std::shared_ptr <gltfPackage> asset (new gltfPackage ()) ;
 	asset->ioSettings (name.c_str (), reverseTransparency, defaultLighting, copyMedia, embedMedia) ;
 

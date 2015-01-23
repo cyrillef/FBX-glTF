@@ -43,7 +43,7 @@
 
 namespace _IOglTF_NS_ {
 
-web::json::value &MergeJsonObjects (web::json::value &a, web::json::value &b) ;
+web::json::value &MergeJsonObjects (web::json::value &a, const web::json::value &b) ;
 utility::string_t GetJsonObjectKeyAt (web::json::value &a, int i =0) ;
 #define GetJsonFirstKey(a) GetJsonObjectKeyAt(a)
 

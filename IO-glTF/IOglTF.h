@@ -79,8 +79,8 @@ public:
 	static const utility::char_t *szMAT3 ;
 	static const utility::char_t *szMAT4 ;
 	// bufferView::Target (https://github.com/KhronosGroup/glTF/blob/master/specification/bufferView.schema.json)
-	static const int ARRAY_BUFFER =34962 ;
-	static const int ELEMENT_ARRAY_BUFFER =34963 ;
+	static const unsigned int ARRAY_BUFFER =34962 ;
+	static const unsigned int ELEMENT_ARRAY_BUFFER =34963 ;
 	// mesh::primitive (https://github.com/KhronosGroup/glTF/blob/master/specification/meshPrimitive.schema.json)
 	static const unsigned int POINTS =0 ;
 	static const unsigned int LINES =1 ;
@@ -145,32 +145,42 @@ public:
 
 template<class T>
 /*static*/ unsigned int IOglTF::accessorComponentType () {
-	//const type_info
-	//ucout << utility::conversions::to_string_t (typeid (T).name()) ;
-	switch ( typeid (T).hash_code () ) {
-		case 0xf2a39391f9f8ad2c /*typeid (char).hash_code ()*/:
-		case 0xdbf2be74fb6e4f03 /*typeid (int8_t).hash_code ()*/:
-			return (BYTE) ;
-		case 0xf9b6d9fdbc918e1b /*typeid (unsigned char).hash_code ()*/:
-		//case 0xf9b6d9fdbc918e1b /*typeid (uint8_t).hash_code ()*/:
-			return (UNSIGNED_BYTE) ;
-		case 0xf69155480110981d /*typeid (short).hash_code ()*/:
-			return (SHORT) ;
-		case 0x27a436e029489774 /*typeid (unsigned short).hash_code ()*/:
-			return (UNSIGNED_SHORT) ;
-		case 0x2b9fff19004b3727 /*typeid (int).hash_code ()*/:
-			return (INT) ;
-		case 0xbaaedcffb89ab934 /*typeid (unsigned int).hash_code ()*/:
-			return (UNSIGNED_INT) ;
-		case 0xa00a62a9e2b863cc /*typeid (float).hash_code ()*/:
-			return (FLOAT) ;
-		case 0xcd2fd49b0b9fc026 /*typeid (bool).hash_code ()*/:
-			return (BOOL) ;
-	}
+	static const size_t iChar =typeid (char).hash_code () ;
+	static const size_t iInt8_t =typeid (int8_t).hash_code () ;
+	static const size_t iUnsignedChar =typeid (unsigned char).hash_code () ;
+	static const size_t iUInt8_t =typeid (uint8_t).hash_code () ;
+	static const size_t iShort =typeid (short).hash_code () ;
+	static const size_t iUnsignedShort =typeid (unsigned short).hash_code () ;
+	static const size_t iInt =typeid (int).hash_code () ;
+	static const size_t iUnsignedInt =typeid (unsigned int).hash_code () ;
+	static const size_t iFloat =typeid (float).hash_code () ;
+	static const size_t iBool =typeid (bool).hash_code () ;
+	
+	size_t tp =typeid (T).hash_code () ;
+	if ( tp == iChar || tp == iInt8_t ) return (BYTE) ;
+	if ( tp == iUnsignedChar || tp == iUInt8_t ) return (UNSIGNED_BYTE) ;
+	if ( tp == iShort ) return (SHORT) ;
+	if ( tp == iUnsignedShort ) return (UNSIGNED_SHORT) ;
+	if ( tp == iInt ) return (INT) ;
+	if ( tp == iUnsignedInt ) return (UNSIGNED_INT) ;
+	if ( tp == iFloat ) return (FLOAT) ;
+	if ( tp == iBool ) return (BOOL) ;
+		
+	ucout << U("IOglTF::accessorComponentType() / hash code: ") << std::hex << typeid (T).hash_code () << std::endl ;
+	ucout << U("char: ") << std::hex << typeid (char).hash_code () << std::endl ;
+	ucout << U("int8_t: ") << std::hex << typeid (int8_t).hash_code () << std::endl ;
+	ucout << U("unsigned char: ") << std::hex << typeid (unsigned char).hash_code () << std::endl ;
+	ucout << U("uint8_t: ") << std::hex << typeid (uint8_t).hash_code () << std::endl ;
+	ucout << U("short: ") << std::hex << typeid (short).hash_code () << std::endl ;
+	ucout << U("unsigned short: ") << std::hex << typeid (unsigned short).hash_code () << std::endl ;
+	ucout << U("int: ") << std::hex << typeid (int).hash_code () << std::endl ;
+	ucout << U("unsigned int: ") << std::hex << typeid (unsigned int).hash_code () << std::endl ;
+	ucout << U("float: ") << std::hex << typeid (float).hash_code () << std::endl ;
+	ucout << U("bool: ") << std::hex << typeid (bool).hash_code () << std::endl ;
 	_ASSERTE( false ) ;
 	return (0) ;
 }
-
+	
 template<class T>
 /*static*/ const utility::char_t *IOglTF::accessorType (int size, int dim) {
 	if ( dim == 1 ) {

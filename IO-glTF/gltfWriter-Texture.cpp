@@ -48,7 +48,12 @@ web::json::value gltfWriter::WriteTexture (FbxTexture *pTexture) {
 		image [name] [U("uri")] =web::json::value::string (IOglTF::dataURI (utility::conversions::to_string_t (imageFile.Buffer ()))) ;
 	} /*else*/
 	if ( GetIOSettings ()->GetBoolProp (IOSN_FBX_GLTF_COPYMEDIA, false) ) {
-		FbxString path =FbxPathUtils::GetFolderName (utility::conversions::to_utf8string (_fileName).c_str ()) + "\\" ;
+		FbxString path =FbxPathUtils::GetFolderName (utility::conversions::to_utf8string (_fileName).c_str ()) ;
+#if defined(_WIN32) || defined(_WIN64)
+		path +="\\" ;
+#else
+		path +="/" ;
+#endif
 		FbxString imageFile =FbxCast<FbxFileTexture> (pTexture)->GetFileName () ;
 		std::ifstream src (imageFile.Buffer (), std::ios::binary) ;
 		std::ofstream dst (path + FbxPathUtils::GetFileName (imageFile), std::ios::binary) ;

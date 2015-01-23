@@ -20,14 +20,20 @@
 //
 #pragma once
 
+//#if defined(_WIN32) || defined(_WIN64)
+//#elif defined (__linux)
+//#elif defined (__APPLE__)
+//#endif
+
+#if defined(_WIN32) || defined(_WIN64)
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-// Windows Header Files:
 #include <windows.h>
+#endif
 
 #include <assert.h>
-#include <tchar.h>
+//#include <tchar.h>
 #define GLTF_UNREFERENCED_PARAMETER(x) (void)x
 #define _ASSERTE(x) assert(x)
 
@@ -65,4 +71,3 @@ typedef web::json::value::value_type JsonValueType ;
 #include "IOglTF.h"
 #include "gltfReader.h"
 #include "gltfWriter.h"
-

@@ -19,6 +19,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 //
 #include "StdAfx.h"
+#include "glTF.h"
 #include "gltfPackage.h"
 
 //-----------------------------------------------------------------------------

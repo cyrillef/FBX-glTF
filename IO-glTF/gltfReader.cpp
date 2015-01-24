@@ -37,7 +37,7 @@ void gltfReader::GetVersion (int &pMajor, int &pMinor, int &pRevision) {
 }
 
 bool gltfReader::FileOpen (char *pFileName) {
-	_in =std::wifstream (pFileName, std::ios::in) ;
+	_in.open (pFileName, std::ios::in) ;
 	return (IsFileOpen ()) ;
 }
 bool gltfReader::FileClose () {

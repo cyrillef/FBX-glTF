@@ -246,7 +246,7 @@ void *_gltfFormatInfo (FbxWriter::EInfoRequest pRequest, int pId) {
 
 			std::vector<uint8_t> v8 ;
 			v8.resize (length) ;
-			buff.seekpos (0, std::ios_base::beg) ;
+			buff.seekpos (0, std::ios_base::binary) ;
 			buff.getn (&v8.front (), length) ;
 
 			st +=IOglTF::mimeType (fileName.c_str ()) ;

@@ -50,10 +50,10 @@ EXPRESSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 	#if defined(EXPORTS_GETOPT) && defined(STATIC_GETOPT)
 		#error "The preprocessor definitions of EXPORTS_GETOPT and STATIC_GETOPT can only be used individually"
 	#elif defined(STATIC_GETOPT)
-#ifdef __APPLE__
-		#pragma warning "Warning static builds of getopt violate the Lesser GNU Public License"
-#else
+#if defined(_WIN32) || defined(_WIN64)
 		#pragma message("Warning static builds of getopt violate the Lesser GNU Public License")
+#else
+		#pragma warning "Warning static builds of getopt violate the Lesser GNU Public License"
 #endif
 		#define _GETOPT_API
 	#elif defined(EXPORTS_GETOPT)

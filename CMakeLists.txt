@@ -1,29 +1,39 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project ("glTF")
 
+if ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
+	set (LIBRARY_EXT dylib)
+elseif ( UNIX )
+	set (LIBRARY_EXT so)
+else ()
+	set (LIBRARY_EXT lib)
+endif ()
+
 string (TOLOWER ${CMAKE_BUILD_TYPE} glTF_BUILD_TYPE)
 
-set (CASABLANCA /Users/cyrille/Projects/casablanca)
+set (CASABLANCA /home/parallels/casablanca)
 set (CASABLANCA_INCLUDES ${CASABLANCA}/Release/include)
 set (CASABLANCA_LIBS ${CASABLANCA}/build.${glTF_BUILD_TYPE}/Binaries)
-set (CASABLANCA_LIBRARY libcpprest.2.4)
+if ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
+	set (CASABLANCA_LIBRARY libcpprest.2.4.${LIBRARY_EXT})
+elseif ( UNIX )
+	set (CASABLANCA_LIBRARY libcpprest.${LIBRARY_EXT}.2.4)
+else ()
+	set (CASABLANCA_LIBRARY libcpprest.2.4.${LIBRARY_EXT})
+endif ()
 message (STATUS "Using Casablanca: " ${CASABLANCA})
 
-set (FBX_SDK "/Applications/Autodesk/FBX SDK/2015.1")
+set (FBX_SDK "/home/parallels/fbxsdk")
 set (FBX_SDK_INCLUDES ${FBX_SDK}/include)
-set (FBX_SDK_LIBS ${FBX_SDK}/lib/clang/${glTF_BUILD_TYPE})
-set (FBX_SDK_LIBRARY libfbxsdk)
+set (FBX_SDK_LIBS ${FBX_SDK}/lib/gcc4/x64/${glTF_BUILD_TYPE})
+set (FBX_SDK_LIBRARY libfbxsdk.${LIBRARY_EXT})
 message (STATUS "Using FBX: " ${FBX_SDK})
-
-set (IOGLTF_MAJOR_VERSION 0)
-set (IOGLTF_MINOR_VERSION 1)
-set (IOGLTF_PATCH_VERSION 0)
-set (IOGLTF_VERSION ${IOGLTF_MAJOR_VERSION}.${IOGLTF_MINOR_VERSION}.${IOGLTF_PATCH_VERSION})
 
 # Reconfigure final output directory
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/${CMAKE_BUILD_TYPE})
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/${CMAKE_BUILD_TYPE})
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/${CMAKE_BUILD_TYPE})
+message (STATUS "Ouput Directory: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 # Platform (not compiler) specific settings
 if ( WIN32 ) # Check if we are on Windows
@@ -62,6 +72,7 @@ elseif ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" )
 	set (LD_FLAGS "${LD_FLAGS} -Wl,-z,defs")
 
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
+	set (LD_LIBRARY_PATH ${CASABLANCA_LIBS})
 else ()
 	message ("-- Unknown compiler, success is doubtful.")
 endif ()
@@ -69,3 +80,4 @@ endif ()
 
 add_subdirectory (IO-glTF)
 add_subdirectory (glTF)
+

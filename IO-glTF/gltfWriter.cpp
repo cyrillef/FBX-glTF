@@ -83,7 +83,8 @@ bool gltfWriter::FileCreate (char *pFileName) {
 
 	if ( !FbxPathUtils::Create (FbxPathUtils::GetFolderName (fileName)) )
 		return (GetStatus ().SetCode (FbxStatus::eFailure, "Cannot create folder!"), false) ;
-	_gltf =utility::ofstream_t (_fileName, std::ios::out) ;
+	//_gltf =utility::ofstream_t (_fileName, std::ios::out) ;
+	_gltf.open (_fileName, std::ios::out) ;
 
 	return (IsFileOpen ()) ;
 }
@@ -101,7 +102,7 @@ bool gltfWriter::FileClose () {
 #else
 		fileName =FbxPathUtils::GetFolderName (fileName) + "/" + FbxPathUtils::GetFileName (fileName, false) + ".bin" ;
 #endif
-		std::ofstream binFile =std::ofstream (fileName, std::ios::out | std::ofstream::binary) ;
+		std::ofstream binFile (fileName, std::ios::out | std::ofstream::binary) ;
 		//_bin.seekg (0, std::ios_base::beg) ;
 		binFile.write ((const char *)_bin.rdbuf (), _bin.vec ().size ()) ;
 		binFile.close () ;

@@ -177,12 +177,12 @@ template<class Type>
 web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxNode *pNode, const utility::char_t *suffix) {
 	std::ofstream::pos_type offset =_bin.tellg () ;
 	//std::copy (data.begin (), data.end (), std::ostream_iterator<Type> (_bin)) ;
-#ifdef __APPLE__
-	typedef typename std::vector<Type>::iterator iteratorType ;
-	for ( iteratorType iter =data.begin () ; iter != data.end () ; iter++ )
+#if defined(_WIN32) || defined(_WIN64)
+	for ( std::vector<Type>::iterator iter =data.begin () ; iter != data.end () ; iter++ )
 		_bin.write ((uint8_t *)&(*iter), sizeof (Type)) ;
 #else
-	for ( std::vector<Type>::iterator iter =data.begin () ; iter != data.end () ; iter++ )
+	typedef typename std::vector<Type>::iterator iteratorType ;
+	for ( iteratorType iter =data.begin () ; iter != data.end () ; iter++ )
 		_bin.write ((uint8_t *)&(*iter), sizeof (Type)) ;
 #endif
 	// bufferView - https://github.com/KhronosGroup/glTF/blob/master/specification/bufferView.schema.json

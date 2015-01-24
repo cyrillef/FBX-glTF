@@ -46,7 +46,7 @@ fbxSdkMgr::fbxSdkMgr () : _sdkManager(FbxManager::Create ()) {
 	FbxString extension ("dll") ;
 #elif defined(__APPLE__)
 	FbxString extension ("dylib") ;
-#elif // Linux
+#else // __linux
 	FbxString extension ("so") ;
 #endif
 	_sdkManager->LoadPluginsDirectory (path.Buffer ()/*, extension.Buffer ()*/) ;

@@ -52,6 +52,10 @@ EXPRESSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 #endif
 #include "getopt.h"
 
+#ifdef __linux
+typedef int errno_t ;
+#endif
+
 #ifdef __cplusplus
 	#define _GETOPT_THROW throw()
 #else
@@ -134,13 +138,13 @@ static const char *_getopt_initialize_a (const char *optstring, struct _getopt_d
 	d->__nextchar = NULL;
 	//d->__posixly_correct = posixly_correct | !!getenv("POSIXLY_CORRECT");
 	char *pValue ;
-#ifdef __APPLE__
-	pValue =getenv ("POSIXLY_CORRECT") ;
-	errno_t err =pValue != nullptr ;
-#else
+#if defined(_WIN32) || defined(_WIN64)
 	size_t len ;
 	errno_t err =_dupenv_s (&pValue, &len, "POSIXLY_CORRECT") ;
 	free (pValue) ;
+#else
+	pValue =getenv ("POSIXLY_CORRECT") ;
+	errno_t err =pValue != nullptr ;
 #endif
 	d->__posixly_correct = posixly_correct | !err;
 	if (optstring[0] == '-')
@@ -611,15 +615,15 @@ static const wchar_t *_getopt_initialize_w (const wchar_t *optstring, struct _ge
 	d->__first_nonopt = d->__last_nonopt = d->optind;
 	d->__nextchar = NULL;
 	//d->__posixly_correct = posixly_correct | !!_wgetenv(L"POSIXLY_CORRECT");
-#ifdef __APPLE__
-	char *pValue ;
-	pValue =getenv ("POSIXLY_CORRECT") ;
-	errno_t err =pValue != nullptr ;
-#else
+#if defined(_WIN32) || defined(_WIN64)
 	wchar_t *pValue ;
 	size_t len ;
 	errno_t err =_wdupenv_s (&pValue, &len, L"POSIXLY_CORRECT") ;
 	free (pValue) ;
+#else
+	char *pValue ;
+	pValue =getenv ("POSIXLY_CORRECT") ;
+	errno_t err =pValue != nullptr ;
 #endif
 	d->__posixly_correct = posixly_correct | !err;
 	if (optstring[0] == L'-')

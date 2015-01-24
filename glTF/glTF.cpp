@@ -32,7 +32,7 @@
 	//{ U("n"), U("n"), no_argument, U("-n -> don't combine animations with the same target") }
 
 void usage () {
-	ucout << std::endl << U("glTf [-h] [-v] [-t] [-l] [-e] [-o <output path>] -f <input file>") << std::endl ;
+	ucout << std::endl << U("glTF [-h] [-v] [-t] [-l] [-e] [-o <output path>] -f <input file>") << std::endl ;
 	ucout << U("-f/--file \t- file to convert to glTF [string]") << std::endl ;
 	ucout << U("-o/--output \t- path of output directory [string]") << std::endl ;
 	ucout << U("-n/--name \t- override the scene name [string]") << std::endl ;

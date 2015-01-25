@@ -11,10 +11,14 @@ include_directories (
 	${FBX_SDK_INCLUDES}
 	/usr/local/include
 )
+link_directories (
+	${CASABLANCA_LIBS}
+	${FBX_SDK_LIBS}
+)
 add_library (IO-glTF SHARED ${IO-glTF-src})
 target_link_libraries (
 	IO-glTF
-	${FBX_SDK_LIBS}/${FBX_SDK_LIBRARY}
+	${FBX_SDK_LIBRARY}
 	${CASABLANCA_LIBS}/${CASABLANCA_LIBRARY}
 	${Boost_LIBRARIES} ${Boost_FRAMEWORK}
 )
@@ -30,7 +34,7 @@ file (
 )
 
 # Dependencies
-if ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
+if ( UNIX )
 	# Mac OS X specific code
 	file (
 		COPY ${CASABLANCA_LIBS}/${CASABLANCA_LIBRARY}

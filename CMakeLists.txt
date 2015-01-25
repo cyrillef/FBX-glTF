@@ -11,7 +11,6 @@ endif ()
 
 string (TOLOWER ${CMAKE_BUILD_TYPE} glTF_BUILD_TYPE)
 
-set (CASABLANCA /home/parallels/casablanca)
 set (CASABLANCA_INCLUDES ${CASABLANCA}/Release/include)
 set (CASABLANCA_LIBS ${CASABLANCA}/build.${glTF_BUILD_TYPE}/Binaries)
 if ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
@@ -23,16 +22,15 @@ else ()
 endif ()
 message (STATUS "Using Casablanca: " ${CASABLANCA})
 
-set (FBX_SDK "/home/parallels/fbxsdk")
 set (FBX_SDK_INCLUDES ${FBX_SDK}/include)
 set (FBX_SDK_LIBS ${FBX_SDK}/lib/gcc4/x64/${glTF_BUILD_TYPE})
 set (FBX_SDK_LIBRARY libfbxsdk.${LIBRARY_EXT})
 message (STATUS "Using FBX: " ${FBX_SDK})
 
 # Reconfigure final output directory
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/${CMAKE_BUILD_TYPE})
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/${CMAKE_BUILD_TYPE})
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries/${CMAKE_BUILD_TYPE})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 message (STATUS "Ouput Directory: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 # Platform (not compiler) specific settings

@@ -1,7 +1,4 @@
 
-# casablanca C++ RESTful SDK root directory
-CASABLANCA:PATH=/home/parallels/casablanca
-
 # FBX C++ SDK root directory
 FBX_SDK:PATH=/home/parallels/fbxsdk
 

@@ -11,12 +11,10 @@ endif ()
 
 string (TOLOWER ${CMAKE_BUILD_TYPE} glTF_BUILD_TYPE)
 
-set (CASABLANCA_INCLUDES ${CASABLANCA}/Release/include)
-set (CASABLANCA_LIBS ${CASABLANCA}/build.${glTF_BUILD_TYPE}/Binaries)
 if ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
 	set (CASABLANCA_LIBRARY libcpprest.2.4.${LIBRARY_EXT})
 elseif ( UNIX )
-	set (CASABLANCA_LIBRARY libcpprest.${LIBRARY_EXT}.2.4)
+	set (CASABLANCA_LIBRARY libcpprest.${LIBRARY_EXT})
 else ()
 	set (CASABLANCA_LIBRARY libcpprest.2.4.${LIBRARY_EXT})
 endif ()

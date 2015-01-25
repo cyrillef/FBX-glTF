@@ -32,3 +32,11 @@ file (
 	DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
 )
 
+# Dependencies
+if ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin" )
+	# Mac OS X specific
+	file (
+		COPY ${FBX_SDK_LIBS}/${FBX_SDK_LIBRARY}
+		DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+	)
+endif ()

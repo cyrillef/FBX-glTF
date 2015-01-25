@@ -1,6 +1,7 @@
 
 # FBX C++ SDK root directory
-FBX_SDK:PATH=/home/parallels/fbxsdk
+#FBX_SDK:PATH=/home/parallels/fbxsdk
+FBX_SDK:PATH=/Applications/Autodesk/FBX SDK/2015.1
 
 # default build type
 CMAKE_BUILD_TYPE:STRING=Release

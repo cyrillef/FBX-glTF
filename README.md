@@ -51,7 +51,7 @@ Required: Visual Studio 2013 (should work with Visual Studio 2012 too, but not t
        open the solution Property Manager and edit the User Macro FBX_SDK to point to the root of your FBX SDK. 
 	   Another way is to edit the Fbx.props file and manually change the path before step 2.
 
-  4. Build the FBX-glTF solution. Nuget will install 'casablanca' for you upon building.
+  4. Build the FBX-glTF solution. NuGet will install 'casablanca' for you upon building.
   
   
 ### Mac OSX
@@ -63,20 +63,27 @@ Required: Mac OSX Maverick or Yosemite, Xcode 6.1.1
   2. Clone or download the FBX-glTF source code
   
   3. Download and compile 'casablanca' on your machine. [Instructions here](https://casablanca.codeplex.com/wikipage?title=Setup%20and%20Build%20on%20OSX&referringTitle=Documentation)
+
+  4. Install ‘casablanca’ on your system by running ‘sudo make install’
   
-  3. Go in the FBX-glTF directory where you cloned the repo, and edit the CMakeLists.txt file
+  5. Go in the FBX-glTF directory where you cloned the repo, and edit the CMakeLists.txt file
   
-    a. line #14: put your casablanca root directory
+     a. line #14: put your casablanca root directory
 	
-	b. line #26: put the FBX SDK root directory
+     b. line #26: put the FBX SDK root directory
 	
-  4. Recommended: Create a folder with the name you want, and go in that directory
+  6. Recommended: Create a folder with the name you want, and go in that directory
+
+  7. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
+     will avoid you to type the parameters below.
   
-  5. Execute: 
+  8. Execute: 
   
-    a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release
+     a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release -DFBX_SDK=<path to FBX>
 	
-	b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug
+     b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=<path to FBX>
+
+     or simply ‘cmake ..’ if you made step 7.
 
 
 ### Linux
@@ -89,26 +96,33 @@ Required: gcc 4.8+ (tested on Ubuntu Linux 14.04 Desktop)
   
   3. Download and compile 'casablanca' on your machine. [Instructions here](https://casablanca.codeplex.com/wikipage?title=Setup%20and%20Build%20on%20Linux&referringTitle=Documentation)
   
-  3. Go in the FBX-glTF directory where you cloned the repo, and edit the CMakeLists.txt file
+  4. Install ‘casablanca’ on your system by running ‘sudo make install’
+
+  5. Go in the FBX-glTF directory where you cloned the repo, and edit the CMakeLists.txt file
   
-    a. line #14: put your casablanca root directory
+     a. line #14: put your casablanca root directory
 	
-	b. line #26: put the FBX SDK root directory
+     b. line #26: put the FBX SDK root directory
 	
-  4. Recommended: Create a folder with the name you want, and go in that directory
+  6. Recommended: Create a folder with the name you want, and go in that directory
   
-  5. Execute: 
+  7. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
+     will avoid you to type the parameters below.
+
+  8. Execute: 
   
-    a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release
+     a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release -DFBX_SDK=<path to FBX>
 	
-	b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug
+     b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=<path to FBX>
+
+     or simply ‘cmake ..’ if you made step 7.
 
 	
 # Usage Instructions
 
 For Windows, the files will be located in  FBX-glTF\x64\Release or FBX-glTF\x64\Debug
 
-For both Mac OXS and Linux, the files will be located in  FBX-glTF/&lt;your cmake folder&gt;/Binaries/Release or FBX-glTF/<your cmake folder>/Binaries/Debug
+For both Mac OXS and Linux, the files will be located in  FBX-glTF/&lt;your cmake folder&gt;/Release or FBX-glTF/<your cmake folder>/Debug
 
 Usage:  glTF [-h] [-v] [-t] [-l] [-e] [-o <output path>] -f &lt;input file&gt;
 
@@ -147,7 +161,7 @@ Example:
   
   5. Execute: node serve.js
   
-  6. Launch your internet favorite browser and browse to [http://localhost](http://localhost)
+  6. Launch your internet favourite browser and browse to [http://localhost](http://localhost)
 
 
 --------

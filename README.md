@@ -41,11 +41,11 @@ This sample is dependent of the following 3rd party extension:
 
 Required: Visual Studio 2013 (should work with Visual Studio 2012 too, but not tested)
 
-  1.  Download and install the FBX SDK
+  1. Download and install the FBX SDK
   
   2. Clone or download the FBX-glTF source code
   
-  3.  Load the glTF.sln solution file in Visual Studio 2013
+  3. Load the glTF.sln solution file in Visual Studio 2013
   
   4. Optional: if you did not install FBX at the standard location or use a version different from 2015.1, 
        open the solution Property Manager and edit the User Macro FBX_SDK to point to the root of your FBX SDK. 
@@ -66,24 +66,21 @@ Required: Mac OSX Maverick or Yosemite, Xcode 6.1.1
 
   4. Install ‘casablanca’ on your system by running ‘sudo make install’
   
-  5. Go in the FBX-glTF directory where you cloned the repo, and edit the CMakeLists.txt file
-  
-     a. line #14: put your casablanca root directory
-	
-     b. line #26: put the FBX SDK root directory
-	
-  6. Recommended: Create a folder with the name you want, and go in that directory
+  5. Recommended: Create a folder with the name you want, and go in that directory
 
-  7. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
+  6. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
      will avoid you to type the parameters below.
   
-  8. Execute: 
+  7. Execute: 
   
-     a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release -DFBX_SDK=<path to FBX>
+     a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release -DFBX_SDK=&lt;path to FBX&gt;
 	
-     b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=<path to FBX>
+     b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=&lt;path to FBX&gt;
 
      or simply ‘cmake ..’ if you made step 7.
+     
+     
+Note: on Mac OSX, the FBX SDK installs by default in /Applications/Autodesk/FBX SDK/2015.1
 
 
 ### Linux
@@ -98,22 +95,16 @@ Required: gcc 4.8+ (tested on Ubuntu Linux 14.04 Desktop)
   
   4. Install ‘casablanca’ on your system by running ‘sudo make install’
 
-  5. Go in the FBX-glTF directory where you cloned the repo, and edit the CMakeLists.txt file
+  5. Recommended: Create a folder with the name you want, and go in that directory
   
-     a. line #14: put your casablanca root directory
-	
-     b. line #26: put the FBX SDK root directory
-	
-  6. Recommended: Create a folder with the name you want, and go in that directory
-  
-  7. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
+  6. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
      will avoid you to type the parameters below.
 
-  8. Execute: 
+  7. Execute: 
   
-     a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release -DFBX_SDK=<path to FBX>
+     a. For a release build: cmake .. -DCMAKE_BUILD_TYPE=Release -DFBX_SDK=&lt;path to FBX&gt;
 	
-     b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=<path to FBX>
+     b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=&lt;path to FBX&gt;
 
      or simply ‘cmake ..’ if you made step 7.
 

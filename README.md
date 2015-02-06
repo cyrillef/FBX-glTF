@@ -29,7 +29,7 @@ This sample is dependent of the following 3rd party extension:
 
 * The [Casablanca C++ RESTful SDK](https://casablanca.codeplex.com/) - version 2.4.0.1
 
-* The [FBX C++ SDK](www.autodesk.com/fbx) - version 2015.1
+* The [FBX C++ SDK](http://www.autodesk.com/fbx) - version 2015.1
 
 * For building on Mac OSX, and Linux, you also need [cmake](http://www.cmake.org/) which is also required for the Casablanca C++ RESTful SDK.<br />
    However, Casablanca requires version 2.8 (or later), while the glTF converter is setup to use version 3.1, you may install version 3.1 or change the cmake files header back to 2.8.

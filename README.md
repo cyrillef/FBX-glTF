@@ -51,7 +51,7 @@ Required: Visual Studio 2013 (should work with Visual Studio 2012 too, but not t
        open the solution Property Manager and edit the User Macro FBX_SDK to point to the root of your FBX SDK. 
 	   Another way is to edit the Fbx.props file and manually change the path before step 2.
 
-  4. Build the FBX-glTF solution. NuGet will install 'casablanca' for you upon building.
+  5. Build the FBX-glTF solution. NuGet will install 'casablanca' for you upon building.
   
   
 ### Mac OSX
@@ -77,7 +77,7 @@ Required: Mac OSX Maverick or Yosemite, Xcode 6.1.1
 	
      b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=&lt;path to FBX&gt;
 
-     or simply ‘cmake ..’ if you made step 7.
+     or simply ‘cmake ..’ if you followed step 6.
      
      
 Note: on Mac OSX, the FBX SDK installs by default in /Applications/Autodesk/FBX SDK/2015.1
@@ -106,7 +106,7 @@ Required: gcc 4.8+ (tested on Ubuntu Linux 14.04 Desktop)
 	
      b. For a debug build: cmake .. -DCMAKE_BUILD_TYPE=Debug -DFBX_SDK=&lt;path to FBX&gt;
 
-     or simply ‘cmake ..’ if you made step 7.
+     or simply ‘cmake ..’ if you followed step 6.
 
 	
 # Usage Instructions

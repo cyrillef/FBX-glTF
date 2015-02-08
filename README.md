@@ -68,8 +68,8 @@ Required: Mac OSX Maverick or Yosemite, Xcode 6.1.1
   
   5. Recommended: Create a folder with the name you want, and go in that directory
 
-  6. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
-     will avoid you to type the parameters below.
+  6. Optional: Copy the CMakeConfigExample.txt file and rename it as CMakeCache.txt in your build folder,
+     and edit the FBX path entry. That will avoid you to type the parameters below.
   
   7. Execute: 
   
@@ -97,8 +97,8 @@ Required: gcc 4.8+ (tested on Ubuntu Linux 14.04 Desktop)
 
   5. Recommended: Create a folder with the name you want, and go in that directory
   
-  6. Optional: Copy the CMakeConfigExample.txt as CMakeCache.txt in your build folder, and edit the FBX path entry. That
-     will avoid you to type the parameters below.
+  6. Optional: Copy the CMakeConfigExample.txt file and rename it as CMakeCache.txt in your build folder,
+     and edit the FBX path entry. That will avoid you to type the parameters below.
 
   7. Execute: 
   

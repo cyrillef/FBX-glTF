@@ -318,7 +318,7 @@ namespace _IOglTF_NS_ {
 		for (int iLayer = 0; iLayer < nbLayers; iLayer++) {
 			web::json::value primitive = web::json::value::object({
 				{ U("attributes"), web::json::value::object() },
-				{ U("primitive"), IOglTF::TRIANGLES } // Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN).
+				{ U("mode"), IOglTF::TRIANGLES } // Allowed values are 0 (POINTS), 1 (LINES), 2 (LINE_LOOP), 3 (LINE_STRIP), 4 (TRIANGLES), 5 (TRIANGLE_STRIP), and 6 (TRIANGLE_FAN).
 			});
 
 			//web::json::value elts =web::json::value::object ({

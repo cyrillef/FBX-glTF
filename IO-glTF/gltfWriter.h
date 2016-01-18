@@ -23,11 +23,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v0.1")
+#define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v1.0")
 //#define FBX_GLTF_COMMONPROFILE U("COLLADA-1.4.1/commonProfile")
 #define FBX_GLTF_COMMONPROFILE U("MAYA")
 #define WebGL_1_0_2 U("WebGL 1.0.2")
-#define GLTF_VERSION 0.8
+#define GLTF_VERSION 1.0
 #define szGLTF_VERSION U(#GLTF_VERSION)
 
 #define DEG2RAD(a) a * M_PI / 180.0

@@ -62,7 +62,7 @@ bool IOglTF::SpecificInitialize () {
 //-----------------------------------------------------------------------------
 
 /*static*/ const char *IOglTF::PLUGIN_NAME ="IO-glTF" ;
-/*static*/ const char *IOglTF::PLUGIN_VERSION ="0.1.0" ;
+/*static*/ const char *IOglTF::PLUGIN_VERSION ="1.0.0" ;
 
 #ifdef __APPLE__
 /*static*/ const unsigned int IOglTF::BYTE ;

@@ -1,0 +1,23 @@
+{
+	"accessors": { },
+	"animations": { },
+	"asset": {
+		"generator": "FBX GLTF Exporter v1.0",
+		"version": "1.0"
+	},
+	"buffers": {},
+	"bufferViews": {},
+	"cameras": {},
+	"images": {},
+	"lights": {},
+	"materials": {},
+	"meshes": {},
+	"nodes": {},
+	"programs": {},
+	"samplers": {},
+	"scenes": {},
+	"shaders": {},
+	"skins": {},
+	"techniques": {},
+	"textures": {}
+}

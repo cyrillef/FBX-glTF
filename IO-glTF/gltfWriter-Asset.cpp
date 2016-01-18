@@ -45,10 +45,11 @@ bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 	asset [U ("generator")] =web::json::value::string (FBX_GLTF_EXPORTER) ;
 	if ( _writeDefaults )
 		asset [U ("premultipliedAlpha")] =web::json::value::boolean (false) ;
-	if ( _writeDefaults )
-		asset [U ("profile")] =web::json::value::string (WebGL_1_0_2) ; // default WebGL 1.0.2
-	asset [U ("version")] =web::json::value::number (GLTF_VERSION) ; // default 0.6
-	//todo really a number double is no 0.8 but 0.8000000004
+	if (_writeDefaults) {
+		asset[U("profile")] = web::json::value::object({
+			{ U("API"), web::json::value::string(PROFILE_API) },  // default "WebGL"
+			{ U("version"), web::json::value::string(PROFILE_VERSION) } }); // default 1.0.3
+	}
 
 	_json [U ("asset")] =asset ;
 	return (true) ;

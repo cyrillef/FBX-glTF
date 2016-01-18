@@ -26,7 +26,8 @@
 #define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v1.0")
 //#define FBX_GLTF_COMMONPROFILE U("COLLADA-1.4.1/commonProfile")
 #define FBX_GLTF_COMMONPROFILE U("MAYA")
-#define WebGL_1_0_2 U("WebGL 1.0.2")
+#define PROFILE_API U("WebGL")
+#define PROFILE_VERSION U("1.0.3")
 #define GLTF_VERSION 1.0
 #define szGLTF_VERSION U(#GLTF_VERSION)
 

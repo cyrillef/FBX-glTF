@@ -81,7 +81,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 			}) ;
 			techniqueParameters [name + utility::conversions::to_string_t (i) + U("Transform")] =web::json::value::object ({ // Transform
 				{ U("semantic"), web::json::value::string (U("MODELVIEW")) },
-				{ U("source"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
+				{ U("node"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
 				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
 			}) ;
 			if ( pLight->LightType.Get () == FbxLight::EType::eDirectional ) {
@@ -106,7 +106,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 			if ( pLight->LightType.Get () == FbxLight::EType::eSpot ) {
 				techniqueParameters [name + utility::conversions::to_string_t (i) + U("InverseTransform")] =web::json::value::object ({
 					{ U("semantic"), web::json::value::string (U("MODELVIEWINVERSE")) },
-					{ U("source"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
+					{ U("node"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
 					{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
 				}) ;
 				techniqueParameters [name + utility::conversions::to_string_t (i) + U("FallOffAngle")] =web::json::value::object ({

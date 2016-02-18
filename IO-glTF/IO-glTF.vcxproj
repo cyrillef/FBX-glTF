@@ -72,7 +72,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)*.json" "$(TargetDir)" &gt; nul
-copy D:\__sdk\FBX\2015.1\lib\vs2013\x64\debug\libfbxsdk.* "$(TargetDir)" &gt; nul</Command>
+copy "$(FBX_SDK)\lib\vs2013\x64\debug\libfbxsdk.*" "$(TargetDir)" &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -96,7 +96,7 @@ copy D:\__sdk\FBX\2015.1\lib\vs2013\x64\debug\libfbxsdk.* "$(TargetDir)" &gt; nu
     </Link>
     <PostBuildEvent>
       <Command>copy "$(ProjectDir)*.json" "$(TargetDir)" &gt; nul
-copy D:\__sdk\FBX\2015.1\lib\vs2013\x64\release\libfbxsdk.* "$(TargetDir)" &gt; nul</Command>
+copy "$(FBX_SDK)\lib\vs2013\x64\release\libfbxsdk.*" "$(TargetDir)" &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

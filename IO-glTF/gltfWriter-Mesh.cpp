@@ -427,17 +427,17 @@ namespace _IOglTF_NS_ {
 					MergeJsonObjects(textures[U("textures")], ret[U("textures")]);
 
 				utility::string_t techniqueName = GetJsonFirstKey(ret[U("techniques")]);
-				web::json::value techniqueParameters = ret[U("techniques")][techniqueName][U("parameters")];
+				web::json::value techniqueParameters =ret [U("techniques")] [techniqueName] [U("parameters")] ;
 				AdditionalTechniqueParameters(pNode, techniqueParameters, out_normals.size() != 0);
 				TechniqueParameters(pNode, techniqueParameters, primitive[U("attributes")], localAccessorsAndBufferViews[U("accessors")]);
 				ret = WriteTechnique(pNode, pNode->GetMaterial(i), techniqueParameters);
 				//MergeJsonObjects (techniques, ret) ;
 				techniques[U("techniques")][techniqueName] = ret;
 
-				utility::string_t programName = ret[U("passes")][ret[U("pass")].as_string()][U("instanceProgram")][U("program")].as_string();
-				web::json::value attributes = ret[U("passes")][ret[U("pass")].as_string()][U("instanceProgram")][U("attributes")];
-				ret = WriteProgram(pNode, pNode->GetMaterial(i), programName, attributes);
-				MergeJsonObjects(programs, ret);
+				utility::string_t programName =ret [U("program")].as_string () ;
+				web::json::value attributes =ret [U("attributes")] ;
+				ret =WriteProgram (pNode, pNode->GetMaterial(i), programName, attributes) ;
+				MergeJsonObjects (programs, ret) ;
 			}
 
 			meshPrimitives[meshPrimitives.size()] = primitive;

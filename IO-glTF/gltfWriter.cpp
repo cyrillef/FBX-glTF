@@ -77,7 +77,7 @@ bool gltfWriter::FileCreate (char *pFileName) {
 
 	//utility::string_t path =_GLTF_NAMESPACE_::GetModulePath () ;
 	utility::string_t path =utility::conversions::to_string_t ((const char *)FbxGetApplicationDirectory ()) ;
-	utility::ifstream_t input (path + U("glTF-0-8.json"), std::ios::in) ;
+	utility::ifstream_t input (path + U("glTF-1-0.json"), std::ios::in) ;
 	_json =web::json::value::parse (input) ;
 	input.close () ;
 

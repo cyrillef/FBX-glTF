@@ -69,7 +69,7 @@
       <AdditionalLibraryDirectories>$(FBX_SDK)\lib\vs2013\$(Platform)\$(Configuration);$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy D:\__sdk\FBX\2015.1\lib\vs2013\x64\debug\libfbxsdk.* "$(TargetDir)" &gt; nul</Command>
+      <Command>copy "$(FBX_SDK)\lib\vs2013\x64\debug\libfbxsdk.*" "$(TargetDir)" &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -91,7 +91,7 @@
       <AdditionalLibraryDirectories>$(FBX_SDK)\lib\vs2013\$(Platform)\$(Configuration);$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy D:\__sdk\FBX\2015.1\lib\vs2013\x64\release\libfbxsdk.* "$(TargetDir)" &gt; nul</Command>
+      <Command>copy "$(FBX_SDK)\lib\vs2013\x64\release\libfbxsdk.*" "$(TargetDir)" &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

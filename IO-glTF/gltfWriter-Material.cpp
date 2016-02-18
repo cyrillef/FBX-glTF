@@ -24,8 +24,6 @@
 namespace _IOglTF_NS_ {
 
 // https://github.com/KhronosGroup/glTF/blob/master/specification/material.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/materialInstanceTechnique.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/materialInstanceTechniqueValues.schema.json
 
 utility::string_t gltfWriter::LighthingModel (FbxSurfaceMaterial *pMaterial) {
 	if ( pMaterial->Is<FbxSurfacePhong> () ) {
@@ -87,7 +85,8 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 		// IMPORTANT NOTE:
 		// Always check for the most complex class before the less one. In this case, Phong inherit from Lambert,
 		// so if we would be testing for lambert classid before phong, we would never enter the phong case.
-	//eh, Blinn–Phong shading model - The Blinn–Phong reflection model (also called the modified Phong reflection model) is a modification to the Phong reflection model
+		// eh, Blinn–Phong shading model - The Blinn–Phong reflection model (also called the modified Phong reflection model) 
+		// is a modification to the Phong reflection model
 		if ( pMaterial->Is<FbxSurfacePhong> () ) {
 			ret =WritePhongMaterial (pNode, pMaterial) ;
 		} else if ( pMaterial->Is<FbxSurfaceLambert> () ) {
@@ -115,12 +114,12 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 
 	web::json::value techniqueParameters =web::json::value::null () ;
 	if ( !ret.is_null () ) {
-		material [U("instanceTechnique")] =ret [U("instanceTechnique")] ;
+		material [U("values")] =ret [U("values")] ;
 		techniqueParameters =ret [U("techniqueParameters")] ;
 	}
 
 	utility::string_t techniqueName =createUniqueId (materialName + U("_technique"), 0) ;
-	material [U("instanceTechnique")] [U("technique")] =web::json::value::string (techniqueName) ;
+	material [U("technique")] =web::json::value::string (techniqueName) ;
 
 	web::json::value lib =web::json::value::object ({ { materialName, material } }) ;
 
@@ -130,7 +129,7 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 	web::json::value full =web::json::value::object ({ { U("materials"), lib }, { U("techniques"), techniques } }) ;
 	if ( !ret.is_null () ) {
 		for ( auto iter =ret.as_object ().begin () ; iter != ret.as_object ().end () ; iter++ ) {
-			if ( iter->first != U("instanceTechnique") && iter->first != U("techniqueParameters") )
+			if ( iter->first != U("values") && iter->first != U("techniqueParameters") )
 				full [iter->first] =iter->second ;
 		}
 	}
@@ -199,7 +198,6 @@ web::json::value gltfWriter::WriteMaterialParameter (const utility::char_t *pszN
 }
 
 web::json::value gltfWriter::WritePhongMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
-	web::json::value instanceTechnique =web::json::value::object () ;
 	web::json::value values =web::json::value::object () ;
 	web::json::value techniqueParameters =web::json::value::object () ;
 	FbxSurfacePhong *pPhongSurface =FbxCast<FbxSurfacePhong> (pMaterial) ;
@@ -225,13 +223,11 @@ web::json::value gltfWriter::WritePhongMaterial (FbxNode *pNode, FbxSurfaceMater
 	// Note: 
 	// INDEXOFREFRACTION is not supported by FBX.
 
-	instanceTechnique [U("values")] =values ;
-	MergeJsonObjects (ret, web::json::value::object ({ { U("instanceTechnique"), instanceTechnique }, { U("techniqueParameters"), techniqueParameters } })) ;
+	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
 	return (ret) ;
 }
 
 web::json::value gltfWriter::WriteLambertMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
-	web::json::value instanceTechnique =web::json::value::object () ;
 	web::json::value values =web::json::value::object () ;
 	web::json::value techniqueParameters =web::json::value::object () ;
 	FbxSurfaceLambert *pLambertSurface = FbxCast<FbxSurfaceLambert> (pMaterial) ;
@@ -249,12 +245,10 @@ web::json::value gltfWriter::WriteLambertMaterial (FbxNode *pNode, FbxSurfaceMat
 	// Note: 
 	// REFLECTIVITY, INDEXOFREFRACTION are not supported by FBX.
 
-	instanceTechnique [U("values")] =values ;
-	return (web::json::value::object ({ { U("instanceTechnique"), instanceTechnique }, { U("techniqueParameters"), techniqueParameters } })) ;
+	return (web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
 }
 
 web::json::value gltfWriter::WriteConstantShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
-	web::json::value instanceTechnique =web::json::value::object () ;
 	web::json::value values =web::json::value::object () ;
 	web::json::value techniqueParameters =web::json::value::object () ;
 
@@ -271,13 +265,11 @@ web::json::value gltfWriter::WriteConstantShadingModelMaterial (FbxNode *pNode, 
 	// Note: 
 	// REFLECTIVE, INDEXOFREFRACTION are not supported by FBX.
 
-	instanceTechnique [U("values")] =values ;
-	MergeJsonObjects (ret, web::json::value::object ({ { U("instanceTechnique"), instanceTechnique }, { U("techniqueParameters"), techniqueParameters } })) ;
+	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
 	return (ret) ;
 }
 
 web::json::value gltfWriter::WriteBlinnShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
-	web::json::value instanceTechnique =web::json::value::object () ;
 	web::json::value values =web::json::value::object () ;
 	web::json::value techniqueParameters =web::json::value::object () ;
 
@@ -301,8 +293,7 @@ web::json::value gltfWriter::WriteBlinnShadingModelMaterial (FbxNode *pNode, Fbx
 	// Note: 
 	// INDEXOFREFRACTION is not supported by FBX.
 
-	instanceTechnique [U("values")] =values ;
-	MergeJsonObjects (ret, web::json::value::object ({ { U("instanceTechnique"), instanceTechnique }, { U("techniqueParameters"), techniqueParameters } })) ;
+	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
 	return (ret) ;
 }
 
@@ -316,7 +307,6 @@ web::json::value gltfWriter::WriteDefaultShadingModelWithCGFXMaterial (FbxNode *
 }
 
 web::json::value gltfWriter::WriteDefaultShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
-	web::json::value instanceTechnique =web::json::value::object () ;
 	web::json::value values =web::json::value::object () ;
 	web::json::value techniqueParameters =web::json::value::object () ;
 
@@ -341,8 +331,7 @@ web::json::value gltfWriter::WriteDefaultShadingModelMaterial (FbxNode *pNode, F
 	// Note: 
 	// INDEXOFREFRACTION is not supported by FBX.
 
-	instanceTechnique [U("values")] =values ;
-	MergeJsonObjects (ret, web::json::value::object ({ { U("instanceTechnique"), instanceTechnique }, { U("techniqueParameters"), techniqueParameters } })) ;
+	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
 	return (ret) ;
 }
 

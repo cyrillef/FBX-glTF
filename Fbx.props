@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <FBX_SDK>D:\__sdk\FBX\2015.1</FBX_SDK>
+    <FBX_SDK>C:\Program Files\Autodesk\FBX\FBX SDK\2015.1</FBX_SDK>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

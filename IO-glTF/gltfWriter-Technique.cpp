@@ -169,10 +169,6 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 		}
 	}
 
-	web::json::value details =web::json::value::object () ;
-	details [U("commonProfile")] =commonProfile ;
-	details [U("type")] =web::json::value::string (FBX_GLTF_COMMONPROFILE) ;
-
 	web::json::value attributes =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   utility::details::limitedCompareTo (iter.first, U("position")) == 0
@@ -203,16 +199,14 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	techStates [U("enable")] =techStatesEnable ;
 	// TODO: needs to be implemented
 	//techStates [U("functions")] =
-
-	web::json::value techniquePass =web::json::value::object () ;
-	techniquePass [U("details")] =details ;
-	techniquePass [U("instanceProgram")] =instanceProgram ;
-	techniquePass [U("states")] =techStates ;
-
+	
 	web::json::value technique =web::json::value::object () ;
 	technique [U("parameters")] =techniqueParameters ;
-	technique [U("pass")] =web::json::value::string (U("defaultPass")) ;
-	technique [U("passes")] =web::json::value::object ({{ U("defaultPass"), techniquePass }}) ;
+	//technique [U("passes")] =web::json::value::object ({{ U("defaultPass"), techniquePass }}) ;
+	technique [U("program")] =instanceProgram [U("program")] ;
+	technique [U("states")] =techStates ;
+	technique [U("attributes")] =instanceProgram[U("attributes")] ;
+	technique [U("uniforms")] =instanceProgram[U("uniforms")] ;
 
 	return (technique) ;
 }

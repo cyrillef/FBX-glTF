@@ -36,6 +36,7 @@ bool gltfWriter::WriteScene (FbxScene *pScene, int poseIndex /*=-1*/) {
 	//FbxDouble3 scaling =pRoot->LclScaling.Get () ;
 
 	WriteSceneNodeRecursive (pRoot, pPose, true) ;
+
 	return (true) ;
 }
 

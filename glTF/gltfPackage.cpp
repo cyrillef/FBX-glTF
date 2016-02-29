@@ -163,8 +163,9 @@ bool gltfPackage::LoadScene (const utility::string_t &fn) {
 	//if ( bStatus == false && pImporter->GetStatus ().GetCode () == FbxStatus::ePasswordError ) {
 	//}
 
-	FbxAxisSystem::MayaYUp.ConvertScene (_scene) ;
-	FbxSystemUnit sceneSystemUnit =_scene->GetGlobalSettings ().GetSystemUnit () ;
+	FbxAxisSystem::MayaYUp.ConvertScene (_scene) ; // We want the Y up axis for glTF
+
+	FbxSystemUnit sceneSystemUnit =_scene->GetGlobalSettings ().GetSystemUnit () ; // We want meter as default unit for gltTF
 	if ( sceneSystemUnit != FbxSystemUnit::m ) {
 		const FbxSystemUnit::ConversionOptions conversionOptions ={
 			false, // mConvertRrsNodes
@@ -176,8 +177,12 @@ bool gltfPackage::LoadScene (const utility::string_t &fn) {
 		} ;
 		FbxSystemUnit::m.ConvertScene (_scene, conversionOptions) ;
 	}
-	//if ( sceneSystemUnit.GetScaleFactor () != 1.0 )
-	//	FbxSystemUnit::m.ConvertScene (_scene) ;
+	if ( sceneSystemUnit.GetScaleFactor () != 1.0 )
+		FbxSystemUnit::m.ConvertScene (_scene) ;
+
+	FbxGeometryConverter converter (fbxSdkMgr::Instance ()->fbxMgr ()) ;
+	converter.Triangulate (_scene, true) ; // glTF supports triangles only
+	converter.SplitMeshesPerMaterial (_scene, true) ; // Split meshes per material, so we only have one material per mesh (VBO support)
 	
 	return (true) ;
 }
@@ -189,10 +194,14 @@ bool gltfPackage::WriteScene (const utility::string_t &outdir) {
 		return (false) ;
 	FbxAutoDestroyPtr<FbxExporter> pExporter (FbxExporter::Create (pMgr, "")) ;
 	utility::string_t newFn =outdir + utility::conversions::to_string_t (_scene->GetName ()) + U(".gltf") ;
+	
 	bool bRet =pExporter->Initialize (utility::conversions::to_utf8string (newFn).c_str (), iFormat, pMgr->GetIOSettings ()) ;
 	_ASSERTE( bRet ) ;
 	if ( !bRet )
 		return (false) ;
+
+	// The next line will call the exporter
 	bRet =pExporter->Export (_scene) ;
+
 	return (bRet) ;
 }

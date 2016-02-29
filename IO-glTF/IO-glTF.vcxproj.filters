@@ -45,6 +45,9 @@
     <ClInclude Include="memoryStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gltfwriterVBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -98,6 +101,9 @@
     <ClCompile Include="IOglTF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gltfWriterVBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="glTF-0-8-defaults.json">
@@ -107,5 +113,11 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="glTF-1-0.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="glTF-1-0-defaults.json">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

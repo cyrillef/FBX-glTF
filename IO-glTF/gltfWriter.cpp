@@ -61,8 +61,8 @@ utility::string_t GetJsonObjectKeyAt (web::json::value &a, int i) {
 
 //-----------------------------------------------------------------------------
 gltfWriter::gltfWriter (FbxManager &pManager, int id)
-	: FbxWriter(pManager, id, FbxStatusGlobal::GetRef ()),
-	  _fileName(), _triangulate(false), _writeDefaults(true)
+	: FbxWriter (pManager, id, FbxStatusGlobal::GetRef ()),
+	  _fileName(), _writeDefaults(true)
 { 
 	_samplingPeriod =1. / 30. ;
 }
@@ -118,7 +118,6 @@ void gltfWriter::GetWriteOptions () {
 }
 
 bool gltfWriter::Write (FbxDocument *pDocument) {
-	//_triangulate =IOS_REF.GetBoolProp (EXP_GLTF_TRIANGULATE, true) ;
 	//_computeDeformations =IOS_REF.GetBoolProp(EXP_GLTF_DEFORMATION, true);
 	//_singleMatrix =IOS_REF.GetBoolProp (EXP_GLTF_SINGLEMATRIX, true) ;
 	//_samplingPeriod =1. / IOS_REF.GetDoubleProp (EXP_GLTF_FRAME_RATE, 30.0) ;
@@ -126,10 +125,9 @@ bool gltfWriter::Write (FbxDocument *pDocument) {
 	FbxScene *pScene =FbxCast<FbxScene>(pDocument) ;
 	if ( !pScene )
 		return (GetStatus ().SetCode (FbxStatus::eFailure, "Document not supported!"), false) ;
+
 	if ( !PreprocessScene (*pScene) )
 		return (false) ;
-	//if ( !InitNodes (pScene->GetRootNode ()) )
-	//	return (false) ;
 
 	FbxDocumentInfo *pSceneInfo =pScene->GetSceneInfo () ;
 	if ( !WriteAsset (pSceneInfo) )
@@ -140,9 +138,9 @@ bool gltfWriter::Write (FbxDocument *pDocument) {
 	//	return (false) ;
 	//if ( !ExportLibraries () )
 	//	return (false) ;
-
 	if ( !WriteBuffer () ) // Should be last !!!
 		return (false) ;
+
 	if ( !PostprocessScene (*pScene) )
 		return (false) ;
 
@@ -160,31 +158,6 @@ bool gltfWriter::IsGeometryNode (FbxNode *pNode) {
 	else if ( pNodeAttribute->GetAttributeType () == FbxNodeAttribute::ePatch )
 		return (true) ;
 	return (false) ;
-}
-
-bool gltfWriter::TriangulateGeometry (FbxNode *pNode) {
-	FbxNodeAttribute *pNodeAttribute =pNode->GetNodeAttribute () ;
-	FbxMesh *pMesh =pNode->GetMesh () ;
-	if (   pNodeAttribute->GetAttributeType () == FbxNodeAttribute::eNurbs || pNodeAttribute->GetAttributeType () == FbxNodeAttribute::ePatch
-		|| (pNodeAttribute->GetAttributeType () == FbxNodeAttribute::eMesh && _triangulate == true)
-	) {
-		FbxGeometryConverter converter (&mManager) ;
-		pMesh =FbxCast<FbxMesh> (converter.Triangulate (pMesh, true)) ;
-		return (true) ;
-	}
-	// node is not a geometry node
-	return (false) ;
-}
-
-bool gltfWriter::InitNodes (FbxNode *pNode) {
-	if ( pNode == nullptr )
-		return (false) ;
-	if ( IsGeometryNode (pNode) )
-		TriangulateGeometry (pNode) ;
-	int nbChildren =pNode->GetChildCount () ;
-	for ( int i =0 ; i < nbChildren ; i++ )
-		InitNodes (pNode->GetChild (i)) ;
-	return (true) ;
 }
 
 bool gltfWriter::PreprocessScene (FbxScene &scene) {

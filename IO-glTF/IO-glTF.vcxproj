@@ -104,6 +104,7 @@ copy "$(FBX_SDK)\lib\vs2013\x64\release\libfbxsdk.*" "$(TargetDir)" &gt; nul</Co
     <ClInclude Include="glTF.h" />
     <ClInclude Include="gltfReader.h" />
     <ClInclude Include="gltfWriter.h" />
+    <ClInclude Include="gltfwriterVBO.h" />
     <ClInclude Include="IOglTF.h" />
     <ClInclude Include="memoryStream.h" />
     <ClInclude Include="ns_exports.h" />
@@ -134,6 +135,7 @@ copy "$(FBX_SDK)\lib\vs2013\x64\release\libfbxsdk.*" "$(TargetDir)" &gt; nul</Co
     <ClCompile Include="gltfWriter-Technique.cpp" />
     <ClCompile Include="gltfWriter-Texture.cpp" />
     <ClCompile Include="gltfWriter.cpp" />
+    <ClCompile Include="gltfWriterVBO.cpp" />
     <ClCompile Include="IOglTF.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -143,6 +145,8 @@ copy "$(FBX_SDK)\lib\vs2013\x64\release\libfbxsdk.*" "$(TargetDir)" &gt; nul</Co
   <ItemGroup>
     <None Include="glTF-0-8-defaults.json" />
     <None Include="glTF-0-8.json" />
+    <None Include="glTF-1-0-defaults.json" />
+    <None Include="glTF-1-0.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

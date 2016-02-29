@@ -24,12 +24,9 @@
 #include <math.h>
 
 #define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v1.0")
-//#define FBX_GLTF_COMMONPROFILE U("COLLADA-1.4.1/commonProfile")
-#define FBX_GLTF_COMMONPROFILE U("MAYA")
 #define PROFILE_API U("WebGL")
 #define PROFILE_VERSION U("1.0.3")
-#define GLTF_VERSION 1.0
-#define szGLTF_VERSION U(#GLTF_VERSION)
+#define GLTF_VERSION U("1.0")
 
 #define DEG2RAD(a) a * M_PI / 180.0
 #define MergeJsonObjects_(a, b) \
@@ -56,7 +53,7 @@ private:
 
 	web::json::value _json ;
 
-	bool _triangulate, _writeDefaults ;
+	bool _writeDefaults ;
 	double _samplingPeriod ;
 	std::vector<utility::string_t> _registeredIDs ;
 	std::map<utility::string_t, utility::string_t> _uvSets ;
@@ -98,9 +95,7 @@ protected:
 	web::json::value WriteSceneNode (FbxNode *pNode, FbxPose *pPose =nullptr) ;
 
 	bool IsGeometryNode (FbxNode *pNode) ;
-	bool TriangulateGeometry (FbxNode *pNode) ;
 	bool CheckMaterials (FbxNode *pNode) ;
-	bool InitNodes (FbxNode *pNode) ;
 	void PreprocessNodeRecursive (FbxNode *pNode) ;
 	web::json::value WriteNode (FbxNode *pNode) ;
 	web::json::value GetTransform (FbxNode *pNode) ;

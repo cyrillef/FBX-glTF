@@ -30,15 +30,10 @@ bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 	// unit - <meter> and <name>. In FBX we always work in centimeters, but we already converted to meter here
 	//double scale =_scene->GetGlobalSettings ().GetSystemUnit ().GetScaleFactor () / 100. ;
 
-	// Up axis
+	// Up axis - Y up axis. The scene already got converted to Maya Y up axis
 	//FbxScene *pScene =sceneInfo->GetScene () ;
 	//FbxAxisSystem axisSystem =pScene->GetGlobalSettings ().GetAxisSystem () ;
-	//int upAxisSign =0 ;
-	//axisSystem.GetUpVector (upAxisSign) ;
-	//if ( upAxisSign < 0 )
-	//	GetStatus ().SetCode (FbxStatus::eFailure, "Invalid direction for up-axis: exporter should convert scene!") ;
-	//if ( axisSystem.GetCoorSystem () != FbxAxisSystem::eRightHanded )
-	//	GetStatus ().SetCode (FbxStatus::eFailure, "Axis system is Left Handed: exporter should convert scene!") ;
+	
 
 	// FBX uses author and comments, not authoring_tool(i.e. generator), and copyright.
 	asset [U ("copyright")] =web::json::value::string (utility::conversions::to_string_t (pSceneInfo->mAuthor.Buffer ())) ;
@@ -47,9 +42,12 @@ bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 		asset [U ("premultipliedAlpha")] =web::json::value::boolean (false) ;
 	if (_writeDefaults) {
 		asset[U("profile")] = web::json::value::object({
-			{ U("API"), web::json::value::string(PROFILE_API) },  // default "WebGL"
-			{ U("version"), web::json::value::string(PROFILE_VERSION) } }); // default 1.0.3
+			{ U("api"), web::json::value::string (PROFILE_API) }, // default "WebGL"
+			{ U("version"), web::json::value::string (PROFILE_VERSION) } } // default 1.0.3
+		) ;
 	}
+
+	asset [U("version")] =web::json::value::string (GLTF_VERSION) ;
 
 	_json [U ("asset")] =asset ;
 	return (true) ;

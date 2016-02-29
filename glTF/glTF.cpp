@@ -24,6 +24,10 @@
 #include "tchar.h"
 #endif
 
+// Tests
+// -f $(ProjectDir)\..\models\duck\duck.fbx -o $(ProjectDir)\..\models\duck\out -n duck -c
+// -f $(ProjectDir)\..\models\au\au3.fbx -o $(ProjectDir)\..\models\au\out -n test -c
+
 	//{ U("n"), U("a"), required_argument, U("-a -> export animations, argument [bool], default:true") },
 	//{ U("n"), U("g"), required_argument, U("-g -> [experimental] GLSL version to output in generated shaders") },
 	//{ U("n"), U("d"), no_argument, U("-d -> export pass details to be able to regenerate shaders and states") },
@@ -32,10 +36,11 @@
 	//{ U("n"), U("n"), no_argument, U("-n -> don't combine animations with the same target") }
 
 void usage () {
-	ucout << std::endl << U("glTF [-h] [-v] [-t] [-l] [-e] [-o <output path>] -f <input file>") << std::endl ;
+	ucout << std::endl << U("glTF [-h] [-v] [-n] [-d] [-t] [-l] [-c] [-e] [-o <output path>] -f <input file>") << std::endl ;
 	ucout << U("-f/--file \t- file to convert to glTF [string]") << std::endl ;
 	ucout << U("-o/--output \t- path of output directory [string]") << std::endl ;
 	ucout << U("-n/--name \t- override the scene name [string]") << std::endl ;
+	ucout << U("-d/--degree \t- output angles in degrees vs radians (default to radians)") << std::endl ;
 	//ucout << U("-t/--transparency \t- invert transparency") << std::endl ;
 	//ucout << U("-l/--lighting \t- enable default lighting (if no lights in scene)") << std::endl ;
 	ucout << U("-c/--copy \t- copy all media to the target directory (cannot be combined with --embed)") << std::endl ;
@@ -48,6 +53,7 @@ static struct option long_options [] ={
 	{ U("file"), ARG_REQ, 0, U('f') },
 	{ U("output"), ARG_REQ, 0, U('o') },
 	{ U("name"), ARG_REQ, 0, U('n') },
+	{ U("degree"), ARG_NONE, 0, U('d') },
 	{ U("transparency"), ARG_NONE, 0, U('t') },
 	{ U("lighting"), ARG_NONE, 0, U('l') },
 	{ U("copy"), ARG_NONE, 0, U('c') },
@@ -67,6 +73,7 @@ int main (int argc, char *argv []) {
 	utility::string_t inFile ;
 	utility::string_t outDir ;
 	utility::string_t name ;
+	bool angleInDegree =false ;
 	bool reverseTransparency =false ;
 	bool defaultLighting =false ;
 	bool copyMedia =false ;
@@ -107,6 +114,9 @@ int main (int argc, char *argv []) {
 			case U('n'): // override the scene name [string]
 				name =optarg ;
 				break ;
+			case U('d'): // invert transparency
+				angleInDegree =true ;
+				break ;
 			case U('t'): // invert transparency
 				reverseTransparency =true ;
 				break ;
@@ -139,7 +149,7 @@ int main (int argc, char *argv []) {
 #endif
 	
 	std::shared_ptr <gltfPackage> asset (new gltfPackage ()) ;
-	asset->ioSettings (name.c_str (), reverseTransparency, defaultLighting, copyMedia, embedMedia) ;
+	asset->ioSettings (name.c_str (), angleInDegree, reverseTransparency, defaultLighting, copyMedia, embedMedia) ;
 
 	ucout << U("Loading file: ") << inFile << U("...") << std::endl ;
 	bool bRet =asset->load (inFile) ;

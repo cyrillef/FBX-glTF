@@ -230,7 +230,7 @@ web::json::value gltfWriter::WritePhongMaterial (FbxNode *pNode, FbxSurfaceMater
 web::json::value gltfWriter::WriteLambertMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
 	web::json::value values =web::json::value::object () ;
 	web::json::value techniqueParameters =web::json::value::object () ;
-	FbxSurfaceLambert *pLambertSurface = FbxCast<FbxSurfaceLambert> (pMaterial) ;
+	FbxSurfaceLambert *pLambertSurface =FbxCast<FbxSurfaceLambert> (pMaterial) ;
 
 	web::json::value ret =web::json::value::object () ;
 	MergeJsonObjects (ret, WriteMaterialParameter (U("ambient"), pLambertSurface->Ambient, pLambertSurface->AmbientFactor.Get (), values, techniqueParameters)) ;
@@ -245,7 +245,9 @@ web::json::value gltfWriter::WriteLambertMaterial (FbxNode *pNode, FbxSurfaceMat
 	// Note: 
 	// REFLECTIVITY, INDEXOFREFRACTION are not supported by FBX.
 
-	return (web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
+	//return (web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
+	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
+	return (ret) ;
 }
 
 web::json::value gltfWriter::WriteConstantShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {

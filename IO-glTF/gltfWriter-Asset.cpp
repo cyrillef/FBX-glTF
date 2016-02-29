@@ -36,8 +36,8 @@ bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 	
 
 	// FBX uses author and comments, not authoring_tool(i.e. generator), and copyright.
-	asset [U ("copyright")] =web::json::value::string (utility::conversions::to_string_t (pSceneInfo->mAuthor.Buffer ())) ;
-	asset [U ("generator")] =web::json::value::string (FBX_GLTF_EXPORTER) ;
+	asset [U("copyright")] =web::json::value::string (utility::conversions::to_string_t (pSceneInfo->mAuthor.Buffer ())) ;
+	asset [U("generator")] =web::json::value::string (FBX_GLTF_EXPORTER) ;
 	if ( _writeDefaults )
 		asset [U ("premultipliedAlpha")] =web::json::value::boolean (false) ;
 	if (_writeDefaults) {
@@ -49,7 +49,7 @@ bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 
 	asset [U("version")] =web::json::value::string (GLTF_VERSION) ;
 
-	_json [U ("asset")] =asset ;
+	_json [U("asset")] =asset ;
 	return (true) ;
 }
 

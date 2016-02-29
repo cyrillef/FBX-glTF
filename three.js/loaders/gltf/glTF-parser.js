@@ -66,7 +66,7 @@ var global = window;
 }(this, function (root) {
     "use strict";
 
-    var categoriesDepsOrder = ["buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
+    var categoriesDepsOrder = ["extensions", "buffers", "bufferViews", "images",  "videos", "samplers", "textures", "shaders", "programs", "techniques", "materials", "accessors", "meshes", "cameras", "lights", "skins", "nodes", "animations", "scenes"];
 
     var glTFParser = Object.create(Object.prototype, {
 
@@ -98,6 +98,11 @@ var global = window;
                     return path;
                 }
 
+                var isDataUriRegex = /^data:/;
+                if (isDataUriRegex.test(path)) {
+                    return path;
+                }
+                
                 return this.baseURL + path;
             }
         },
@@ -110,12 +115,7 @@ var global = window;
                         var descriptionKeys = Object.keys(descriptions);
                         descriptionKeys.forEach( function(descriptionKey) {
                             var description = descriptions[descriptionKey];
-							if ( description.hasOwnProperty ('uri') ) {
-								description.uri =this.resolvePathIfNeeded (description.uri) ;
-								description.path =description.uri ;
-							} else {
-								description.path =this.resolvePathIfNeeded (description.path) ;
-							}
+                            description.uri = this.resolvePathIfNeeded(description.uri);
                         }, this);
                     }
                 }, this);
@@ -218,7 +218,8 @@ var global = window;
                     "skins" : this.handleSkin,
                     "samplers" : this.handleSampler,
                     "textures" : this.handleTexture,
-                    "videos" : this.handleVideo
+                    "videos" : this.handleVideo,
+                    "extensions" : this.handleExtension,
 
                 };
 
@@ -277,12 +278,16 @@ var global = window;
                     this.baseURL = (i !== 0) ? jsonPath.substring(0, i + 1) : '';
                     var jsonfile = new XMLHttpRequest();
                     jsonfile.open("GET", jsonPath, true);
-                    jsonfile.addEventListener( 'load', function ( event ) {
-                        self.json = JSON.parse(jsonfile.responseText);
-                        if (callback) {
-                            callback(self.json);
+                    jsonfile.onreadystatechange = function() {
+                        if (jsonfile.readyState == 4) {
+                            if (jsonfile.status == 200) {
+                                self.json = JSON.parse(jsonfile.responseText);
+                                if (callback) {
+                                    callback(self.json);
+                                }
+                            }
                         }
-                    }, false );
+                    };
                     jsonfile.send(null);
                } else {
                     if (callback) {

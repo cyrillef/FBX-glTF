@@ -77,6 +77,7 @@ gltfPackage::~gltfPackage () {
 
 void gltfPackage::ioSettings (
 	const utility::char_t *name /*=nullptr*/,
+	bool angleInDegree /*=false*/,
 	bool invertTransparency /*=false*/,
 	bool defaultLighting /*=false*/,
 	bool copyMedia /*=false*/,
@@ -84,6 +85,7 @@ void gltfPackage::ioSettings (
 ) {
 	FbxIOSettings *pIOSettings =fbxSdkMgr::Instance ()->fbxMgr ()->GetIOSettings () ;
 	_ioSettings._name =name == nullptr ? U("") : name ;
+	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_ANGLEINDEGREE, angleInDegree) ;
 	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_INVERTTRANSPARENCY, invertTransparency) ;
 	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_DEFAULTLIGHTING, defaultLighting) ;
 	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_COPYMEDIA, copyMedia) ;
@@ -167,18 +169,17 @@ bool gltfPackage::LoadScene (const utility::string_t &fn) {
 
 	FbxSystemUnit sceneSystemUnit =_scene->GetGlobalSettings ().GetSystemUnit () ; // We want meter as default unit for gltTF
 	if ( sceneSystemUnit != FbxSystemUnit::m ) {
-		const FbxSystemUnit::ConversionOptions conversionOptions ={
-			false, // mConvertRrsNodes
-			true, // mConvertAllLimits
-			true, // mConvertClusters
-			false, // mConvertLightIntensity
-			true, // mConvertPhotometricLProperties
-			false  // mConvertCameraClipPlanes
-		} ;
-		FbxSystemUnit::m.ConvertScene (_scene, conversionOptions) ;
-	}
-	if ( sceneSystemUnit.GetScaleFactor () != 1.0 )
+		//const FbxSystemUnit::ConversionOptions conversionOptions ={
+		//	false, // mConvertRrsNodes
+		//	true, // mConvertAllLimits
+		//	true, // mConvertClusters
+		//	false, // mConvertLightIntensity
+		//	true, // mConvertPhotometricLProperties
+		//	false  // mConvertCameraClipPlanes
+		//} ;
+		//FbxSystemUnit::m.ConvertScene (_scene, conversionOptions) ;
 		FbxSystemUnit::m.ConvertScene (_scene) ;
+	}
 
 	FbxGeometryConverter converter (fbxSdkMgr::Instance ()->fbxMgr ()) ;
 	converter.Triangulate (_scene, true) ; // glTF supports triangles only

@@ -64,6 +64,62 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
 
     _loadStream: {
         value: function(path, type, delegate) {
+
+
+
+            var dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
+
+            function decodeDataUriText(isBase64, data) {
+                var result = decodeURIComponent(data);
+                if (isBase64) {
+                    return atob(result);
+                }
+                return result;
+            }
+
+            function decodeDataUriArrayBuffer(isBase64, data) {
+                var byteString = decodeDataUriText(isBase64, data);
+                var buffer = new ArrayBuffer(byteString.length);
+                var view = new Uint8Array(buffer);
+                for (var i = 0; i < byteString.length; i++) {
+                    view[i] = byteString.charCodeAt(i);
+                }
+                return buffer;
+            }
+
+            function decodeDataUri(dataUriRegexResult, responseType) {
+                responseType = typeof responseType !== 'undefined' ? responseType : '';
+                var mimeType = dataUriRegexResult[1];
+                var isBase64 = !!dataUriRegexResult[2];
+                var data = dataUriRegexResult[3];
+
+                switch (responseType) {
+                case '':
+                case 'text':
+                    return decodeDataUriText(isBase64, data);
+                case 'ArrayBuffer':
+                    return decodeDataUriArrayBuffer(isBase64, data);
+                case 'blob':
+                    var buffer = decodeDataUriArrayBuffer(isBase64, data);
+                    return new Blob([buffer], {
+                        type : mimeType
+                    });
+                case 'document':
+                    var parser = new DOMParser();
+                    return parser.parseFromString(decodeDataUriText(isBase64, data), mimeType);
+                case 'json':
+                    return JSON.parse(decodeDataUriText(isBase64, data));
+                default:
+                    throw 'Unhandled responseType: ' + responseType;
+                }
+            }
+
+            var dataUriRegexResult = dataUriRegex.exec(path);
+            if (dataUriRegexResult !== null) {
+                delegate.streamAvailable(path, decodeDataUri(dataUriRegexResult, type));
+                return;
+            }
+
             var self = this;
 
             if (!type) {
@@ -82,12 +138,15 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
 
             //if this is not specified, 1 "big blob" scenes fails to load.
             xhr.setRequestHeader("If-Modified-Since", "Sat, 01 Jan 1970 00:00:00 GMT");
-            xhr.addEventListener( 'load', function ( event ) {
-                delegate.streamAvailable(path, xhr.response);
-            }, false );
-            xhr.addEventListener( 'error', function ( event ) {
-                delegate.handleError(THREE.GLTFLoaderUtils.XMLHTTPREQUEST_STATUS_ERROR, xhr.status);
-            }, false );
+            xhr.onload = function(e) {
+                if ((xhr.status == 200) || (xhr.status == 206)) {
+
+                    delegate.streamAvailable(path, xhr.response);
+
+                } else {
+                    delegate.handleError(THREE.GLTFLoaderUtils.XMLHTTPREQUEST_STATUS_ERROR, this.status);
+                }
+            };
             xhr.send(null);
         }
     },
@@ -107,14 +166,14 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
             	this._resourcesStatus[request.id] = 1;
             }
             
-            var streamStatus = this._streamsStatus[request.path];
+            var streamStatus = this._streamsStatus[request.uri];
             if (streamStatus && streamStatus.status === "loading" )
             {
             	streamStatus.requests.push(request);
                 return;
             }
             
-            this._streamsStatus[request.path] = { status : "loading", requests : [request] };
+            this._streamsStatus[request.uri] = { status : "loading", requests : [request] };
     		
             var self = this;
             var processResourceDelegate = {};
@@ -139,30 +198,51 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
                 request.delegate.handleError(errorCode, info);
             }
 
-            this._loadStream(request.path, request.type, processResourceDelegate);
+            this._loadStream(request.uri, request.type, processResourceDelegate);
         }
     },
 
+
     _elementSizeForGLType: {
-        value: function(glType) {
-            switch (glType) {
+        value: function(componentType, type) {
+    	
+    		var nElements = 0;
+    		switch(type) {    		
+	            case "SCALAR" :
+	                nElements = 1;
+	                break;
+	            case "VEC2" :
+	                nElements = 2;
+	                break;
+	            case "VEC3" :
+	                nElements = 3;
+	                break;
+	            case "VEC4" :
+	                nElements = 4;
+	                break;
+	            case "MAT2" :
+	                nElements = 4;
+	                break;
+	            case "MAT3" :
+	                nElements = 9;
+	                break;
+	            case "MAT4" :
+	                nElements = 16;
+	                break;
+	            default :
+	            	debugger;
+	            	break;
+    		}
+    		
+            switch (componentType) {
                 case WebGLRenderingContext.FLOAT :
-                    return Float32Array.BYTES_PER_ELEMENT;
+                    return Float32Array.BYTES_PER_ELEMENT * nElements;
                 case WebGLRenderingContext.UNSIGNED_BYTE :
-                    return Uint8Array.BYTES_PER_ELEMENT;
+                    return Uint8Array.BYTES_PER_ELEMENT * nElements;
                 case WebGLRenderingContext.UNSIGNED_SHORT :
-                    return Uint16Array.BYTES_PER_ELEMENT;
-                case WebGLRenderingContext.FLOAT_VEC2 :
-                    return Float32Array.BYTES_PER_ELEMENT * 2;
-                case WebGLRenderingContext.FLOAT_VEC3 :
-                    return Float32Array.BYTES_PER_ELEMENT * 3;
-                case WebGLRenderingContext.FLOAT_VEC4 :
-                    return Float32Array.BYTES_PER_ELEMENT * 4;
-                case WebGLRenderingContext.FLOAT_MAT3 :
-                    return Float32Array.BYTES_PER_ELEMENT * 9;
-                case WebGLRenderingContext.FLOAT_MAT4 :
-                    return Float32Array.BYTES_PER_ELEMENT * 16;
-                default:
+                    return Uint16Array.BYTES_PER_ELEMENT * nElements;
+                default :
+                	debugger;
                     return null;
             }
         }
@@ -173,12 +253,12 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
             var bufferView = wrappedBufferView.bufferView;
             var buffer = bufferView.buffer;
             var byteOffset = wrappedBufferView.byteOffset + bufferView.description.byteOffset;
-			var range =range = [byteOffset , (this._elementSizeForGLType(wrappedBufferView.type) * wrappedBufferView.count) + byteOffset];
+            var range = [byteOffset , (this._elementSizeForGLType(wrappedBufferView.componentType, wrappedBufferView.type) * wrappedBufferView.count) + byteOffset];
 
             this._handleRequest({   "id" : wrappedBufferView.id,
                                     "range" : range,
                                     "type" : buffer.description.type,
-                                    "path" : buffer.description.path,
+                                    "uri" : buffer.description.uri,
                                     "delegate" : delegate,
                                     "ctx" : ctx }, null);
         }
@@ -189,7 +269,7 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
             value: function(wrappedBufferView, delegate, ctx) {
 
             var savedBuffer = this._getResource(wrappedBufferView.id);
-            if (savedBuffer) {
+            if (false) { // savedBuffer) {
                 return savedBuffer;
             } else {
                 this._handleWrappedBufferViewResourceLoading(wrappedBufferView, delegate, ctx);
@@ -207,7 +287,7 @@ THREE.GLTFLoaderUtils = Object.create(Object, {
     		request.ctx = ctx;
 
             this._handleRequest({   "id" : request.id,
-                "path" : request.path,
+                "uri" : request.uri,
                 "range" : [0],
                 "type" : "text",
                 "delegate" : delegate,

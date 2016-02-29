@@ -39,6 +39,9 @@
 //		a [iter.first] =iter.second ; \
 //	}
 
+#define GLTF_ANGLE(a) \
+	GetIOSettings ()->GetBoolProp (IOSN_FBX_GLTF_ANGLEINDEGREE, false) ? a : DEG2RAD(a)
+
 namespace _IOglTF_NS_ {
 
 web::json::value &MergeJsonObjects (web::json::value &a, const web::json::value &b) ;
@@ -108,7 +111,7 @@ protected:
 	// buffer
 	bool WriteBuffer () ;
 	// camera
-	void cameraFOV (FbxCamera *pCamera, web::json::value &cameraDef) ;
+	double cameraYFOV (FbxCamera *pCamera) ;
 	web::json::value WriteCamera (FbxNode *pNode) ;
 	// light
 	void lightAttenuation (FbxLight *pLight, web::json::value &lightDef) ;

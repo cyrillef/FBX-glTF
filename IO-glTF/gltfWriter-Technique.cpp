@@ -75,13 +75,14 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 				{ U("value"), web::json::value::array ({{ pLight->Color.Get () [0], pLight->Color.Get () [1], pLight->Color.Get () [2] }}) }
 			}) ;
 		} else {
+			utility::string_t light_id =utility::conversions::to_string_t (nodeId (pLight->GetNode ())) ;
 			techniqueParameters [name + utility::conversions::to_string_t (i) + U("Color")] =web::json::value::object ({ // Color
 				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_VEC3) },
 				{ U("value"), web::json::value::array ({{ pLight->Color.Get () [0], pLight->Color.Get () [1], pLight->Color.Get () [2] }}) }
 			}) ;
 			techniqueParameters [name + utility::conversions::to_string_t (i) + U("Transform")] =web::json::value::object ({ // Transform
 				{ U("semantic"), web::json::value::string (U("MODELVIEW")) },
-				{ U("node"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
+				{ U("node"), web::json::value::string (light_id) },
 				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
 			}) ;
 			if ( pLight->LightType.Get () == FbxLight::EType::eDirectional ) {
@@ -106,7 +107,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 			if ( pLight->LightType.Get () == FbxLight::EType::eSpot ) {
 				techniqueParameters [name + utility::conversions::to_string_t (i) + U("InverseTransform")] =web::json::value::object ({
 					{ U("semantic"), web::json::value::string (U("MODELVIEWINVERSE")) },
-					{ U("node"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
+					{ U("node"), web::json::value::string (utility::conversions::to_string_t (light_id)) },
 					{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
 				}) ;
 				techniqueParameters [name + utility::conversions::to_string_t (i) + U("FallOffAngle")] =web::json::value::object ({
@@ -122,7 +123,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 	}
 }
 
-void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors) {
+void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors, bool bHasMaterial) {
 	for ( const auto &iter : attributes.as_object () ) {
 		utility::string_t name =iter.first ;
 		std::transform (name.begin (), name.end (), name.begin (), ::tolower) ;
@@ -131,6 +132,8 @@ void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqu
 		utility::string_t upperName (iter.first) ;
 		std::transform (upperName.begin (), upperName.end (), upperName.begin (), ::toupper) ;
 		web::json::value accessor =accessors [iter.second.as_string ()] ;
+		if ( !bHasMaterial && utility::details::limitedCompareTo (name, U("texcoord")) == 0 )
+			continue ;
 		techniqueParameters [name] =web::json::value::object ({
 			{ U("semantic"), web::json::value::string (upperName) },
 			{ U("type"), web::json::value::number ((int)IOglTF::techniqueParameters (accessor [U("type")].as_string ().c_str (), accessor [U("componentType")].as_integer ())) }
@@ -142,7 +145,8 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	web::json::value commonProfile =web::json::value::object () ;
 	// The FBX SDK does not have such attribute. At best, it is an attribute of a Shader FX, CGFX or HLSL.
 	commonProfile [U("extras")] =web::json::value::object ({{ U("doubleSided"), web::json::value::boolean (false) }}) ;
-	commonProfile [U("lightingModel")] =web::json::value::string (LighthingModel (pMaterial)) ;
+	if ( pMaterial != nullptr )
+		commonProfile [U("lightingModel")] =web::json::value::string (LighthingModel (pMaterial)) ;
 	commonProfile [U("parameters")] =web::json::value::array () ;
 	if ( _uvSets.size () ) {
 		commonProfile [U("texcoordBindings")] =web::json::value::object () ;
@@ -160,12 +164,12 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("texcoord")) != 0)
 			|| iter.first == U("normalMatrix")
-			)
+		)
 			commonProfile [U("parameters")] [commonProfile [U("parameters")].size ()] =web::json::value::string (iter.first) ;
 
 		web::json::value param =iter.second ;
 		if ( param [U("type")].as_integer () == IOglTF::SAMPLER_2D ) {
-
+			// todo:
 		}
 	}
 
@@ -173,19 +177,21 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   utility::details::limitedCompareTo (iter.first, U("position")) == 0
 			|| (utility::details::limitedCompareTo (iter.first, U("normal")) == 0 && iter.first != U("normalMatrix"))
-			|| utility::details::limitedCompareTo (iter.first, U("texcoord")) == 0 )
+			|| (utility::details::limitedCompareTo (iter.first, U("texcoord")) == 0 && pMaterial != nullptr)
+		)
 			attributes [utility::string_t (U("a_")) + iter.first] =web::json::value::string (iter.first) ;
 	}
 
 	web::json::value instanceProgram=web::json::value::object () ;
 	instanceProgram [U("attributes")] =attributes ;
-	instanceProgram [U("program")] =web::json::value::string (createUniqueId (utility::string_t (U("program")), 0)) ;
+	instanceProgram [U("program")] =web::json::value::string (createUniqueId (utility::string_t (U("program")), 0)) ; // Start with 0, but will increase based on own many are yet registered
 	instanceProgram [U("uniforms")] =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   (  utility::details::limitedCompareTo (iter.first, U("position")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("texcoord")) != 0)
-			|| iter.first == U("normalMatrix") )
+			|| iter.first == U("normalMatrix")
+		)
 			instanceProgram [U("uniforms")] [utility::string_t (U("u_")) + iter.first] =web::json::value::string (iter.first) ;
 	}
 

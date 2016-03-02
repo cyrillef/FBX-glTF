@@ -117,7 +117,13 @@ web::json::value gltfWriter::WriteAmbientLight (FbxScene &pScene) {
 	lightDef [U("color")] [2] =static_cast<float> (color.mBlue) ;
 	light [U("type")] =web::json::value::string (U("ambient")) ;
 	light [U("ambient")] =lightDef ;
-	return (web::json::value::object ({ { nodeId (U("defaultambient"), 0x00), light } })) ;
+
+	utility::string_t buffer =utility::conversions::to_string_t ((int)0) ;
+	utility::string_t uid (U("defaultambient")) ;
+	uid +=U("_") + buffer ;
+	return (web::json::value::object ({ { uid, light } })) ;
+
+	//return (web::json::value::object ({ { nodeId (U("defaultambient"), 0x00), light } })) ;
 }
 
 }

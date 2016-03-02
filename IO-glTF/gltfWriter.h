@@ -83,11 +83,11 @@ protected:
 	utility::string_t registerId (utility::string_t id) ;
 	bool isIdRegistered (utility::string_t id) ;
 public:
-	utility::string_t nodeId (utility::string_t type, FbxUInt64 id) ;
-	utility::string_t nodeId (const utility::char_t *pszType, FbxUInt64 id) ;
+	//utility::string_t nodeId (utility::string_t type, FbxUInt64 id) ;
+	//utility::string_t nodeId (const utility::char_t *pszType, FbxUInt64 id) ;
 	utility::string_t nodeId (FbxNode *pNode) ;
 	utility::string_t createUniqueId (utility::string_t type, FbxUInt64 id) ;
-	utility::string_t createUniqueId (FbxNode *pNode) ;
+	//utility::string_t createUniqueId (FbxNode *pNode) ;
 	inline utility::string_t createSamplerName (FbxString &szname) { return (U ("sampler_") + utility::conversions::to_string_t (szname.Buffer ())) ; }
 	inline utility::string_t createSamplerName (const char *pszName) { return (U ("sampler_") + utility::conversions::to_string_t (pszName)) ; }
 	inline utility::string_t createTextureName (FbxString &szname) { return (U("texture_") + utility::conversions::to_string_t (szname.Buffer ())) ; }
@@ -96,6 +96,7 @@ public:
 protected:
 	web::json::value WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *pPose =nullptr, bool bRoot =false) ;
 	web::json::value WriteSceneNode (FbxNode *pNode, FbxPose *pPose =nullptr) ;
+	FbxNodeAttribute::EType nodeType (FbxNode *pNode) ;
 
 	bool IsGeometryNode (FbxNode *pNode) ;
 	bool CheckMaterials (FbxNode *pNode) ;
@@ -123,12 +124,14 @@ protected:
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxSurfaceMaterial *pMaterial, const char *propertyName, const char *factorName, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
+	web::json::value WriteDefaultMaterial (FbxNode *pNode) ;
 	web::json::value WritePhongMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteLambertMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteConstantShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteBlinnShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteDefaultShadingModelWithCGFXMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteDefaultShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
+	web::json::value WriteDefaultShadingModelMaterial (FbxNode *pNode) ;
 	// mesh
 	web::json::value WriteMesh (FbxNode *pNode) ;
 	// null
@@ -141,7 +144,7 @@ protected:
 	web::json::value WriteShaders (FbxNode *pNode, web::json::value &program) ;
 	// technique
 	void AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals =false) ;
-	void TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors) ;
+	void TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors, bool bHasMaterial =true) ;
 	web::json::value WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, web::json::value &techniqueParameters) ;
 	// textures
 	web::json::value WriteTextureBindings (FbxMesh *pMesh, FbxSurfaceMaterial *pMaterial, web::json::value &params) ;

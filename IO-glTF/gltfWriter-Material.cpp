@@ -118,7 +118,46 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 		techniqueParameters =ret [U("techniqueParameters")] ;
 	}
 
-	utility::string_t techniqueName =createUniqueId (materialName + U("_technique"), 0) ;
+	utility::string_t techniqueName =createUniqueId (materialName + U("_technique"), 0) ; // Start with 0, but will increase based on own many are yet registered
+	material [U("technique")] =web::json::value::string (techniqueName) ;
+
+	web::json::value lib =web::json::value::object ({ { materialName, material } }) ;
+
+	web::json::value technique =web::json::value::object ({{ U("parameters"), techniqueParameters }}) ;
+	web::json::value techniques =web::json::value::object ({ { techniqueName, technique } }) ;
+
+	web::json::value full =web::json::value::object ({ { U("materials"), lib }, { U("techniques"), techniques } }) ;
+	if ( !ret.is_null () ) {
+		for ( auto iter =ret.as_object ().begin () ; iter != ret.as_object ().end () ; iter++ ) {
+			if ( iter->first != U("values") && iter->first != U("techniqueParameters") )
+				full [iter->first] =iter->second ;
+		}
+	}
+	return (full) ;
+}
+
+web::json::value gltfWriter::WriteDefaultMaterial (FbxNode *pNode) {
+	utility::string_t materialName (U("defaultMaterial")) ;
+	if ( _json [U("materials")].has_field (materialName) )
+		return (web::json::value::string (materialName)) ;
+
+	web::json::value material =web::json::value::object () ;
+	material [U("name")] =web::json::value::string (materialName) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+
+	// Look if this material is already in the materials library.
+	web::json::value ret =web::json::value::null () ;
+	if ( !_json [U("materials")].has_field (materialName) ) {
+		FbxNode::EShadingMode shadingMode =pNode->GetShadingMode () ;
+		ret =WriteDefaultShadingModelMaterial (pNode) ;
+	}
+
+	web::json::value techniqueParameters =web::json::value::null () ;
+	if ( !ret.is_null () ) {
+		material [U("values")] =ret [U("values")] ;
+		techniqueParameters =ret [U("techniqueParameters")] ;
+	}
+
+	utility::string_t techniqueName =createUniqueId (materialName + U("_technique"), 0) ; // Start with 0, but will increase based on own many are yet registered
 	material [U("technique")] =web::json::value::string (techniqueName) ;
 
 	web::json::value lib =web::json::value::object ({ { materialName, material } }) ;
@@ -305,7 +344,6 @@ web::json::value gltfWriter::WriteDefaultShadingModelWithCGFXMaterial (FbxNode *
 
 	_ASSERTE( false ) ;
 	return (web::json::value::null ()) ;
-	
 }
 
 web::json::value gltfWriter::WriteDefaultShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
@@ -332,6 +370,29 @@ web::json::value gltfWriter::WriteDefaultShadingModelMaterial (FbxNode *pNode, F
 
 	// Note: 
 	// INDEXOFREFRACTION is not supported by FBX.
+
+	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
+	return (ret) ;
+}
+
+#define AssignDefaultColor(pszName, defaultColor) \
+	{ \
+		values [pszName] =web::json::value::array ({ { defaultColor [0], defaultColor [1], defaultColor [2], 1. } }) ; \
+		techniqueParameters [pszName] =web::json::value::object ({{ U("type"), IOglTF::FLOAT_VEC4 }}) ; \
+	}
+
+web::json::value gltfWriter::WriteDefaultShadingModelMaterial (FbxNode *pNode) {
+	web::json::value values =web::json::value::object () ;
+	web::json::value techniqueParameters =web::json::value::object () ;
+
+	web::json::value ret =web::json::value::object () ;
+	//FbxScene *pScene =pNode->GetScene () ;
+	//FbxColor ambient (pScene->GetGlobalSettings ().GetAmbientColor ()) ;
+	//AssignDefaultColor (U("ambient"), ambient) ;
+
+	FbxProperty property =pNode->GetNodeAttribute ()->Color ;
+	FbxDouble3 color =property.IsValid () ? property.Get<FbxDouble3> () : FbxNodeAttribute::sDefaultColor ;
+	AssignDefaultColor (U("diffuse"), color) ;
 
 	MergeJsonObjects (ret, web::json::value::object ({ { U("values"), values }, { U("techniqueParameters"), techniqueParameters } })) ;
 	return (ret) ;

@@ -32,23 +32,25 @@ web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *p
 		programAttributes [programAttributes.size ()] =web::json::value::string (iter.first) ;
 
 	// Get the implementation to see if it's a hardware shader.
-	//const FbxImplementation *pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_HLSL) ;
-	//if ( !pImplementation )
-	//	pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_CGFX) ;
-	//if ( pImplementation ) {
-	//	const FbxBindingTable *pRootTable =pImplementation->GetRootTable () ;
-	//	FbxString fileName =pRootTable->DescAbsoluteURL.Get () ;
-	//	FbxString pTechniqueName =pRootTable->DescTAG.Get () ;
-	//	const FbxBindingTable *pTable =pImplementation->GetRootTable () ;
-	//	size_t entryNum =pTable->GetEntryCount () ;
-	//	for ( size_t i =0 ; i < entryNum ; i++ ) {
-	//		const FbxBindingTableEntry &entry =pTable->GetEntry (i) ;
-	//		const char *pszEntrySrcType =entry.GetEntryType (true) ;
-	//	}
-	//} else {
-	//	int nb =pNode->GetImplementationCount () ;
-	//	//pImplementation =pNode->GetImplementation (0) ;
-	//}
+	if ( pMaterial != nullptr ) {
+		//const FbxImplementation *pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_HLSL) ;
+		//if ( !pImplementation )
+		//	pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_CGFX) ;
+		//if ( pImplementation ) {
+		//	const FbxBindingTable *pRootTable =pImplementation->GetRootTable () ;
+		//	FbxString fileName =pRootTable->DescAbsoluteURL.Get () ;
+		//	FbxString pTechniqueName =pRootTable->DescTAG.Get () ;
+		//	const FbxBindingTable *pTable =pImplementation->GetRootTable () ;
+		//	size_t entryNum =pTable->GetEntryCount () ;
+		//	for ( size_t i =0 ; i < entryNum ; i++ ) {
+		//		const FbxBindingTableEntry &entry =pTable->GetEntry (i) ;
+		//		const char *pszEntrySrcType =entry.GetEntryType (true) ;
+		//	}
+		//} else {
+		//	int nb =pNode->GetImplementationCount () ;
+		//	//pImplementation =pNode->GetImplementation (0) ;
+		//}
+	}
 	FbxString filename =FbxPathUtils::GetFileName (utility::conversions::to_utf8string (_fileName).c_str (), false) ;
 
 	web::json::value program =web::json::value::object ({

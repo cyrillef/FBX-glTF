@@ -74,6 +74,7 @@ web::json::value gltfWriter::WriteTexture (FbxTexture *pTexture) {
 
 	web::json::value texture =web::json::value::object ({{ texName, textureDef }}) ;
 	
+	//TODO: Shall try to find a similar sampler defined already vs create one each time?
 	web::json::value samplerDef =web::json::value::object ({
 		{ U("name"), web::json::value::string (samplerName) },  // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
 		{ U("magFilter"), web::json::value::number ((int)IOglTF::LINEAR) },

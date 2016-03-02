@@ -326,20 +326,46 @@ bool gltfWriter::isIdRegistered (utility::string_t id) {
 	return (std::find (_registeredIDs.begin (), _registeredIDs.end (), id) != _registeredIDs.end ()) ;
 }
 
-utility::string_t gltfWriter::nodeId (utility::string_t type, FbxUInt64 id) {
-	utility::string_t buffer =utility::conversions::to_string_t ((int)id) ;
-	utility::string_t uid (type) ;
-	uid +=U("_") + buffer ;
-	return (uid) ;
-}
+//utility::string_t gltfWriter::nodeId (utility::string_t type, FbxUInt64 id) {
+//	utility::string_t buffer =utility::conversions::to_string_t ((int)id) ;
+//	utility::string_t uid (type) ;
+//	uid +=U("_") + buffer ;
+//	return (uid) ;
+//}
 
-utility::string_t gltfWriter::nodeId (const utility::char_t *pszType, FbxUInt64 id) {
-	utility::string_t st (pszType) ;
-	return (nodeId (st, id)) ;
-}
+//utility::string_t gltfWriter::nodeId (const utility::char_t *pszType, FbxUInt64 id) {
+//	utility::string_t st (pszType) ;
+//	return (nodeId (st, id)) ;
+//}
 
 utility::string_t gltfWriter::nodeId (FbxNode *pNode) {
-	return (nodeId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
+	//FbxNodeAttribute *gg =pNode->GetNodeAttribute () ;
+	//const char *kk =gg->GetName () ;
+	//utility::string_t st =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
+	// pNode->GetUniqueID ())
+
+	//if ( pNode->GetNodeAttribute () == nullptr ) {
+	//	utility::string_t uid =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
+	//	uid +=U("_") + utility::conversions::to_string_t ((int)pNode->GetUniqueID ()) ;
+	//	if ( uid == U("group_0") )
+	//		return (uid) ;
+	//	return (uid) ;
+	//}
+
+	//FbxProperty cid =pNode->FindProperty ("COLLADA_ID") ;
+	//FbxString sid =cid.IsValid () ? cid.Get<FbxString> () : "" ;
+	//if ( sid != "" )
+	//	return (utility::conversions::to_string_t (sid.Buffer ())) ;
+
+	if ( pNode->GetNodeAttribute () == nullptr )
+		return (utility::conversions::to_string_t (pNode->GetName ())) ;
+
+	//if ( utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ()) == U("group_0") )
+	//	return (utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ())) ;
+	return (utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ())) ;
+
+	//return (nodeId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
+
 	//FbxString nameWithoutSpacePrefix =pNode->GetNameWithoutNameSpacePrefix () ;
 	//FbxString szID =nameWithoutSpacePrefix ;
 	//FbxProperty id =pNode->FindProperty ("COLLADA_ID") ;
@@ -350,7 +376,11 @@ utility::string_t gltfWriter::nodeId (FbxNode *pNode) {
 
 utility::string_t gltfWriter::createUniqueId (utility::string_t type, FbxUInt64 id) {
 	for ( ;; id++ ) {
-		utility::string_t uid =nodeId (type, id) ;
+		//utility::string_t uid =nodeId (type, id) ;
+		utility::string_t buffer =utility::conversions::to_string_t ((int)id) ;
+		utility::string_t uid (type) ;
+		uid +=U("_") + buffer ;
+
 		if ( !isIdRegistered (uid) )
 			return (registerId (uid)) ;
 	}
@@ -358,9 +388,9 @@ utility::string_t gltfWriter::createUniqueId (utility::string_t type, FbxUInt64 
 	return (U("error")) ;
 }
 
-utility::string_t gltfWriter::createUniqueId (FbxNode *pNode) {
-	return (createUniqueId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
-}
+//utility::string_t gltfWriter::createUniqueId (FbxNode *pNode) {
+//	return (createUniqueId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
+//}
 
 //-----------------------------------------------------------------------------
 web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *pPose /*=nullptr*/, bool bRoot /*=false*/) {
@@ -387,10 +417,9 @@ web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *p
 		}
 	}
 
-	FbxNodeAttribute *pNodeAttribute =pNode->GetNodeAttribute () ;
-	FbxNodeAttribute::EType nodeType =pNodeAttribute ? pNodeAttribute->GetAttributeType () : FbxNodeAttribute::eUnknown ;
+	FbxNodeAttribute::EType enodeType =nodeType (pNode) ;
 	for ( int i =0; i < pNode->GetChildCount () ; i++ ) {
-		web::json::value child =WriteSceneNodeRecursive (pNode->GetChild (i), pPose, bRoot && nodeType == FbxNodeAttribute::eUnknown) ;
+		web::json::value child =WriteSceneNodeRecursive (pNode->GetChild (i), pPose, bRoot && enodeType == FbxNodeAttribute::eUnknown) ;
 		if ( !child.is_null () && !node.is_null () ) {
 			utility::string_t key (U("nodes")), key2 (U("children")) ; ;
 			if (   !child.is_null () && child [U("nodes")].size () == 0
@@ -407,26 +436,56 @@ web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *p
 }
 
 web::json::value gltfWriter::WriteSceneNode (FbxNode *pNode, FbxPose *pPose) {
-	FbxNodeAttribute *pNodeAttribute =pNode->GetNodeAttribute () ;
-	FbxNodeAttribute::EType nodeType =pNodeAttribute ? pNodeAttribute->GetAttributeType () : FbxNodeAttribute::eUnknown ;
-	//if ( nodeType == FbxNodeAttribute::eMesh ) {
-		//if ( FbxCast<FbxLine> (pNode->GetLine ()) != nullptr )
-		//	nodeType =FbxNodeAttribute::eLine ;
-	//}
-
-	if ( _routes.find (nodeType) == _routes.end () ) {
-		if ( FbxString (pNode->GetName ()) != FbxString ("RootNode") )
+	FbxNodeAttribute::EType enodeType =nodeType (pNode) ;
+	if ( _routes.find (enodeType) == _routes.end () ) {
+		//if (   FbxString (pNode->GetName ()) != FbxString ("RootNode")
+		//	&& pNodeAttribute != nullptr
+		//)
 			ucout << U("Warning: (") << utility::conversions::to_string_t (pNode->GetTypeName ())
-				  << U(" - ") << (int)nodeType
+				  << U(" - ") << (int)enodeType
 				  << U(") ") <<  utility::conversions::to_string_t (pNode->GetName ())
-				  << U(" not exported")
+				  << U(" not exported!")
 				  << std::endl ;
 		return (web::json::value::null ()) ;
 	}
-	ExporterRouteFct fct =(*(_routes.find (nodeType))).second ;
+
+	//FbxProperty cid =pNode->FindProperty ("COLLADA_ID") ;
+	//FbxString sid =cid.IsValid () ? cid.Get<FbxString> () : FbxString ("") ;
+	//utility::string_t ff =utility::conversions::to_string_t (sid.Buffer ()) ;
+
+	//utility::string_t id =nodeId (pNode) ;
+	//if ( isIdRegistered (id) ) {
+	////	ucout << id << U(" ( ") << ff << U(" ) x") << std::endl ;
+	//	return (web::json::value::null ()) ;
+	//}
+	////ucout << id << U(" ( ") << ff << U(" ) ") << std::endl ;
+
+	ExporterRouteFct fct =(*(_routes.find (enodeType))).second ;
 	web::json::value val =(this->*fct) (pNode) ;
 
+	for ( auto iter =val.as_object ().cbegin () ; iter != val.as_object ().cend () ; ++iter ) {
+		//const utility::string_t &str =iter->first ;
+		const web::json::value &v =iter->second ;
+		for ( auto iter2 =v.as_object ().cbegin () ; iter2 != v.as_object ().cend () ; ++iter2 ) {
+			const utility::string_t &id =iter2->first ;
+			//ucout << id << std::endl ;
+			registerId (id) ;
+		}
+	}
+
 	return (val) ;
+}
+
+FbxNodeAttribute::EType gltfWriter::nodeType (FbxNode *pNode) {
+	FbxNodeAttribute *pNodeAttribute =pNode->GetNodeAttribute () ;
+	FbxNodeAttribute::EType nodeType =pNodeAttribute ? pNodeAttribute->GetAttributeType () : FbxNodeAttribute::eUnknown ;
+	// Non paired node
+	if ( pNodeAttribute == nullptr ) {
+		utility::string_t szType =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
+		if ( szType == U("Null") )
+			nodeType =FbxNodeAttribute::eNull ;
+	}
+	return (nodeType) ;
 }
 
 web::json::value gltfWriter::GetTransform (FbxNode *pNode) {
@@ -480,15 +539,17 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 	//FbxProperty pid =pNode->FindProperty ("COLLADA_ID") ;
 	//if ( pid.IsValid () )
 	//	id =utility::conversions::to_string_t (pid.Get<FbxString> ().Buffer ()) ;
-	utility::string_t id =utility::conversions::to_string_t (pNode->GetName ()) ;
-
+	
+	//utility::string_t id =utility::conversions::to_string_t (pNode->GetName ()) ;
+	utility::string_t id =nodeId (pNode) ;
 	nodeDef [U("name")] =web::json::value::string (id) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
 
 	utility::string_t szType =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
 	std::transform (szType.begin (), szType.end (), szType.begin (), ::tolower) ;
 	//if ( szType == U("camera") || szType == U("light") )
-	if (   pNode->GetNodeAttribute () && (pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eCamera
-		|| pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eLight)
+	if (   pNode->GetNodeAttribute ()
+		&& (   pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eCamera
+			|| pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eLight)
 	)
 		nodeDef [szType] =web::json::value::string (nodeId (pNode)) ; //nodeDef [U("camera")] nodeDef [U("light")]
 	// A floating-point 4x4 transformation matrix stored in column-major order.

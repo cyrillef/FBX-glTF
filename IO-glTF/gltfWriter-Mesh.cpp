@@ -81,7 +81,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 		std::vector<FbxDouble3> out_binormals =vbo.getBinormals () ;
 		std::vector<FbxColor> out_vcolors =vbo.getVertexColors () ;
 
-		_uvSets=vbo.getUvSets ();
+		_uvSets =vbo.getUvSets () ;
 
 		web::json::value vertex=WriteArrayWithMinMax<FbxDouble3, float> (out_positions, pMesh->GetNode (), U("_Positions")) ;
 		MergeJsonObjects (localAccessorsAndBufferViews, vertex);
@@ -100,7 +100,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 		}
 
 		if ( out_uvs.size () ) { // todo more than 1
-			std::map<utility::string_t, utility::string_t>::iterator iter=_uvSets.begin () ;
+			std::map<utility::string_t, utility::string_t>::iterator iter =_uvSets.begin () ;
 			utility::string_t st (U("_") + iter->second) ;
 			web::json::value ret=WriteArrayWithMinMax<FbxDouble2, float> (out_uvs, pMesh->GetNode (), st.c_str ()) ;
 			MergeJsonObjects (localAccessorsAndBufferViews, ret) ;
@@ -124,8 +124,8 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 		// Get mesh face indices
 		//std::vector<unsigned short> faces ;
 		//utility::MapToVec(out_indices, faces) ;
-		web::json::value polygons=WriteArray<unsigned short> (out_indices, 1, pMesh->GetNode (), U("_Polygons")) ;
-		primitive [U("indices")]=web::json::value::string (GetJsonFirstKey (polygons [U("accessors")])) ;
+		web::json::value polygons =WriteArray<unsigned short> (out_indices, 1, pMesh->GetNode (), U("_Polygons")) ;
+		primitive [U("indices")] =web::json::value::string (GetJsonFirstKey (polygons [U("accessors")])) ;
 
 		MergeJsonObjects (accessorsAndBufferViews, polygons) ;
 		MergeJsonObjects (accessorsAndBufferViews, localAccessorsAndBufferViews) ;

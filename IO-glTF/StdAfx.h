@@ -30,6 +30,7 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#include <tchar.h>
 #endif
 
 #include <assert.h>
@@ -55,6 +56,12 @@
 #include <cpprest/uri.h>                    // URI library
 typedef web::json::value JsonValue ;
 typedef web::json::value::value_type JsonValueType ;
+
+#include <regex>
+typedef std::basic_regex<utility::char_t> uregex ;
+//typedef std::match_results<utility::char_t *> umatch ;
+typedef std::match_results<utility::string_t::const_iterator> umatch ;
+//typedef std::match_results<const utility::char_t *> umatch ;
 
 // C++ FBX SDK
 // http://www.autodeks.com/developfbx

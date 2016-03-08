@@ -138,6 +138,10 @@ bool gltfWriter::Write (FbxDocument *pDocument) {
 	//	return (false) ;
 	//if ( !ExportLibraries () )
 	//	return (false) ;
+
+	if ( !WriteShaders () )
+		return (false) ;
+
 	if ( !WriteBuffer () ) // Should be last !!!
 		return (false) ;
 
@@ -312,7 +316,6 @@ void gltfWriter::PrepareForSerialization () {
 
 	//	wcout << key << L" : " << value << " (" << JsonValueTypeToString (v.type ()) << ")" << endl;
 	//}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -356,13 +359,21 @@ utility::string_t gltfWriter::nodeId (FbxNode *pNode) {
 	//FbxString sid =cid.IsValid () ? cid.Get<FbxString> () : "" ;
 	//if ( sid != "" )
 	//	return (utility::conversions::to_string_t (sid.Buffer ())) ;
-
+	utility::string_t id ;
 	if ( pNode->GetNodeAttribute () == nullptr )
-		return (utility::conversions::to_string_t (pNode->GetName ())) ;
+		id =utility::conversions::to_string_t (pNode->GetName ()) ;
 
 	//if ( utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ()) == U("group_0") )
 	//	return (utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ())) ;
-	return (utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ())) ;
+	else
+		id =utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ()) ;
+
+	if ( id.length () == 0 ) {
+		id =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
+		id +=U("_") + utility::conversions::to_string_t ((int)pNode->GetUniqueID ()) ;
+	}
+
+	return (id) ;
 
 	//return (nodeId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
 

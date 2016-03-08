@@ -150,6 +150,8 @@ protected:
 	web::json::value WriteTextureBindings (FbxMesh *pMesh, FbxSurfaceMaterial *pMaterial, web::json::value &params) ;
 	web::json::value WriteTexture (FbxTexture *pTexture) ;
 
+	// buffer
+	bool WriteShaders () ;
 
 private:
 	typedef web::json::value (gltfWriter::*ExporterRouteFct) (FbxNode *pNode) ;

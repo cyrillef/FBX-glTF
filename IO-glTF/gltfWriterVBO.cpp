@@ -200,15 +200,23 @@ void gltfwriterVBO::GetLayerElements (int layerIndex /*=0*/, bool bInGeometry /*
 			FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
 			_in_positions.push_back (position) ;
 
-			GetLayerElement (pLayerElementNormals, normalIndex, FbxVector4, normal, index, [this] (FbxVector4 &V) { _in_normals.push_back (V) ; }) ;
+			GetLayerElement (pLayerElementNormals, normalIndex, FbxVector4, normal, index, [this] (FbxVector4 &V) {
+				_in_normals.push_back (V) ;
+			}) ;
 			FbxLayerElementUV *pLayerElementUVs =channels [FbxLayerElement::eTextureDiffuse] ;
 			GetLayerElement (pLayerElementUVs, uvIndex, FbxVector2, uv, index, [this] (FbxVector2 &V) {
 				V [1] =1.0 - V [1] ;
 				_in_uvs.push_back (V) ;
 			}) ;
-			GetLayerElement (pLayerTangent, tangentIndex, FbxVector4, tangent, index, [this] (FbxVector4 &V) { _in_tangents.push_back (V) ; }) ;
-			GetLayerElement (pLayerBinormal, binormalIndex, FbxVector4, binormal, index, [this] (FbxVector4 &V) { _in_binormals.push_back (V) ; }) ;
-			GetLayerElement (pLayerElementColors, colorIndex, FbxColor, color, index, [this] (FbxColor &V) { _in_vcolors.push_back (V) ; }) ;
+			GetLayerElement (pLayerTangent, tangentIndex, FbxVector4, tangent, index, [this] (FbxVector4 &V) {
+				_in_tangents.push_back (V) ;
+			}) ;
+			GetLayerElement (pLayerBinormal, binormalIndex, FbxVector4, binormal, index, [this] (FbxVector4 &V) {
+				_in_binormals.push_back (V) ;
+			}) ;
+			GetLayerElement (pLayerElementColors, colorIndex, FbxColor, color, index, [this] (FbxColor &V) {
+				_in_vcolors.push_back (V) ;
+			}) ;
 		}
 	}
 }

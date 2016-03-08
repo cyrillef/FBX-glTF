@@ -142,12 +142,12 @@ void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqu
 }
 
 web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, web::json::value &techniqueParameters) {
-	web::json::value commonProfile =web::json::value::object () ;
 	// The FBX SDK does not have such attribute. At best, it is an attribute of a Shader FX, CGFX or HLSL.
-	commonProfile [U("extras")] =web::json::value::object ({{ U("doubleSided"), web::json::value::boolean (false) }}) ;
+	web::json::value commonProfile =web::json::value::object ({{ U("doubleSided"), web::json::value::boolean (false) }}) ;
 	if ( pMaterial != nullptr )
 		commonProfile [U("lightingModel")] =web::json::value::string (LighthingModel (pMaterial)) ;
-	commonProfile [U("parameters")] =web::json::value::array () ;
+	else
+		commonProfile [U("lightingModel")] =web::json::value::string (U("Unknown")) ;
 	if ( _uvSets.size () ) {
 		commonProfile [U("texcoordBindings")] =web::json::value::object () ;
 		for ( auto iter : _uvSets ) {
@@ -159,6 +159,7 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 			commonProfile [U("texcoordBindings")] [key] =web::json::value::string (iter.second) ;
 		}
 	}
+	/*commonProfile [U("parameters")] =web::json::value::array () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   (  utility::details::limitedCompareTo (iter.first, U("position")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
@@ -171,7 +172,7 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 		if ( param [U("type")].as_integer () == IOglTF::SAMPLER_2D ) {
 			// todo:
 		}
-	}
+	}*/
 
 	web::json::value attributes =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
@@ -196,7 +197,7 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	}
 
 	web::json::value techStatesEnable =web::json::value::array () ;
-	if ( pNode->mCullingType != FbxNode::ECullingType::eCullingOff )
+	if ( pNode->mCullingType == FbxNode::ECullingType::eCullingOff )
 		techStatesEnable [techStatesEnable.size ()] =web::json::value::number ((int)IOglTF::CULL_FACE) ;
 	// TODO: should it always be this way?
 	techStatesEnable [techStatesEnable.size ()] =web::json::value::number ((int)IOglTF::DEPTH_TEST) ;
@@ -211,8 +212,10 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	//technique [U("passes")] =web::json::value::object ({{ U("defaultPass"), techniquePass }}) ;
 	technique [U("program")] =instanceProgram [U("program")] ;
 	technique [U("states")] =techStates ;
-	technique [U("attributes")] =instanceProgram[U("attributes")] ;
-	technique [U("uniforms")] =instanceProgram[U("uniforms")] ;
+	technique [U("attributes")] =instanceProgram [U("attributes")] ;
+	technique [U("uniforms")] =instanceProgram [U("uniforms")] ;
+
+	technique [U("extras")] =commonProfile ;
 
 	return (technique) ;
 }

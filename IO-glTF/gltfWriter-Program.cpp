@@ -20,7 +20,6 @@
 //
 #include "StdAfx.h"
 #include "gltfWriter.h"
-#include "glslShader.h"
 
 namespace _IOglTF_NS_ {
 

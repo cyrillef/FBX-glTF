@@ -104,6 +104,9 @@
     <ClCompile Include="gltfWriterVBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gltfWriter-Shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="glTF-0-8-defaults.json">

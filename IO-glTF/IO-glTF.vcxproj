@@ -123,6 +123,7 @@ copy "$(FBX_SDK)\lib\vs2013\x64\release\libfbxsdk.*" "$(TargetDir)" &gt; nul</Co
     </ClCompile>
     <ClCompile Include="glslShader.cpp" />
     <ClCompile Include="gltfReader.cpp" />
+    <ClCompile Include="gltfWriter-Shaders.cpp" />
     <ClCompile Include="gltfWriter-Asset.cpp" />
     <ClCompile Include="gltfWriter-Buffer.cpp" />
     <ClCompile Include="gltfWriter-Camera.cpp" />

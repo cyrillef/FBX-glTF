@@ -23,8 +23,6 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/program.schema.json
-
 web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, utility::string_t programName, web::json::value &attributes) {
 	web::json::value programAttributes =web::json::value::array () ;
 	for ( const auto &iter : attributes.as_object () )
@@ -54,9 +52,11 @@ web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *p
 
 	web::json::value program =web::json::value::object ({
 		{ U("attributes"), programAttributes },
-		{ U("name"), web::json::value::string (programName) }, // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
-		{ U("fragmentShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0FS")) },
-		{ U("vertexShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0VS")) }
+		{ U("name"), web::json::value::string (programName) },
+		//{ U("fragmentShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0FS")) },
+		//{ U("vertexShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0VS")) }
+		{ U("fragmentShader"), web::json::value::string (programName + U("FS")) },
+		{ U("vertexShader"), web::json::value::string (programName + U("VS")) }
 	}) ;
 	web::json::value lib =web::json::value::object ({{ programName, program }}) ;
 
@@ -64,8 +64,6 @@ web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *p
 
 	return (web::json::value::object ({ { U("programs"), lib }, { U("shaders"), shaders } })) ;
 }
-
-// https://github.com/KhronosGroup/glTF/blob/master/specification/shader.schema.json
 
 web::json::value gltfWriter::WriteShaders (FbxNode *pNode, web::json::value &program) {
 	web::json::value fragmentShader =web::json::value::object ({

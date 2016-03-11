@@ -23,15 +23,6 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePass.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassDetails.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassDetailsCommonProfile.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassDetailsCommonProfileTexcoordBindings.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassInstanceProgram.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassInstanceProgramAttribute.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassInstanceProgramUniform.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassStates.schema.json
-
 void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals /*=false*/) {
 	if ( bHasNormals ) {
 		techniqueParameters [U("normalMatrix")] =web::json::value::object ({ // normal matrix
@@ -75,7 +66,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 				{ U("value"), web::json::value::array ({{ pLight->Color.Get () [0], pLight->Color.Get () [1], pLight->Color.Get () [2] }}) }
 			}) ;
 		} else {
-			utility::string_t light_id =utility::conversions::to_string_t (nodeId (pLight->GetNode ())) ;
+			utility::string_t light_id =utility::conversions::to_string_t (nodeId (pLight->GetNode (), false)) ;
 			techniqueParameters [name + utility::conversions::to_string_t (i) + U("Color")] =web::json::value::object ({ // Color
 				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_VEC3) },
 				{ U("value"), web::json::value::array ({{ pLight->Color.Get () [0], pLight->Color.Get () [1], pLight->Color.Get () [2] }}) }
@@ -185,7 +176,7 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 
 	web::json::value instanceProgram=web::json::value::object () ;
 	instanceProgram [U("attributes")] =attributes ;
-	instanceProgram [U("program")] =web::json::value::string (createUniqueId (utility::string_t (U("program")), 0)) ; // Start with 0, but will increase based on own many are yet registered
+	instanceProgram [U("program")] =web::json::value::string (createUniqueName (utility::string_t (U("program")), 0)) ; // Start with 0, but will increase based on own many are yet registered
 	instanceProgram [U("uniforms")] =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   (  utility::details::limitedCompareTo (iter.first, U("position")) != 0

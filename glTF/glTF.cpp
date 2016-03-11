@@ -25,7 +25,7 @@
 #endif
 
 // Tests
-// -f $(ProjectDir)\..\models\duck\duck.fbx -o $(ProjectDir)\..\models\duck\out -n duck -c
+// -f $(ProjectDir)\..\models\duck\duck.fbx -o $(ProjectDir)\..\models\duck\out -n test -c
 // -f $(ProjectDir)\..\models\au\au3.fbx -o $(ProjectDir)\..\models\au\out -n test -c
 // -f $(ProjectDir)\..\models\teapot\teapot.fbx -o $(ProjectDir)\..\models\teapot\out -n test -c
 // -f $(ProjectDir)\..\models\wine\wine.fbx -o $(ProjectDir)\..\models\wine\out -n test -c

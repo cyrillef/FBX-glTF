@@ -55,11 +55,18 @@ void gltfWriter::lightAttenuation (FbxLight *pLight, web::json::value &lightDef)
 		lightDef [U("quadraticAttenuation")] =web::json::value::number (attenuation [2]) ;
 }
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/light.schema.json
 web::json::value gltfWriter::WriteLight (FbxNode *pNode) {
 	web::json::value light =web::json::value::object () ;
 	web::json::value lightDef =web::json::value::object () ;
-	light [U("name")] =web::json::value::string (nodeId (pNode)) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	light [U("name")] =web::json::value::string (nodeId (pNode, true)) ;
+
+	if ( isKnownId (pNode->GetNodeAttribute ()->GetUniqueID ()) ) {
+		// The light was already exported, create only the transform node
+		web::json::value node =WriteNode (pNode) ;
+		web::json::value ret =web::json::value::object ({ { U("nodes"), node } }) ;
+		return (ret) ;
+	}
+
 	FbxLight *pLight =pNode->GetLight () ; //FbxCast<FbxLight>(pNode->GetNodeAttribute ()) ;
 	static const FbxDouble3 defaultLightColor (1., 1., 1.) ;
 	auto color =pLight->Color ;
@@ -70,12 +77,12 @@ web::json::value gltfWriter::WriteLight (FbxNode *pNode) {
 			static_cast<float>(color.Get () [2])
 		}}) ;
 	switch ( pLight->LightType.Get () ) {
-		case FbxLight::EType::ePoint: // https://github.com/KhronosGroup/glTF/blob/master/specification/lightPoint.schema.json
+		case FbxLight::EType::ePoint:
 			light [U("type")] =web::json::value::string (U("point")) ;
 			lightAttenuation (pLight, lightDef) ;
 			light [U("point")] =lightDef ;
 			break ;
-		case FbxLight::EType::eSpot: // https://github.com/KhronosGroup/glTF/blob/master/specification/lightSpot.schema.json
+		case FbxLight::EType::eSpot:
 			light [U("type")] =web::json::value::string (U("spot")) ;
 			lightAttenuation (pLight, lightDef) ;
 			if ( pLight->OuterAngle.Get () != 180.0 ) // default is PI
@@ -84,19 +91,19 @@ web::json::value gltfWriter::WriteLight (FbxNode *pNode) {
 				lightDef [U("fallOffExponent")] =web::json::value::number ((double)0.) ;
 			light [U("spot")] =lightDef ;
 			break ;
-		case FbxLight::EType::eDirectional: // https://github.com/KhronosGroup/glTF/blob/master/specification/lightDirectional.schema.json
+		case FbxLight::EType::eDirectional:
 			light [U("type")] =web::json::value::string (U("directional")) ;
 			light [U("directional")] =lightDef ;
 			break ;
 		case FbxLight::EType::eArea:
 		case FbxLight::EType::eVolume:
-		default: // ambient - https://github.com/KhronosGroup/glTF/blob/master/specification/lightAmbient.schema.json
+		default: // ambient
 			_ASSERTE (false) ;
 			return (web::json::value::object ()) ;
 			break ;
 	}
 
-	web::json::value lib =web::json::value::object ({ { nodeId (pNode), light } }) ;
+	web::json::value lib =web::json::value::object ({ { nodeId (pNode, true, true), light } }) ;
 	web::json::value node =WriteNode (pNode) ;
 
 	return (web::json::value::object ({ { U("lights"), lib }, { U("nodes"), node } })) ;
@@ -122,7 +129,6 @@ web::json::value gltfWriter::WriteAmbientLight (FbxScene &pScene) {
 	utility::string_t uid (U("defaultambient")) ;
 	uid +=U("_") + buffer ;
 	return (web::json::value::object ({ { uid, light } })) ;
-
 	//return (web::json::value::object ({ { nodeId (U("defaultambient"), 0x00), light } })) ;
 }
 

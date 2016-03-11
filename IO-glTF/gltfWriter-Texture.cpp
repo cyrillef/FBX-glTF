@@ -23,10 +23,6 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/texture.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/image.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/sampler.schema.json
-
 //FbxLayerElementTexture* texturesLayer =pNode->GetMesh ()->GetLayer (0)->GetTextures (FbxLayerElement::eTextureDiffuse) ;
 //FbxLayerElementArrayTemplate<FbxTexture *> &arrayTextures =texturesLayer->GetDirectArray() ;
 //for ( int j = 0; j < arrayTextures.GetCount (); j++ )
@@ -38,7 +34,7 @@ web::json::value gltfWriter::WriteTexture (FbxTexture *pTexture) {
 	utility::string_t uri =utility::conversions::to_string_t (FbxCast<FbxFileTexture> (pTexture)->GetRelativeFileName ()) ;
 	web::json::value image =web::json::value::object ({{
 		name, web::json::value::object ({
-			{ U("name"), web::json::value::string (name) }, // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+			{ U("name"), web::json::value::string (name) },
 			{ U("uri"), web::json::value::string (uri) }
 		}) }
 	}) ;
@@ -63,7 +59,7 @@ web::json::value gltfWriter::WriteTexture (FbxTexture *pTexture) {
 	utility::string_t texName =createTextureName (pTexture->GetNameWithoutNameSpacePrefix ()) ;
 	utility::string_t samplerName =createSamplerName (pTexture->GetNameWithoutNameSpacePrefix ()) ;
 	web::json::value textureDef =web::json::value::object ({
-		{ U("name"), web::json::value::string (texName) },  // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+		{ U("name"), web::json::value::string (texName) },
 		{ U("format"), web::json::value::number ((int)IOglTF::RGBA) }, // todo
 		{ U("internalFormat"), web::json::value::number ((int)IOglTF::RGBA) }, // todo
 		{ U("sampler"), web::json::value::string (samplerName) }, // todo do I need one everytime
@@ -76,7 +72,7 @@ web::json::value gltfWriter::WriteTexture (FbxTexture *pTexture) {
 	
 	//TODO: Shall try to find a similar sampler defined already vs create one each time?
 	web::json::value samplerDef =web::json::value::object ({
-		{ U("name"), web::json::value::string (samplerName) },  // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+		{ U("name"), web::json::value::string (samplerName) },
 		{ U("magFilter"), web::json::value::number ((int)IOglTF::LINEAR) },
 		{ U("minFilter"), web::json::value::number ((int)IOglTF::LINEAR_MIPMAP_LINEAR) },
 		{ U("wrapS"), web::json::value::number ((int)(pTexture->WrapModeU.Get () == FbxTexture::eRepeat ? IOglTF::REPEAT : IOglTF::CLAMP_TO_EDGE)) },
@@ -171,14 +167,14 @@ web::json::value gltfWriter::WriteTextureBindings (FbxMesh *pMesh, web::json::va
 				utility::string_t uri =utility::conversions::to_string_t (pTexture->GetRelativeFileName ()) ;
 				web::json::value image =web::json::value::object ({{
 						name, web::json::value::object ({
-							{ U("name"), web::json::value::string (name) }, // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+							{ U("name"), web::json::value::string (name) },
 							{ U("uri"), web::json::value::string (uri) }
 						}) }
 				}) ;
 
 				utility::string_t texName (U("texture_") + name) ;
 				web::json::value textureDef =web::json::value::object ({
-					{ U("name"), web::json::value::string (texName) },  // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+					{ U("name"), web::json::value::string (texName) },
 		//			{ U("format"), web::json::value::string (uri) },
 		//			{ U("internalFormat"), web::json::value::string (uri) },
 		//			{ U("sampler"), web::json::value::string (uri) },
@@ -190,7 +186,7 @@ web::json::value gltfWriter::WriteTextureBindings (FbxMesh *pMesh, web::json::va
 				web::json::value texture =web::json::value::object ({{ texName, textureDef }}) ;
 				
 				web::json::value samplerDef =web::json::value::object ({
-					{ U("name"), web::json::value::string (texName) },  // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+					{ U("name"), web::json::value::string (texName) },
 					{ U("magFilter"), web::json::value::number ((int)IOglTF::LINEAR) },
 					{ U("minFilter"), web::json::value::number ((int)IOglTF::LINEAR_MIPMAP_LINEAR) },
 					{ U("wrapS"), web::json::value::number ((int)(pTexture->WrapModeU.Get () == FbxTexture::eRepeat ? IOglTF::REPEAT : IOglTF::CLAMP_TO_EDGE)) },

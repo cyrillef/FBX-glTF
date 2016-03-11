@@ -23,7 +23,6 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/asset.schema.json
 bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 	web::json::value asset =web::json::value::object () ;
 

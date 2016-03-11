@@ -73,23 +73,23 @@
     },
     "bufferViews": {
         "bufferView_29": {
-            "buffer": "duck\\out\\duck",
+            "buffer": "duck",
             "byteLength": 25272,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_30": {
-            "buffer": "duck\\out\\duck",
+            "buffer": "duck",
             "byteLength": 76768,
             "byteOffset": 25272,
             "target": 34962
         }
     },
     "buffers": {
-        "duck\\out\\duck": {
+        "duck": {
             "byteLength": 102040,
             "type": "arraybuffer",
-            "uri": "duck\\out\\duck.bin"
+            "uri": "duck.bin"
         }
     },
     "cameras": {
@@ -234,8 +234,8 @@
                 "a_position",
                 "a_texcoord0"
             ],
-            "fragmentShader": "duck\\out\\duck0FS",
-            "vertexShader": "duck\\out\\duck0VS"
+            "fragmentShader": "duck0FS",
+            "vertexShader": "duck0VS"
         }
     },
     "samplers": {
@@ -257,13 +257,13 @@
         }
     },
     "shaders": {
-        "duck\\out\\duck0FS": {
+        "duck0FS": {
             "type": 35632,
-            "uri": "duck\\out\\duck0FS.glsl"
+            "uri": "duck0FS.glsl"
         },
-        "duck\\out\\duck0VS": {
+        "duck0VS": {
             "type": 35633,
-            "uri": "duck\\out\\duck0VS.glsl"
+            "uri": "duck0VS.glsl"
         }
     },
     "skins": {},

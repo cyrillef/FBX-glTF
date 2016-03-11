@@ -27,7 +27,7 @@ namespace _IOglTF_NS_ {
 bool gltfWriter::WriteShaders () {
 	//web::json::value buffer =web::json::value::object () ;
 	//FbxString filename =FbxPathUtils::GetFileName (utility::conversions::to_utf8string (_fileName).c_str (), false) ;
-	//buffer [U("name")] =web::json::value::string (utility::conversions::to_string_t (filename.Buffer ())) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	//buffer [U("name")] =web::json::value::string (utility::conversions::to_string_t (filename.Buffer ())) ;
 
 	//buffer [U("uri")] =web::json::value::string (utility::conversions::to_string_t ((filename + ".bin").Buffer ())) ;
 	//// The Buffer file should be fully completed by now.

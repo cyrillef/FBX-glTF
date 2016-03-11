@@ -59,7 +59,8 @@ class gltfwriterVBO {
 
 public:
 	gltfwriterVBO (FbxMesh *pMesh) { _pMesh =pMesh ; }
-	void GetLayerElements (int layerIndex, bool bInGeometry) ;
+
+	void GetLayerElements (bool bInGeometry) ;
 	FbxArray<FbxVector4> GetVertexPositions (bool bInGeometry, bool bExportControlPoints) ;
 	bool getSimilarVertexIndex (PackedVertex & packed, std::map<PackedVertex, unsigned short> &VertexToOutIndex, unsigned short &result) ;
 	void indexVBO () ;
@@ -72,6 +73,16 @@ public:
 	std::vector<FbxDouble3> getBinormals () { return (_out_binormals) ; }
 	std::vector<FbxColor> getVertexColors () { return (_out_vcolors) ; }
 	std::map<utility::string_t, utility::string_t> getUvSets () { return (_uvSets) ; }
+
+protected:
+	FbxLayerElementNormal *elementNormals (int iLayer =-1) ;
+	FbxLayerElementUV *elementUVs (FbxLayerElement::EType channel, int iLayer =-1) ;
+	FbxGeometryElementTangent *elementTangents (int iLayer =-1)  ;
+	FbxGeometryElementBinormal *elementBinormals (int iLayer =-1) ;
+	FbxLayerElementVertexColor *elementVcolors (int iLayer =-1) ;
+public:
+	static FbxLayer *getLayer (FbxMesh *pMesh, FbxLayerElement::EType pType) ;
+
 } ;
 
 }

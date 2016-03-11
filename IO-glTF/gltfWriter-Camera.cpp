@@ -75,15 +75,22 @@ double gltfWriter::cameraYFOV (FbxCamera *pCamera) {
 	return (focalAngle) ;
 }
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/camera.schema.json
 web::json::value gltfWriter::WriteCamera (FbxNode *pNode) {
 	web::json::value camera =web::json::value::object () ;
 	web::json::value cameraDef =web::json::value::object () ;
-	camera [U("name")] =web::json::value::string (nodeId (pNode)) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	camera [U("name")] =web::json::value::string (nodeId (pNode, true)) ;
+
+	if ( isKnownId (pNode->GetNodeAttribute ()->GetUniqueID ()) ) {
+		// The camera was already exported, create only the transform node
+		web::json::value node =WriteNode (pNode) ;
+		web::json::value ret =web::json::value::object ({ { U("nodes"), node } }) ;
+		return (ret) ;
+	}
+
 	FbxCamera *pCamera =pNode->GetCamera () ; //FbxCast<FbxCamera>(pNode->GetNodeAttribute ()) ;
 	//FbxCamera::EAspectRatioMode aspectRatioMode =pCamera->GetAspectRatioMode () ;
 	switch ( pCamera->ProjectionType.Get () ) {
-		case FbxCamera::EProjectionType::ePerspective: // https://github.com/KhronosGroup/glTF/blob/master/specification/cameraPerspective.schema.json
+		case FbxCamera::EProjectionType::ePerspective:
 			camera [U("type")] =web::json::value::string (U("perspective")) ;
 			cameraDef [U("aspectRatio")] =web::json::value::number (pCamera->FilmAspectRatio) ; // (pCamera->AspectWidth / pCamera->AspectHeight) ;
 			//cameraDef [U("yfov")] =web::json::value::number (DEG2RAD(pCamera->FieldOfView)) ;
@@ -92,7 +99,7 @@ web::json::value gltfWriter::WriteCamera (FbxNode *pNode) {
 			cameraDef [U("znear")] =web::json::value::number (pCamera->NearPlane) ;
 			camera [U("perspective")] =cameraDef ;
 			break ;
-		case FbxCamera::EProjectionType::eOrthogonal: // https://github.com/KhronosGroup/glTF/blob/master/specification/cameraOrthographic.schema.json
+		case FbxCamera::EProjectionType::eOrthogonal:
 			camera [U("type")] =web::json::value::string (U("orthographic")) ;
 			//cameraDef [U("xmag")] =web::json::value::number (pCamera->_2DMagnifierX) ;
 			//cameraDef [U("ymag")] =web::json::value::number (pCamera->_2DMagnifierY) ;
@@ -106,11 +113,10 @@ web::json::value gltfWriter::WriteCamera (FbxNode *pNode) {
 			_ASSERTE (false) ;
 			break ;
 	}
-	web::json::value lib =web::json::value::object ({ { nodeId (pNode), camera } }) ;
+	web::json::value lib =web::json::value::object ({ { nodeId (pNode, true, true), camera } }) ;
 	web::json::value node =WriteNode (pNode) ;
 
 	return (web::json::value::object ({ { U("cameras"), lib }, { U("nodes"), node } })) ;
-	//return (web::json::value::object ({{ nodeId (pNode), camera }})) ;
 }
 
 }

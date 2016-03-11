@@ -23,8 +23,7 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/material.schema.json
-
+// FBX does not support Blinn yet, it would become Phong by default.
 utility::string_t gltfWriter::LighthingModel (FbxSurfaceMaterial *pMaterial) {
 	if ( pMaterial->Is<FbxSurfacePhong> () ) {
 		return (U("Phong")) ;
@@ -46,15 +45,17 @@ utility::string_t gltfWriter::LighthingModel (FbxSurfaceMaterial *pMaterial) {
 
 web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) {
 	utility::string_t materialName =utility::conversions::to_string_t (pMaterial->GetNameWithoutNameSpacePrefix ().Buffer ()) ; // Material do not support namespaces.
-	if ( _json [U("materials")].has_field (materialName) )
+
+	// Look if this material is already in the materials library.
+	//if ( _json [U("materials")].has_field (materialName) )
+	if ( isNameRegistered (materialName) )
 		return (web::json::value::string (materialName)) ;
 
 	web::json::value material =web::json::value::object () ;
-	material [U("name")] =web::json::value::string (materialName) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	material [U("name")] =web::json::value::string (materialName) ;
 
-	// Look if this material is already in the materials library.
 	web::json::value ret =web::json::value::null () ;
-	if ( !_json [U("materials")].has_field (materialName) ) {
+	
 		// Use Cg shaders in WebGL?
 		// Usually you don't want to.
 		//
@@ -110,7 +111,7 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 					ret =WriteDefaultShadingModelMaterial (pNode, pMaterial) ;
 			}
 		}
-	}
+	
 
 	web::json::value techniqueParameters =web::json::value::null () ;
 	if ( !ret.is_null () ) {
@@ -118,9 +119,10 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 		techniqueParameters =ret [U("techniqueParameters")] ;
 	}
 
-	utility::string_t techniqueName =createUniqueId (materialName + U("_technique"), 0) ; // Start with 0, but will increase based on own many are yet registered
-	material [U("technique")] =web::json::value::string (techniqueName) ;
+	utility::string_t techniqueName =createUniqueName (materialName + U("_technique"), 0) ; // Start with 0, but will increase based on own many are yet registered
+	material [U("technique")] =web::json::value::string (techniqueName) ; // technique name already registered
 
+	registerName (materialName) ; // Register material name to avoid duplicates
 	web::json::value lib =web::json::value::object ({ { materialName, material } }) ;
 
 	web::json::value technique =web::json::value::object ({{ U("parameters"), techniqueParameters }}) ;
@@ -138,11 +140,14 @@ web::json::value gltfWriter::WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *
 
 web::json::value gltfWriter::WriteDefaultMaterial (FbxNode *pNode) {
 	utility::string_t materialName (U("defaultMaterial")) ;
-	if ( _json [U("materials")].has_field (materialName) )
+
+	// Look if this material is already in the materials library.
+	//if ( _json [U("materials")].has_field (materialName) )
+	if ( isNameRegistered (materialName) )
 		return (web::json::value::string (materialName)) ;
 
 	web::json::value material =web::json::value::object () ;
-	material [U("name")] =web::json::value::string (materialName) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	material [U("name")] =web::json::value::string (materialName) ;
 
 	// Look if this material is already in the materials library.
 	web::json::value ret =web::json::value::null () ;
@@ -157,9 +162,10 @@ web::json::value gltfWriter::WriteDefaultMaterial (FbxNode *pNode) {
 		techniqueParameters =ret [U("techniqueParameters")] ;
 	}
 
-	utility::string_t techniqueName =createUniqueId (materialName + U("_technique"), 0) ; // Start with 0, but will increase based on own many are yet registered
-	material [U("technique")] =web::json::value::string (techniqueName) ;
+	utility::string_t techniqueName =createUniqueName (materialName + U("_technique"), 0) ; // Start with 0, but will increase based on own many are yet registered
+	material [U("technique")] =web::json::value::string (techniqueName) ; // technique name already registered
 
+	registerName (materialName) ; // Register material name to avoid duplicates
 	web::json::value lib =web::json::value::object ({ { materialName, material } }) ;
 
 	web::json::value technique =web::json::value::object ({{ U("parameters"), techniqueParameters }}) ;
@@ -176,9 +182,6 @@ web::json::value gltfWriter::WriteDefaultMaterial (FbxNode *pNode) {
 }
 
 #define MultiplyDouble3By(a,b) a [0] *= b ; a [1] *= b ; a [2] *= b
-
-// https://github.com/KhronosGroup/glTF/blob/master/specification/technique.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniqueParameters.schema.json
 
 web::json::value gltfWriter::WriteMaterialParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble3> &property, double factor, web::json::value &values, web::json::value &techniqueParameters) {
 	web::json::value ret =web::json::value::null () ;

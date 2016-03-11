@@ -883,23 +883,23 @@
     },
     "bufferViews": {
         "bufferView_428": {
-            "buffer": "wine\\dae\\wine",
+            "buffer": "wine",
             "byteLength": 44952,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_429": {
-            "buffer": "wine\\dae\\wine",
+            "buffer": "wine",
             "byteLength": 284136,
             "byteOffset": 44952,
             "target": 34962
         }
     },
     "buffers": {
-        "wine\\dae\\wine": {
+        "wine": {
             "byteLength": 329088,
             "type": "arraybuffer",
-            "uri": "wine\\dae\\wine.bin"
+            "uri": "wine.bin"
         }
     },
     "cameras": {
@@ -11812,31 +11812,31 @@
                 "a_position",
                 "a_texcoord0"
             ],
-            "fragmentShader": "wine\\dae\\wine0FS",
-            "vertexShader": "wine\\dae\\wine0VS"
+            "fragmentShader": "wine0FS",
+            "vertexShader": "wine0VS"
         },
         "program_1": {
             "attributes": [
                 "a_normal",
                 "a_position"
             ],
-            "fragmentShader": "wine\\dae\\wine1FS",
-            "vertexShader": "wine\\dae\\wine1VS"
+            "fragmentShader": "wine1FS",
+            "vertexShader": "wine1VS"
         },
         "program_2": {
             "attributes": [
                 "a_position"
             ],
-            "fragmentShader": "wine\\dae\\wine2FS",
-            "vertexShader": "wine\\dae\\wine2VS"
+            "fragmentShader": "wine2FS",
+            "vertexShader": "wine2VS"
         },
         "program_3": {
             "attributes": [
                 "a_normal",
                 "a_position"
             ],
-            "fragmentShader": "wine\\dae\\wine3FS",
-            "vertexShader": "wine\\dae\\wine3VS"
+            "fragmentShader": "wine3FS",
+            "vertexShader": "wine3VS"
         }
     },
     "samplers": {
@@ -11856,37 +11856,37 @@
         }
     },
     "shaders": {
-        "wine\\dae\\wine0FS": {
+        "wine0FS": {
             "type": 35632,
-            "uri": "wine\\dae\\wine0FS.glsl"
+            "uri": "wine0FS.glsl"
         },
-        "wine\\dae\\wine0VS": {
+        "wine0VS": {
             "type": 35633,
-            "uri": "wine\\dae\\wine0VS.glsl"
+            "uri": "wine0VS.glsl"
         },
-        "wine\\dae\\wine1FS": {
+        "wine1FS": {
             "type": 35632,
-            "uri": "wine\\dae\\wine1FS.glsl"
+            "uri": "wine1FS.glsl"
         },
-        "wine\\dae\\wine1VS": {
+        "wine1VS": {
             "type": 35633,
-            "uri": "wine\\dae\\wine1VS.glsl"
+            "uri": "wine1VS.glsl"
         },
-        "wine\\dae\\wine2FS": {
+        "wine2FS": {
             "type": 35632,
-            "uri": "wine\\dae\\wine2FS.glsl"
+            "uri": "wine2FS.glsl"
         },
-        "wine\\dae\\wine2VS": {
+        "wine2VS": {
             "type": 35633,
-            "uri": "wine\\dae\\wine2VS.glsl"
+            "uri": "wine2VS.glsl"
         },
-        "wine\\dae\\wine3FS": {
+        "wine3FS": {
             "type": 35632,
-            "uri": "wine\\dae\\wine3FS.glsl"
+            "uri": "wine3FS.glsl"
         },
-        "wine\\dae\\wine3VS": {
+        "wine3VS": {
             "type": 35633,
-            "uri": "wine\\dae\\wine3VS.glsl"
+            "uri": "wine3VS.glsl"
         }
     },
     "skins": {},

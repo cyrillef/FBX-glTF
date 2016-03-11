@@ -20,6 +20,9 @@
 //
 #include "StdAfx.h"
 #include "gltfWriter.h"
+#ifdef _DEBUG
+#include "JsonPrettify.h"
+#endif
 
 #include <stdlib.h>
 #define _DEBUG_VERBOSE 1
@@ -92,7 +95,12 @@ bool gltfWriter::FileCreate (char *pFileName) {
 
 bool gltfWriter::FileClose () {
 	PrepareForSerialization () ;
+#ifdef _DEBUG
+	JsonPrettify prettify (_json) ;
+	prettify.serialize (_gltf) ;
+#else
 	_json.serialize (_gltf) ;
+#endif
 	_gltf.close () ;
 
 	// If media saved in file, gltfWriter::PostprocessScene / gltfWriter::WriteBuffer should have embed the data already
@@ -340,18 +348,6 @@ bool gltfWriter::isKnownId (utility::string_t id) {
 	return (findResult != std::end (_IDs)) ;
 }
 
-//utility::string_t gltfWriter::nodeId (utility::string_t type, FbxUInt64 id) {
-//	utility::string_t buffer =utility::conversions::to_string_t ((int)id) ;
-//	utility::string_t uid (type) ;
-//	uid +=U("_") + buffer ;
-//	return (uid) ;
-//}
-
-//utility::string_t gltfWriter::nodeId (const utility::char_t *pszType, FbxUInt64 id) {
-//	utility::string_t st (pszType) ;
-//	return (nodeId (st, id)) ;
-//}
-
 utility::string_t gltfWriter::nodeId (FbxNode *pNode, bool bNodeAttribute /*=false*/, bool bRecord /*=false*/) {
 	FbxUInt64 id =bNodeAttribute && pNode->GetNodeAttribute () != nullptr ? pNode->GetNodeAttribute ()->GetUniqueID () : pNode->GetUniqueID () ;
 	if ( isKnownId (id) )
@@ -367,71 +363,6 @@ utility::string_t gltfWriter::nodeId (FbxNode *pNode, bool bNodeAttribute /*=fal
 		recordId (id, name) ;
 	return (name) ;
 }
-
-//utility::string_t gltfWriter::nodeId (FbxNode *pNode) {
-//	ucout << U(" ID - ")
-//		<< utility::conversions::to_string_t (pNode->GetName ()) 
-//		<< U(" (") << utility::conversions::to_string_t ((int)pNode->GetUniqueID ()) << U(") / ") ;
-//		
-//	if ( pNode->GetNodeAttribute () != nullptr ) {
-//		ucout << utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ())
-//			<< U(" [ ") << utility::conversions::to_string_t (pNode->GetTypeName ()) << U(" ] ") 
-//			<< U("(") << utility::conversions::to_string_t ((int)pNode->GetNodeAttribute ()->GetUniqueID ()) << U(") ") ;
-//	} else {
-//		ucout << U(" [ ") << utility::conversions::to_string_t (pNode->GetTypeName ()) << U(" ] ") ;
-//	}
-//
-//	FbxProperty cid =pNode->FindProperty ("COLLADA_ID") ;
-//	FbxString sid =cid.IsValid () ? cid.Get<FbxString> () : "" ;
-//	if ( sid != "" )
-//		ucout << U(" / ") << utility::conversions::to_string_t (sid.Buffer ()) ;
-//	ucout << std::endl ;
-//
-//
-//	//FbxNodeAttribute *gg =pNode->GetNodeAttribute () ;
-//	//const char *kk =gg->GetName () ;
-//	//utility::string_t st =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
-//	// pNode->GetUniqueID ())
-//
-//	//if ( pNode->GetNodeAttribute () == nullptr ) {
-//	//	utility::string_t uid =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
-//	//	uid +=U("_") + utility::conversions::to_string_t ((int)pNode->GetUniqueID ()) ;
-//	//	if ( uid == U("group_0") )
-//	//		return (uid) ;
-//	//	return (uid) ;
-//	//}
-//
-//	//FbxProperty cid =pNode->FindProperty ("COLLADA_ID") ;
-//	//FbxString sid =cid.IsValid () ? cid.Get<FbxString> () : "" ;
-//	//if ( sid != "" )
-//	//	return (utility::conversions::to_string_t (sid.Buffer ())) ;
-//
-//
-//	utility::string_t id ;
-//	if ( pNode->GetNodeAttribute () == nullptr )
-//		id =utility::conversions::to_string_t (pNode->GetName ()) ;
-//
-//	//if ( utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ()) == U("group_0") )
-//	//	return (utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ())) ;
-//	else
-//		id =utility::conversions::to_string_t (pNode->GetNodeAttribute ()->GetName ()) ;
-//
-//	if ( id.length () == 0 ) {
-//		id =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
-//		id +=U("_") + utility::conversions::to_string_t ((int)pNode->GetUniqueID ()) ;
-//	}
-//
-//	return (id) ;
-//
-//	//return (nodeId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
-//
-//	//FbxString nameWithoutSpacePrefix =pNode->GetNameWithoutNameSpacePrefix () ;
-//	//FbxString szID =nameWithoutSpacePrefix ;
-//	//FbxProperty id =pNode->FindProperty ("COLLADA_ID") ;
-//	//if ( id.IsValid () )
-//	//	szID =id.Get<FbxString> () ;
-//	//return (utility::conversions::to_string_t (szID.Buffer ())) ;
-//}
 
 utility::string_t gltfWriter::registerName (utility::string_t name) {
 	if ( !isNameRegistered (name) )
@@ -455,10 +386,6 @@ utility::string_t gltfWriter::createUniqueName (utility::string_t type, FbxUInt6
 	_ASSERTE (false) ;
 	return (U("error")) ;
 }
-
-//utility::string_t gltfWriter::createUniqueId (FbxNode *pNode) {
-//	return (createUniqueId (utility::conversions::to_string_t (pNode->GetTypeName ()), pNode->GetUniqueID ())) ;
-//}
 
 //-----------------------------------------------------------------------------
 web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *pPose /*=nullptr*/, bool bRoot /*=false*/) {

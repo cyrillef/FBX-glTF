@@ -165,6 +165,24 @@ bool gltfPackage::LoadScene (const utility::string_t &fn) {
 	//if ( bStatus == false && pImporter->GetStatus ().GetCode () == FbxStatus::ePasswordError ) {
 	//}
 
+	// Get current UpAxis of the FBX file.
+	// This have to be done before ConvertiAxisSystem(), cause the function will always change SceneAxisSystem to Y-up.
+	// First, however, if we have the ForcedFileAxis activated, we need to overwrite the global settings.
+	//switch ( IOS_REF.GetEnumProp (IMP_FILE_UP_AXIS, FbxMayaUtility::eUPAXIS_AUTO) ) {
+	//	default:
+	//	case FbxMayaUtility::eUPAXIS_AUTO:
+	//		break ;
+	//	case FbxMayaUtility::eUPAXIS_Y:
+	//		_scene->GetGlobalSettings ().SetAxisSystem (FbxAxisSystem::MayaYUp) ;
+	//		break ;
+	//	case FbxMayaUtility::eUPAXIS_Z:
+	//		_scene->GetGlobalSettings ().SetAxisSystem (FbxAxisSystem::MayaZUp) ;
+	//	break ;
+	//}
+	//FbxAxisSystem sceneAxisSystem =_scene->GetGlobalSettings ().GetAxisSystem () ;
+	//int lSign =0 ;
+	//FbxAxisSystem::EUpVector upVectorFromFile =sceneAxisSystem.GetUpVector (lSign) ;
+
 	FbxAxisSystem::MayaYUp.ConvertScene (_scene) ; // We want the Y up axis for glTF
 
 	FbxSystemUnit sceneSystemUnit =_scene->GetGlobalSettings ().GetSystemUnit () ; // We want meter as default unit for gltTF
@@ -185,8 +203,38 @@ bool gltfPackage::LoadScene (const utility::string_t &fn) {
 	converter.Triangulate (_scene, true) ; // glTF supports triangles only
 	converter.SplitMeshesPerMaterial (_scene, true) ; // Split meshes per material, so we only have one material per mesh (VBO support)
 	
+	// Set the current peripheral to be the NULL so FBX geometries that have been imported can be flushed
+    _scene->SetPeripheral (NULL_PERIPHERAL) ;
+
+	//int nb =_scene->GetSrcObjectCount<FbxNodeAttribute> () ;
+	//int nbTot =5 * nb ;
+	//int nbRest =4 * nb ;
+	//int nbSteps =nbRest / 8 ;
+
+	//FbxArray<FbxNode *> pBadMeshes =RemoveBadPolygonsFromMeshes (_scene) ;
+
 	return (true) ;
 }
+
+//FbxArray<FbxNode *> RemoveBadPolygonsFromMeshes (FbxScene *pScene) {
+//	FbxArray<FbxNode *> pAffectedNodes ;
+//	FbxNode *pNode =pScene->GetRootNode () ;
+//	RemoveBadPolygonsFromMeshesRecursive (pNode, pAffectedNodes) ;
+//	return (pAffectedNodes) ;
+//}
+//
+//FbxArray<FbxNode *> RemoveBadPolygonsFromMeshesRecursive (FbxNode *pNode, FbxArray<FbxNode *> &pAffectedNodes) {
+//	FbxMesh *pMesh =pNode->GetMesh () ;
+//	if ( pMesh ) {
+//		if ( pMesh->RemoveBadPolygons () > 0 )
+//			pAffectedNodes.Add (pNode) ;
+//	}
+//	for ( int nChildIndex =0 ; nChildIndex < pNode->GetChildCount () ; nChildIndex++ ) {
+//		FbxNode *pChild =pNode->GetChild (nChildIndex) ;
+//		RemoveBadPolygonsFromMeshesRecursive (pChild, pAffectedNodes) ;
+//	}
+//	return (pAffectedNodes) ;
+//}
 
 bool gltfPackage::WriteScene (const utility::string_t &outdir) {
 	auto pMgr =fbxSdkMgr::Instance ()->fbxMgr () ;

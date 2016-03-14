@@ -1,0 +1,46 @@
+{
+    "accessors": {},
+    "animations": {},
+    "asset": {
+        "generator": "collada2gltf@bc1fe2adaf3e0bec42750ade3bc1d763d0f298aa",
+        "premultipliedAlpha": true,
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": "1.0"
+    },
+    "bufferViews": {
+        "bufferView_2": {
+            "buffer": "Carnivorous_plant\\dae\\test",
+            "byteLength": 0,
+            "byteOffset": 0,
+            "target": 34963
+        },
+        "bufferView_3": {
+            "buffer": "Carnivorous_plant\\dae\\test",
+            "byteLength": 0,
+            "byteOffset": 0,
+            "target": 34962
+        }
+    },
+    "buffers": {},
+    "images": {
+        "Map #130-image": {
+            "name": "Map #130",
+            "uri": ""
+        },
+        "Map #131-image": {
+            "name": "Map #131",
+            "uri": ""
+        },
+        "Map #133-image": {
+            "name": "Map #133",
+            "uri": ""
+        }
+    },
+    "materials": {},
+    "meshes": {},
+    "nodes": {},
+    "skins": {}
+}

@@ -42,6 +42,9 @@ protected:
 	void formatArray (web::json::array &arr, utility::ostream_t &stream) ;
 	void formatObject (web::json::object &obj, utility::ostream_t &stream) ;
 
+	template<typename CharType>
+	static void append_escape_string (std::basic_string<CharType> &str, const std::basic_string<CharType> &escaped) ;
+
 public:
 	JsonPrettify (web::json::value &json) : _json (json), _level (0) {} 
 

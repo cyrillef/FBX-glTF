@@ -1,0 +1,442 @@
+{
+	"accessors": {
+		"Mesh_53_Normals": {
+			"bufferView": "Mesh_53_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 24,
+			"max": [
+				1,
+				1,
+				1
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "Mesh_53_Normals",
+			"type": "VEC3"
+		},
+		"Mesh_53_Polygons": {
+			"bufferView": "Mesh_53_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 36,
+			"name": "Mesh_53_Polygons",
+			"type": "SCALAR"
+		},
+		"Mesh_53_Positions": {
+			"bufferView": "Mesh_53_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 24,
+			"max": [
+				0.5,
+				0.5,
+				0.5
+			],
+			"min": [
+				-0.5,
+				-0.5,
+				-0.5
+			],
+			"name": "Mesh_53_Positions",
+			"type": "VEC3"
+		},
+		"Mesh_53_TEXCOORD_0": {
+			"bufferView": "Mesh_53_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 24,
+			"max": [
+				1,
+				1
+			],
+			"min": [
+				0,
+				0
+			],
+			"name": "Mesh_53_TEXCOORD_0",
+			"type": "VEC2"
+		}
+	},
+	"animations": {
+	},
+	"asset": {
+		"copyright": "",
+		"generator": "FBX GLTF Exporter v1.0",
+		"premultipliedAlpha": 0,
+		"profile": {
+			"api": "WebGL",
+			"version": "1.0.3"
+		},
+		"version": "1.0"
+	},
+	"bufferViews": {
+		"Mesh_53_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 288,
+			"byteOffset": 288,
+			"name": "Mesh_53_Normals_Buffer",
+			"target": 34962
+		},
+		"Mesh_53_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 72,
+			"byteOffset": 768,
+			"name": "Mesh_53_Polygons_Buffer",
+			"target": 34963
+		},
+		"Mesh_53_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 288,
+			"byteOffset": 0,
+			"name": "Mesh_53_Positions_Buffer",
+			"target": 34962
+		},
+		"Mesh_53_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 192,
+			"byteOffset": 576,
+			"name": "Mesh_53_TEXCOORD_0_Buffer",
+			"target": 34962
+		}
+	},
+	"buffers": {
+		"test": {
+			"byteLength": 840,
+			"name": "test",
+			"type": "arraybuffer",
+			"uri": "test.bin"
+		}
+	},
+	"cameras": {
+		"camera1_44": {
+			"name": "camera1_44",
+			"perspective": {
+				"aspectRatio": 1.5,
+				"yfov": 0.438339,
+				"zfar": 100,
+				"znear": 0.001
+			},
+			"type": "perspective"
+		}
+	},
+	"images": {
+		"file1": {
+			"name": "file1",
+			"uri": "tex_0.jpg"
+		}
+	},
+	"lights": {
+		"Light_43": {
+			"directional": {
+				"color": [
+					1,
+					1,
+					1
+				]
+			},
+			"name": "Light_43",
+			"type": "directional"
+		}
+	},
+	"materials": {
+		"file1Material": {
+			"name": "file1Material",
+			"technique": "file1Material_technique_0",
+			"values": {
+				"ambient": [
+					0,
+					0,
+					0,
+					1
+				],
+				"diffuse": "texture_file1",
+				"emission": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflectivity": 1,
+				"transparency": 1,
+				"transparent": [
+					0,
+					0,
+					0,
+					1
+				]
+			}
+		}
+	},
+	"meshes": {
+		"Mesh_53": {
+			"name": "Mesh_53",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "Mesh_53_Normals",
+						"POSITION": "Mesh_53_Positions",
+						"TEXCOORD_0": "Mesh_53_TEXCOORD_0"
+					},
+					"indices": "Mesh_53_Polygons",
+					"material": "file1Material",
+					"mode": 4
+				}
+			]
+		}
+	},
+	"nodes": {
+		"RootNode_10": {
+			"children": [
+				"pCube1_45",
+				"directionalLight1_46",
+				"camera1_47"
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "RootNode_10"
+		},
+		"camera1_47": {
+			"camera": "camera1_44",
+			"children": [
+			],
+			"matrix": [
+				0.00832854,
+				0.000162955,
+				0.00553253,
+				0,
+				0.00229407,
+				0.00899505,
+				-0.00371839,
+				0,
+				-0.00503713,
+				0.00436607,
+				0.00745418,
+				0,
+				-0.0105989,
+				0.0159404,
+				0.0202664,
+				1
+			],
+			"name": "camera1_47"
+		},
+		"directionalLight1_46": {
+			"children": [
+			],
+			"light": "Light_43",
+			"matrix": [
+				0.00916539,
+				-0.000187221,
+				-0.00399507,
+				0,
+				-0.00216302,
+				0.00817006,
+				-0.00534523,
+				0,
+				0.00336407,
+				0.00576325,
+				0.00744768,
+				0,
+				0,
+				0.00729181,
+				0.0125558,
+				1
+			],
+			"name": "directionalLight1_46"
+		},
+		"pCube1_45": {
+			"children": [
+			],
+			"matrix": [
+				0.01,
+				0,
+				0,
+				0,
+				0,
+				0.01,
+				0,
+				0,
+				0,
+				0,
+				0.01,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"meshes": [
+				"Mesh_53"
+			],
+			"name": "pCube1_45"
+		}
+	},
+	"programs": {
+		"program_0": {
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_0FS",
+			"name": "program_0",
+			"vertexShader": "program_0VS"
+		}
+	},
+	"samplers": {
+		"sampler_file1": {
+			"magFilter": 9729,
+			"minFilter": 9987,
+			"name": "sampler_file1",
+			"wrapS": 10497,
+			"wrapT": 10497
+		}
+	},
+	"scene": "test",
+	"scenes": {
+		"test": {
+			"nodes": [
+				"RootNode_10"
+			]
+		}
+	},
+	"shaders": {
+		"program_0FS": {
+			"type": 35632,
+			"uri": "program_0FS.glsl"
+		},
+		"program_0VS": {
+			"type": 35633,
+			"uri": "program_0VS.glsl"
+		}
+	},
+	"skins": {
+	},
+	"techniques": {
+		"file1Material_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position",
+				"a_texcoord0": "texcoord0"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Lambert",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"ambient": {
+					"type": 35666
+				},
+				"diffuse": {
+					"type": 35678
+				},
+				"emission": {
+					"type": 35666
+				},
+				"light0Color": {
+					"type": 35665,
+					"value": [
+						1,
+						1,
+						1
+					]
+				},
+				"light0Transform": {
+					"node": "directionalLight1_46",
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				},
+				"reflectivity": {
+					"type": 5126
+				},
+				"texcoord0": {
+					"semantic": "TEXCOORD_0",
+					"type": 35664
+				},
+				"transparency": {
+					"type": 5126
+				},
+				"transparent": {
+					"type": 35666
+				}
+			},
+			"program": "program_0",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_ambient": "ambient",
+				"u_diffuse": "diffuse",
+				"u_emission": "emission",
+				"u_light0Color": "light0Color",
+				"u_light0Transform": "light0Transform",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix",
+				"u_reflectivity": "reflectivity",
+				"u_transparency": "transparency",
+				"u_transparent": "transparent"
+			}
+		}
+	},
+	"textures": {
+		"texture_file1": {
+			"format": 6408,
+			"internalFormat": 6408,
+			"name": "texture_file1",
+			"sampler": "sampler_file1",
+			"source": "file1",
+			"target": 3553,
+			"type": 5121
+		}
+	}
+}

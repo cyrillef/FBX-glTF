@@ -1,0 +1,1754 @@
+{
+	"accessors": {
+		"Carnivorous_plant_head_174_Normals": {
+			"bufferView": "Carnivorous_plant_head_174_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 35238,
+			"max": [
+				1,
+				1,
+				1
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "Carnivorous_plant_head_174_Normals",
+			"type": "VEC3"
+		},
+		"Carnivorous_plant_head_174_Polygons": {
+			"bufferView": "Carnivorous_plant_head_174_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 196224,
+			"name": "Carnivorous_plant_head_174_Polygons",
+			"type": "SCALAR"
+		},
+		"Carnivorous_plant_head_174_Positions": {
+			"bufferView": "Carnivorous_plant_head_174_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 35238,
+			"max": [
+				76.2226,
+				50.1195,
+				74.2561
+			],
+			"min": [
+				-61.0822,
+				-50.2698,
+				-69.6533
+			],
+			"name": "Carnivorous_plant_head_174_Positions",
+			"type": "VEC3"
+		},
+		"Carnivorous_plant_head_174_TEXCOORD_0": {
+			"bufferView": "Carnivorous_plant_head_174_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 35238,
+			"max": [
+				0.9969,
+				0.9974
+			],
+			"min": [
+				0.0061,
+				0.00370002
+			],
+			"name": "Carnivorous_plant_head_174_TEXCOORD_0",
+			"type": "VEC2"
+		},
+		"dry_165_Normals": {
+			"bufferView": "dry_165_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 970,
+			"max": [
+				0.998447,
+				0.977358,
+				0.999898
+			],
+			"min": [
+				-0.998387,
+				-0.996713,
+				-0.999908
+			],
+			"name": "dry_165_Normals",
+			"type": "VEC3"
+		},
+		"dry_165_Polygons": {
+			"bufferView": "dry_165_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 3846,
+			"name": "dry_165_Polygons",
+			"type": "SCALAR"
+		},
+		"dry_165_Positions": {
+			"bufferView": "dry_165_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 970,
+			"max": [
+				114.542,
+				188.508,
+				0
+			],
+			"min": [
+				-103.901,
+				-97.4522,
+				-160.159
+			],
+			"name": "dry_165_Positions",
+			"type": "VEC3"
+		},
+		"dry_165_TEXCOORD_0": {
+			"bufferView": "dry_165_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 970,
+			"max": [
+				1.03676,
+				2.5091
+			],
+			"min": [
+				-0.646591,
+				-1.8445
+			],
+			"name": "dry_165_TEXCOORD_0",
+			"type": "VEC2"
+		},
+		"green_162_Normals": {
+			"bufferView": "green_162_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 12492,
+			"max": [
+				0.999852,
+				0.999928,
+				0.999875
+			],
+			"min": [
+				-0.999851,
+				-0.999927,
+				-0.999986
+			],
+			"name": "green_162_Normals",
+			"type": "VEC3"
+		},
+		"green_162_Polygons": {
+			"bufferView": "green_162_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 51192,
+			"name": "green_162_Polygons",
+			"type": "SCALAR"
+		},
+		"green_162_Positions": {
+			"bufferView": "green_162_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 12492,
+			"max": [
+				228.121,
+				335.809,
+				753.226
+			],
+			"min": [
+				-203.948,
+				-227.518,
+				-55.3071
+			],
+			"name": "green_162_Positions",
+			"type": "VEC3"
+		},
+		"green_162_TEXCOORD_0": {
+			"bufferView": "green_162_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 12492,
+			"max": [
+				181.728,
+				103.599
+			],
+			"min": [
+				-4.29327,
+				-27.1312
+			],
+			"name": "green_162_TEXCOORD_0",
+			"type": "VEC2"
+		},
+		"ground_1002_Normals": {
+			"bufferView": "ground_1002_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 57,
+			"max": [
+				4.51918e-008,
+				4.51918e-008,
+				1
+			],
+			"min": [
+				-4.51919e-008,
+				-4.51918e-008,
+				1
+			],
+			"name": "ground_1002_Normals",
+			"type": "VEC3"
+		},
+		"ground_1002_Polygons": {
+			"bufferView": "ground_1002_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 168,
+			"name": "ground_1002_Polygons",
+			"type": "SCALAR"
+		},
+		"ground_1002_Positions": {
+			"bufferView": "ground_1002_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 57,
+			"max": [
+				84.4112,
+				84.4112,
+				58.2582
+			],
+			"min": [
+				-84.4112,
+				-84.4112,
+				58.2582
+			],
+			"name": "ground_1002_Positions",
+			"type": "VEC3"
+		},
+		"ground_1002_TEXCOORD_0": {
+			"bufferView": "ground_1002_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 57,
+			"max": [
+				1,
+				1
+			],
+			"min": [
+				0,
+				0
+			],
+			"name": "ground_1002_TEXCOORD_0",
+			"type": "VEC2"
+		},
+		"pot_171_Normals": {
+			"bufferView": "pot_171_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 807,
+			"max": [
+				1,
+				1,
+				0.94937
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "pot_171_Normals",
+			"type": "VEC3"
+		},
+		"pot_171_Polygons": {
+			"bufferView": "pot_171_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 3780,
+			"name": "pot_171_Polygons",
+			"type": "SCALAR"
+		},
+		"pot_171_Positions": {
+			"bufferView": "pot_171_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 807,
+			"max": [
+				98.1986,
+				98.1986,
+				131.367
+			],
+			"min": [
+				-98.1986,
+				-98.1986,
+				-5.12122
+			],
+			"name": "pot_171_Positions",
+			"type": "VEC3"
+		},
+		"pot_171_TEXCOORD_0": {
+			"bufferView": "pot_171_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 807,
+			"max": [
+				3.23452,
+				1
+			],
+			"min": [
+				-0.748938,
+				-0.0368199
+			],
+			"name": "pot_171_TEXCOORD_0",
+			"type": "VEC2"
+		}
+	},
+	"animations": {
+	},
+	"asset": {
+		"copyright": "",
+		"generator": "FBX GLTF Exporter v1.0",
+		"premultipliedAlpha": 0,
+		"profile": {
+			"api": "WebGL",
+			"version": "1.0.3"
+		},
+		"version": "1.0"
+	},
+	"bufferViews": {
+		"Carnivorous_plant_head_174_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 422856,
+			"byteOffset": 999260,
+			"name": "Carnivorous_plant_head_174_Normals_Buffer",
+			"target": 34962
+		},
+		"Carnivorous_plant_head_174_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 392448,
+			"byteOffset": 1704020,
+			"name": "Carnivorous_plant_head_174_Polygons_Buffer",
+			"target": 34963
+		},
+		"Carnivorous_plant_head_174_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 422856,
+			"byteOffset": 576404,
+			"name": "Carnivorous_plant_head_174_Positions_Buffer",
+			"target": 34962
+		},
+		"Carnivorous_plant_head_174_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 281904,
+			"byteOffset": 1422116,
+			"name": "Carnivorous_plant_head_174_TEXCOORD_0_Buffer",
+			"target": 34962
+		},
+		"dry_165_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 11640,
+			"byteOffset": 513768,
+			"name": "dry_165_Normals_Buffer",
+			"target": 34962
+		},
+		"dry_165_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 7692,
+			"byteOffset": 533168,
+			"name": "dry_165_Polygons_Buffer",
+			"target": 34963
+		},
+		"dry_165_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 11640,
+			"byteOffset": 502128,
+			"name": "dry_165_Positions_Buffer",
+			"target": 34962
+		},
+		"dry_165_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 7760,
+			"byteOffset": 525408,
+			"name": "dry_165_TEXCOORD_0_Buffer",
+			"target": 34962
+		},
+		"green_162_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 149904,
+			"byteOffset": 149904,
+			"name": "green_162_Normals_Buffer",
+			"target": 34962
+		},
+		"green_162_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 102384,
+			"byteOffset": 399744,
+			"name": "green_162_Polygons_Buffer",
+			"target": 34963
+		},
+		"green_162_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 149904,
+			"byteOffset": 0,
+			"name": "green_162_Positions_Buffer",
+			"target": 34962
+		},
+		"green_162_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 99936,
+			"byteOffset": 299808,
+			"name": "green_162_TEXCOORD_0_Buffer",
+			"target": 34962
+		},
+		"ground_1002_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 684,
+			"byteOffset": 541544,
+			"name": "ground_1002_Normals_Buffer",
+			"target": 34962
+		},
+		"ground_1002_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 336,
+			"byteOffset": 542684,
+			"name": "ground_1002_Polygons_Buffer",
+			"target": 34963
+		},
+		"ground_1002_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 684,
+			"byteOffset": 540860,
+			"name": "ground_1002_Positions_Buffer",
+			"target": 34962
+		},
+		"ground_1002_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 456,
+			"byteOffset": 542228,
+			"name": "ground_1002_TEXCOORD_0_Buffer",
+			"target": 34962
+		},
+		"pot_171_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 9684,
+			"byteOffset": 552704,
+			"name": "pot_171_Normals_Buffer",
+			"target": 34962
+		},
+		"pot_171_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 7560,
+			"byteOffset": 568844,
+			"name": "pot_171_Polygons_Buffer",
+			"target": 34963
+		},
+		"pot_171_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 9684,
+			"byteOffset": 543020,
+			"name": "pot_171_Positions_Buffer",
+			"target": 34962
+		},
+		"pot_171_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 6456,
+			"byteOffset": 562388,
+			"name": "pot_171_TEXCOORD_0_Buffer",
+			"target": 34962
+		}
+	},
+	"buffers": {
+		"test": {
+			"byteLength": 2096468,
+			"name": "test",
+			"type": "arraybuffer",
+			"uri": "test.bin"
+		}
+	},
+	"cameras": {
+	},
+	"images": {
+		"Map #130": {
+			"name": "Map #130",
+			"uri": "..\\h_diff.jpg"
+		},
+		"Map #131": {
+			"name": "Map #131",
+			"uri": "..\\h_spec.jpg"
+		},
+		"Map #133": {
+			"name": "Map #133",
+			"uri": "..\\g_diff.jpg"
+		}
+	},
+	"lights": {
+	},
+	"materials": {
+		"Carnivorous_plant_head": {
+			"name": "Carnivorous_plant_head",
+			"technique": "Carnivorous_plant_head_technique_0",
+			"values": {
+				"ambient": [
+					0.588235,
+					0.588235,
+					0.588235,
+					1
+				],
+				"diffuse": "texture_Map #130",
+				"emission": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflective": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflectivity": 1,
+				"shininess": 111.43,
+				"specular": "texture_Map #131",
+				"transparency": 1,
+				"transparent": [
+					1,
+					1,
+					1,
+					1
+				]
+			}
+		},
+		"defaultMaterial": {
+			"name": "defaultMaterial",
+			"technique": "defaultMaterial_technique_0",
+			"values": {
+				"diffuse": [
+					0.835294,
+					0.603922,
+					0.898039,
+					1
+				]
+			}
+		},
+		"ground": {
+			"name": "ground",
+			"technique": "ground_technique_0",
+			"values": {
+				"ambient": [
+					0.588235,
+					0.588235,
+					0.588235,
+					1
+				],
+				"diffuse": "texture_Map #133",
+				"emission": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflective": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflectivity": 1,
+				"shininess": 2,
+				"specular": [
+					0,
+					0,
+					0,
+					1
+				],
+				"transparency": 1,
+				"transparent": [
+					1,
+					1,
+					1,
+					1
+				]
+			}
+		},
+		"pot": {
+			"name": "pot",
+			"technique": "pot_technique_0",
+			"values": {
+				"ambient": [
+					0.356863,
+					0.0941177,
+					0.0117647,
+					1
+				],
+				"diffuse": [
+					0.356863,
+					0.0941177,
+					0.0117647,
+					1
+				],
+				"emission": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflective": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflectivity": 1,
+				"shininess": 14.9285,
+				"specular": [
+					0.252,
+					0.252,
+					0.252,
+					1
+				],
+				"transparency": 1,
+				"transparent": [
+					1,
+					1,
+					1,
+					1
+				]
+			}
+		}
+	},
+	"meshes": {
+		"Carnivorous_plant_head_174": {
+			"name": "Carnivorous_plant_head_174",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "Carnivorous_plant_head_174_Normals",
+						"POSITION": "Carnivorous_plant_head_174_Positions",
+						"TEXCOORD_0": "Carnivorous_plant_head_174_TEXCOORD_0"
+					},
+					"indices": "Carnivorous_plant_head_174_Polygons",
+					"material": "Carnivorous_plant_head",
+					"mode": 4
+				}
+			]
+		},
+		"dry_165": {
+			"name": "dry_165",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "dry_165_Normals",
+						"POSITION": "dry_165_Positions",
+						"TEXCOORD_0": "dry_165_TEXCOORD_0"
+					},
+					"indices": "dry_165_Polygons",
+					"material": "defaultMaterial",
+					"mode": 4
+				}
+			]
+		},
+		"green_162": {
+			"name": "green_162",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "green_162_Normals",
+						"POSITION": "green_162_Positions",
+						"TEXCOORD_0": "green_162_TEXCOORD_0"
+					},
+					"indices": "green_162_Polygons",
+					"material": "defaultMaterial",
+					"mode": 4
+				}
+			]
+		},
+		"ground_1002": {
+			"name": "ground_1002",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "ground_1002_Normals",
+						"POSITION": "ground_1002_Positions",
+						"TEXCOORD_0": "ground_1002_TEXCOORD_0"
+					},
+					"indices": "ground_1002_Polygons",
+					"material": "ground",
+					"mode": 4
+				}
+			]
+		},
+		"pot_171": {
+			"name": "pot_171",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "pot_171_Normals",
+						"POSITION": "pot_171_Positions",
+						"TEXCOORD_0": "pot_171_TEXCOORD_0"
+					},
+					"indices": "pot_171_Polygons",
+					"material": "pot",
+					"mode": 4
+				}
+			]
+		}
+	},
+	"nodes": {
+		"Carnivorous_plant_159": {
+			"children": [
+				"green_161",
+				"dry_164",
+				"ground_167",
+				"pot_170",
+				"Carnivorous_plant_head_173"
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "Carnivorous_plant_159"
+		},
+		"Carnivorous_plant_33": {
+			"children": [
+				"Dummy001_35",
+				"Carnivorous_plant_159"
+			],
+			"matrix": [
+				0.001,
+				0,
+				0,
+				0,
+				0,
+				0.001,
+				0,
+				0,
+				0,
+				0,
+				0.001,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "Carnivorous_plant_33"
+		},
+		"Carnivorous_plant_head_173": {
+			"children": [
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				-109.134,
+				-6.57286,
+				560.337,
+				1
+			],
+			"meshes": [
+				"Carnivorous_plant_head_174"
+			],
+			"name": "Carnivorous_plant_head_173"
+		},
+		"Dummy001_35": {
+			"children": [
+				"IK Chain001_37"
+			],
+			"matrix": [
+				-0.508259,
+				6.76788e-007,
+				6.43586e-039,
+				0,
+				-4.14413e-023,
+				-3.11219e-017,
+				0.508259,
+				0,
+				6.76788e-007,
+				0.508259,
+				3.11219e-017,
+				0,
+				-15.7928,
+				-2.81413,
+				664.986,
+				1
+			],
+			"name": "Dummy001_35"
+		},
+		"Dummy002_131": {
+			"children": [
+				"IK Chain002_133"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1905,
+				57.2136,
+				71.3574,
+				1
+			],
+			"name": "Dummy002_131"
+		},
+		"Dummy003_135": {
+			"children": [
+				"IK Chain003_137"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1904,
+				-20.1292,
+				80.9528,
+				1
+			],
+			"name": "Dummy003_135"
+		},
+		"Dummy004_143": {
+			"children": [
+				"IK Chain004_145"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1903,
+				-81.2873,
+				37.7576,
+				1
+			],
+			"name": "Dummy004_143"
+		},
+		"Dummy005_139": {
+			"children": [
+				"IK Chain005_141"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1902,
+				-81.8628,
+				-47.256,
+				1
+			],
+			"name": "Dummy005_139"
+		},
+		"Dummy006_147": {
+			"children": [
+				"IK Chain006_149"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1903,
+				-33.5146,
+				-78.1498,
+				1
+			],
+			"name": "Dummy006_147"
+		},
+		"Dummy007_151": {
+			"children": [
+				"IK Chain007_153"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1905,
+				50.8249,
+				-70.4031,
+				1
+			],
+			"name": "Dummy007_151"
+		},
+		"Dummy008_127": {
+			"children": [
+				"IK Chain008_129"
+			],
+			"matrix": [
+				6.12321e-017,
+				-6.61744e-023,
+				1,
+				0,
+				1.90735e-006,
+				1,
+				-2.64698e-023,
+				0,
+				-1,
+				1.90735e-006,
+				6.12324e-017,
+				0,
+				98.1906,
+				84.2101,
+				-0.219498,
+				1
+			],
+			"name": "Dummy008_127"
+		},
+		"IK Chain001_37": {
+			"children": [
+			],
+			"matrix": [
+				-1.9675,
+				-2.69491e-038,
+				-2.40949e-016,
+				0,
+				-2.40949e-016,
+				1.20475e-016,
+				1.9675,
+				0,
+				1.47538e-032,
+				1.9675,
+				-1.20475e-016,
+				0,
+				-2.47778,
+				-194.718,
+				-4.01694,
+				1
+			],
+			"name": "IK Chain001_37"
+		},
+		"IK Chain002_133": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				-12.1636,
+				-10.4726,
+				23.4498,
+				1
+			],
+			"name": "IK Chain002_133"
+		},
+		"IK Chain003_137": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				-16.3367,
+				2.91504,
+				14.3164,
+				1
+			],
+			"name": "IK Chain003_137"
+		},
+		"IK Chain004_145": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				-5.99739,
+				17.7763,
+				19.5548,
+				1
+			],
+			"name": "IK Chain004_145"
+		},
+		"IK Chain005_141": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				6.69321,
+				16.2323,
+				24.583,
+				1
+			],
+			"name": "IK Chain005_141"
+		},
+		"IK Chain006_149": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				17.1671,
+				7.75775,
+				14.3164,
+				1
+			],
+			"name": "IK Chain006_149"
+		},
+		"IK Chain007_153": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				13.6991,
+				-9.42456,
+				20.207,
+				1
+			],
+			"name": "IK Chain007_153"
+		},
+		"IK Chain008_129": {
+			"children": [
+			],
+			"matrix": [
+				4.3298e-017,
+				-4.32978e-017,
+				1,
+				0,
+				1,
+				1.32349e-023,
+				-4.32977e-017,
+				0,
+				1.32349e-023,
+				1,
+				4.32978e-017,
+				0,
+				0.696661,
+				-16.939,
+				23.7462,
+				1
+			],
+			"name": "IK Chain008_129"
+		},
+		"RootNode_10": {
+			"children": [
+				"Carnivorous_plant_33"
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "RootNode_10"
+		},
+		"dry_164": {
+			"children": [
+			],
+			"matrix": [
+				-0.579429,
+				-0.615712,
+				0,
+				0,
+				0.494031,
+				-0.464918,
+				0,
+				0,
+				0,
+				0,
+				0.678392,
+				0,
+				-1.12502,
+				-5.19809,
+				157.824,
+				1
+			],
+			"meshes": [
+				"dry_165"
+			],
+			"name": "dry_164"
+		},
+		"green_161": {
+			"children": [
+			],
+			"matrix": [
+				-0.579429,
+				-0.615712,
+				0,
+				0,
+				0.494031,
+				-0.464918,
+				0,
+				0,
+				0,
+				0,
+				0.678392,
+				0,
+				-1.12502,
+				-5.19809,
+				157.824,
+				1
+			],
+			"meshes": [
+				"green_162"
+			],
+			"name": "green_161"
+		},
+		"ground_167": {
+			"children": [
+			],
+			"matrix": [
+				0.258819,
+				0.965926,
+				0,
+				0,
+				-0.965926,
+				0.258819,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0.00288391,
+				0.0779095,
+				123.34,
+				1
+			],
+			"meshes": [
+				"ground_1002"
+			],
+			"name": "ground_167"
+		},
+		"pot_170": {
+			"children": [
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0.00288391,
+				0.0779095,
+				4.63098,
+				1
+			],
+			"meshes": [
+				"pot_171"
+			],
+			"name": "pot_170"
+		}
+	},
+	"programs": {
+		"program_0": {
+			"attributes": [
+				"a_normal",
+				"a_position"
+			],
+			"fragmentShader": "program_0FS",
+			"name": "program_0",
+			"vertexShader": "program_0VS"
+		},
+		"program_1": {
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_1FS",
+			"name": "program_1",
+			"vertexShader": "program_1VS"
+		},
+		"program_2": {
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_2FS",
+			"name": "program_2",
+			"vertexShader": "program_2VS"
+		},
+		"program_3": {
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_3FS",
+			"name": "program_3",
+			"vertexShader": "program_3VS"
+		}
+	},
+	"samplers": {
+		"sampler_Map #130": {
+			"magFilter": 9729,
+			"minFilter": 9987,
+			"name": "sampler_Map #130",
+			"wrapS": 10497,
+			"wrapT": 10497
+		},
+		"sampler_Map #131": {
+			"magFilter": 9729,
+			"minFilter": 9987,
+			"name": "sampler_Map #131",
+			"wrapS": 10497,
+			"wrapT": 10497
+		},
+		"sampler_Map #133": {
+			"magFilter": 9729,
+			"minFilter": 9987,
+			"name": "sampler_Map #133",
+			"wrapS": 10497,
+			"wrapT": 10497
+		}
+	},
+	"scene": "test",
+	"scenes": {
+		"test": {
+			"nodes": [
+				"RootNode_10"
+			]
+		}
+	},
+	"shaders": {
+		"program_0FS": {
+			"type": 35632,
+			"uri": "program_0FS.glsl"
+		},
+		"program_0VS": {
+			"type": 35633,
+			"uri": "program_0VS.glsl"
+		},
+		"program_1FS": {
+			"type": 35632,
+			"uri": "program_1FS.glsl"
+		},
+		"program_1VS": {
+			"type": 35633,
+			"uri": "program_1VS.glsl"
+		},
+		"program_2FS": {
+			"type": 35632,
+			"uri": "program_2FS.glsl"
+		},
+		"program_2VS": {
+			"type": 35633,
+			"uri": "program_2VS.glsl"
+		},
+		"program_3FS": {
+			"type": 35632,
+			"uri": "program_3FS.glsl"
+		},
+		"program_3VS": {
+			"type": 35633,
+			"uri": "program_3VS.glsl"
+		}
+	},
+	"skins": {
+	},
+	"techniques": {
+		"Carnivorous_plant_head_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position",
+				"a_texcoord0": "texcoord0"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Phong",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"ambient": {
+					"type": 35666
+				},
+				"diffuse": {
+					"type": 35678
+				},
+				"emission": {
+					"type": 35666
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				},
+				"reflective": {
+					"type": 35666
+				},
+				"reflectivity": {
+					"type": 5126
+				},
+				"shininess": {
+					"type": 5126
+				},
+				"specular": {
+					"type": 35678
+				},
+				"texcoord0": {
+					"semantic": "TEXCOORD_0",
+					"type": 35664
+				},
+				"transparency": {
+					"type": 5126
+				},
+				"transparent": {
+					"type": 35666
+				}
+			},
+			"program": "program_3",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_ambient": "ambient",
+				"u_diffuse": "diffuse",
+				"u_emission": "emission",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix",
+				"u_reflective": "reflective",
+				"u_reflectivity": "reflectivity",
+				"u_shininess": "shininess",
+				"u_specular": "specular",
+				"u_transparency": "transparency",
+				"u_transparent": "transparent"
+			}
+		},
+		"defaultMaterial_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Unknown",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"diffuse": {
+					"type": 35666
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				}
+			},
+			"program": "program_0",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_diffuse": "diffuse",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix"
+			}
+		},
+		"ground_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position",
+				"a_texcoord0": "texcoord0"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Phong",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"ambient": {
+					"type": 35666
+				},
+				"diffuse": {
+					"type": 35678
+				},
+				"emission": {
+					"type": 35666
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				},
+				"reflective": {
+					"type": 35666
+				},
+				"reflectivity": {
+					"type": 5126
+				},
+				"shininess": {
+					"type": 5126
+				},
+				"specular": {
+					"type": 35666
+				},
+				"texcoord0": {
+					"semantic": "TEXCOORD_0",
+					"type": 35664
+				},
+				"transparency": {
+					"type": 5126
+				},
+				"transparent": {
+					"type": 35666
+				}
+			},
+			"program": "program_1",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_ambient": "ambient",
+				"u_diffuse": "diffuse",
+				"u_emission": "emission",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix",
+				"u_reflective": "reflective",
+				"u_reflectivity": "reflectivity",
+				"u_shininess": "shininess",
+				"u_specular": "specular",
+				"u_transparency": "transparency",
+				"u_transparent": "transparent"
+			}
+		},
+		"pot_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position",
+				"a_texcoord0": "texcoord0"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Phong",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"ambient": {
+					"type": 35666
+				},
+				"diffuse": {
+					"type": 35666
+				},
+				"emission": {
+					"type": 35666
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				},
+				"reflective": {
+					"type": 35666
+				},
+				"reflectivity": {
+					"type": 5126
+				},
+				"shininess": {
+					"type": 5126
+				},
+				"specular": {
+					"type": 35666
+				},
+				"texcoord0": {
+					"semantic": "TEXCOORD_0",
+					"type": 35664
+				},
+				"transparency": {
+					"type": 5126
+				},
+				"transparent": {
+					"type": 35666
+				}
+			},
+			"program": "program_2",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_ambient": "ambient",
+				"u_diffuse": "diffuse",
+				"u_emission": "emission",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix",
+				"u_reflective": "reflective",
+				"u_reflectivity": "reflectivity",
+				"u_shininess": "shininess",
+				"u_specular": "specular",
+				"u_transparency": "transparency",
+				"u_transparent": "transparent"
+			}
+		}
+	},
+	"textures": {
+		"texture_Map #130": {
+			"format": 6408,
+			"internalFormat": 6408,
+			"name": "texture_Map #130",
+			"sampler": "sampler_Map #130",
+			"source": "Map #130",
+			"target": 3553,
+			"type": 5121
+		},
+		"texture_Map #131": {
+			"format": 6408,
+			"internalFormat": 6408,
+			"name": "texture_Map #131",
+			"sampler": "sampler_Map #131",
+			"source": "Map #131",
+			"target": 3553,
+			"type": 5121
+		},
+		"texture_Map #133": {
+			"format": 6408,
+			"internalFormat": 6408,
+			"name": "texture_Map #133",
+			"sampler": "sampler_Map #133",
+			"source": "Map #133",
+			"target": 3553,
+			"type": 5121
+		}
+	}
+}

@@ -1,0 +1,42 @@
+Loading file: monster\monster.fbx...
+Converting to GLTF ...
+Warning: (Root - 3) Bip01 not exported!
+Warning: (LimbNode - 3) Bip01 Pelvis not exported!
+Warning: (LimbNode - 3) Bip01 Spine not exported!
+Warning: (LimbNode - 3) Bip01 Spine1 not exported!
+Warning: (LimbNode - 3) Bip01 Neck not exported!
+Warning: (LimbNode - 3) Bip01 Head not exported!
+Warning: (LimbNode - 3) Bip01 HeadNub not exported!
+Warning: (LimbNode - 3) Bip01 L Clavicle not exported!
+Warning: (LimbNode - 3) Bip01 L UpperArm not exported!
+Warning: (LimbNode - 3) Bip01 L Forearm not exported!
+Warning: (LimbNode - 3) Bip01 L Hand not exported!
+Warning: (LimbNode - 3) Bip01 L Finger0 not exported!
+Warning: (LimbNode - 3) Bip01 L Finger0Nub not exported!
+Warning: (LimbNode - 3) Bip01 R Clavicle not exported!
+Warning: (LimbNode - 3) Bip01 R UpperArm not exported!
+Warning: (LimbNode - 3) Bip01 R Forearm not exported!
+Warning: (LimbNode - 3) Bip01 R Hand not exported!
+Warning: (LimbNode - 3) Bip01 R Finger0 not exported!
+Warning: (LimbNode - 3) Bip01 R Finger0Nub not exported!
+Warning: (LimbNode - 3) Bone03 not exported!
+Warning: (LimbNode - 3) Bone04 not exported!
+Warning: (LimbNode - 3) Bone01 not exported!
+Warning: (LimbNode - 3) Bone02 not exported!
+Warning: (LimbNode - 3) Bip01 L Thigh not exported!
+Warning: (LimbNode - 3) Bip01 L Calf not exported!
+Warning: (LimbNode - 3) Bip01 L Foot not exported!
+Warning: (LimbNode - 3) Bip01 L Toe0 not exported!
+Warning: (LimbNode - 3) Bip01 L Toe0Nub not exported!
+Warning: (LimbNode - 3) Bip01 R Thigh not exported!
+Warning: (LimbNode - 3) Bip01 R Calf not exported!
+Warning: (LimbNode - 3) Bip01 R Foot not exported!
+Warning: (LimbNode - 3) Bip01 R Toe0 not exported!
+Warning: (LimbNode - 3) Bip01 R Toe0Nub not exported!
+Warning: (LimbNode - 3) Bip01 Tail not exported!
+Warning: (LimbNode - 3) Bip01 Tail1 not exported!
+Warning: (LimbNode - 3) Bip01 Tail2 not exported!
+Warning: (LimbNode - 3) Bip01 TailNub not exported!
+Warning: (LimbNode - 3) Bone09 not exported!
+Warning: (LimbNode - 3) Bone07 not exported!
+done!

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+    <title>ADN - glTF viewer</title>
+
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+
+    <!-- External libraries -->
+    <script src="./jquery.min.js"></script><!-- jquery.js -->
+    <script src="./jquery-ui.min.js"></script> <!-- http://jqueryui.com/ -->
+
+    <!-- Autodesk View & Data API -->
+    <link href="./style.css" rel="stylesheet" />
+	<script src="./three.js"></script>
+    <script src="./viewer3D.js"></script>
+
+    <!-- Our scripts -->
+    <style>
+        /* Reset */
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+        table { border-collapse: collapse; border-spacing: 0; }
+        fieldset, img { border: 0; }
+        address, caption, cite, code, dfn, th, var { font-style: normal; font-weight: normal; }
+        ol, ul { list-style: none; }
+        caption, th { text-align: left; }
+        h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+        q:before, q:after { content: ''; }
+        abbr, acronym { border: 0; }
+
+        /* Baseline */
+        body, p, h1, h2, h3, h4, h5, h6 { font: normal 12px/1.3em Helvetica, Arial, sans-serif; color: #333; }
+        h1 { font-size: 22px; font-weight: bold; }
+        h2 { font-size: 19px; font-weight: bold; }
+        h3 { font-size: 16px; font-weight: bold; }
+        h4 { font-size: 14px; font-weight: bold; }
+        h5 { font-size: 12px; font-weight: bold; }
+        p { margin: 10px 0; }
+
+        body { text-align: center; margin: 40px; }
+
+        .left { float: left; }
+        .right { float: right; }
+        .clear { clear: both; }
+
+        div#project { margin: 0 auto; width: 100%; text-align: left; }
+        div#viewer { 
+			width: -moz-calc(100% - 195px);
+			width: -webkit-calc(100% - 195px);
+			width: calc(100% - 195px);
+			height: 700px; cursor: pointer; padding: 0px; margin-bottom: 20px; position: relative; overflow: hidden;
+            background-color: #eee; border: 2px dashed #aaa; border-radius: 10px; }
+        div#footer { margin: 0 auto; width: 100%; text-align: left; }
+        div#list { width: 175px; height: 700px; padding: 0px; position:relative;
+            background-color: #eee; border: 2px dashed #aaa; border-radius: 10px; }
+
+        div#list div button {
+            background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #44c767), color-stop(1, #5cbf2a));
+            background:-moz-linear-gradient(top, #44c767 5%, #5cbf2a 100%);
+            background:-webkit-linear-gradient(top, #44c767 5%, #5cbf2a 100%);
+            background:-o-linear-gradient(top, #44c767 5%, #5cbf2a 100%);
+            background:-ms-linear-gradient(top, #44c767 5%, #5cbf2a 100%);
+            background:linear-gradient(to bottom, #44c767 5%, #5cbf2a 100%);
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#44c767', endColorstr='#5cbf2a',GradientType=0);
+            background-color:#44c767;
+            -moz-border-radius:12px;
+            -webkit-border-radius:12px;
+            border-radius:12px;
+            border:1px solid #18ab29;
+            display:inline-block;
+            cursor:pointer;
+            color:#ffffff;
+            font-family:Verdana;
+            font-size:12px;
+
+            text-decoration:none;
+            text-shadow:0px 1px 0px #2f6627;
+            margin: 2px;
+            height: 42px;
+            width: 170px;
+        }
+        div#list div button:hover {
+            background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #5cbf2a), color-stop(1, #44c767));
+            background:-moz-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+            background:-webkit-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+            background:-o-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+            background:-ms-linear-gradient(top, #5cbf2a 5%, #44c767 100%);
+            background:linear-gradient(to bottom, #5cbf2a 5%, #44c767 100%);
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5cbf2a', endColorstr='#44c767',GradientType=0);
+            background-color:#5cbf2a;
+        }
+        div#list div button:active { position:relative; top:1px; }
+    </style>
+
+    <script>
+        var docs =
+            [/*{"path":"models/duck/glTF/duck.gltf","name":"Duck"},
+             {"path":"models/duck/glTF-Embedded/duck.gltf","name":"Duck2"},
+             {"path":"models/2_cylinder_engine/glTF/2_cylinder_engine.gltf","name":"2 cylinder engine"},
+             {"path":"models/buggy/glTF/buggy.gltf","name":"Buggy"},
+             {"path":"models/monster/glTF/monster.gltf","name":"Monster"},
+             {"path":"models/vc/glTF/vc.gltf","name":"Vc"},
+             {"path":"models/untitled/untitled.gltf","name":"Test"},
+			 {"path":"models/test2/Carnivorous_plant.FBX.gltf","name":"Test2"}*/
+			 {"path":"models/test.gltf","name":"Test"}
+            ]
+        ;
+		
+		Autodesk.Viewing.HTTP_REQUEST_HEADERS ={
+			"If-Modified-Since": "Sat, 29 Oct 1994 19:43:31 GMT"
+		} ;
+
+        var oViewer =null ;
+        $(document).ready (function () {
+            //var options ={ 'document': '', 'env': 'AutodeskProduction' } ;
+            var options ={ 'docid': docs [0].path, env: '' } ;
+
+            //oViewer =new Autodesk.Viewing.Viewer3D ($("#viewer") [0], {}) ; // No toolbar
+            oViewer =new Autodesk.Viewing.Private.GuiViewer3D ($("#viewer") [0], {}) ; // With toolbar
+            Autodesk.Viewing.Initializer (options, function () {
+				oViewer.initialize () ;
+                oViewer.addEventListener (Autodesk.Viewing.GEOMETRY_LOADED_EVENT, function (event) {
+                    //oViewer.removeEventListener (Autodesk.Viewing.GEOMETRY_LOADED_EVENT, arguments.callee) ;
+                    oViewer.fitToView (true) ;
+                    setTimeout (function () { oViewer.autocam.setHomeViewFrom (oViewer.navigation.getCamera ()) ; }, 1000) ;
+			    }) ;
+				oViewer.load (options.docid) ;
+				
+				for ( var i =0 ; i < docs.length ; i++ ) {
+					var r =$('<div><button id="view_' + i + '">' + docs [i].name + '</button></div>') ;
+					$('#list').append (r) ;
+					$('#view_' + i).click (function (e) {
+						e.stopPropagation () ;
+                        //oViewer.impl.unloadCurrentModel () ;
+                        // API would be tearDown()/setUp()
+                        // tearDown() unloads extensions too, so you need setUp() after that to load again
+                        // setUp() requires the viewer configuration again, the one you use to start the viewer.
+                        oViewer.tearDown () ;
+                        oViewer.setUp ({ env: '' }) ;
+						var i =parseInt (e.target.id.substring (5)) ;
+						oViewer.load (docs [i].path) ;
+					}) ;
+				}
+			}) ;
+        }) ;
+    </script>
+</head>
+
+<body>
+    <div id="project">
+        <hr />
+        <h3>glTF viewer demo</h3>
+        <br />
+        <div>
+            <div id="viewer" class="left"></div>
+            <div id="list" class="right"></div>
+        </div>
+        <br />
+    </div>
+
+    <div class="clear">
+        <hr />
+        <p>&#169; Copyright 2015 Autodesk. All rights reserved. </p>
+    </div>
+
+</body>
+</html>

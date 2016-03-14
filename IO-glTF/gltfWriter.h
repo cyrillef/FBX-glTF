@@ -129,6 +129,8 @@ protected:
 	web::json::value WriteAmbientLight (FbxScene &pScene) ;
 	// material
 	utility::string_t LighthingModel (FbxSurfaceMaterial *pMaterial) ;
+	web::json::value WriteMaterialTransparencyParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, FbxPropertyT<FbxDouble3> &propertyColor, FbxProperty &propertyOpaque, web::json::value &values, web::json::value &techniqueParameters) ;
+	//web::json::value WriteMaterialTransparencyParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble3> &property, double factor, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxSurfaceMaterial *pMaterial, const char *propertyName, const char *factorName, web::json::value &values, web::json::value &techniqueParameters) ;
@@ -143,6 +145,8 @@ protected:
 	web::json::value WriteDefaultShadingModelMaterial (FbxNode *pNode) ;
 	// mesh
 	web::json::value WriteMesh (FbxNode *pNode) ;
+	// line
+	//web::json::value WriteLine (FbxNode *pNode) ;
 	// null
 	web::json::value WriteNull (FbxNode *pNode) ;
 	// program

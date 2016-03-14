@@ -29,6 +29,8 @@
 // -f $(ProjectDir)\..\models\au\au3.fbx -o $(ProjectDir)\..\models\au\out -n test -c
 // -f $(ProjectDir)\..\models\teapot\teapot.fbx -o $(ProjectDir)\..\models\teapot\out -n test -c
 // -f $(ProjectDir)\..\models\wine\wine.fbx -o $(ProjectDir)\..\models\wine\out -n test -c
+// -f $(ProjectDir)\..\models\monster\monster.fbx -o $(ProjectDir)\..\models\monster\out -n test -c
+// -f $(ProjectDir)\..\models\Carnivorous_plant\Carnivorous_plant.fbx -o $(ProjectDir)\..\models\Carnivorous_plant\out -n test -c
 
 	//{ U("n"), U("a"), required_argument, U("-a -> export animations, argument [bool], default:true") },
 	//{ U("n"), U("g"), required_argument, U("-g -> [experimental] GLSL version to output in generated shaders") },
@@ -39,16 +41,16 @@
 
 void usage () {
 	ucout << std::endl << U("glTF [-h] [-v] [-n] [-d] [-t] [-l] [-c] [-e] [-o <output path>] -f <input file>") << std::endl ;
-	ucout << U("-f/--file \t- file to convert to glTF [string]") << std::endl ;
-	ucout << U("-o/--output \t- path of output directory [string]") << std::endl ;
-	ucout << U("-n/--name \t- override the scene name [string]") << std::endl ;
-	ucout << U("-d/--degree \t- output angles in degrees vs radians (default to radians)") << std::endl ;
-	//ucout << U("-t/--transparency \t- invert transparency") << std::endl ;
+	ucout << U("-f/--file \t\t- file to convert to glTF [string]") << std::endl ;
+	ucout << U("-o/--output \t\t- path of output directory [string]") << std::endl ;
+	ucout << U("-n/--name \t\t- override the scene name [string]") << std::endl ;
+	ucout << U("-d/--degree \t\t- output angles in degrees vs radians (default to radians)") << std::endl ;
+	ucout << U("-t/--transparency \t- invert transparency") << std::endl ;
 	//ucout << U("-l/--lighting \t- enable default lighting (if no lights in scene)") << std::endl ;
-	ucout << U("-c/--copy \t- copy all media to the target directory (cannot be combined with --embed)") << std::endl ;
-	ucout << U("-e/--embed \t- embed all resources as Data URIs (cannot be combined with --copy)") << std::endl ;
-	ucout << U("-h/--help \t- this message") << std::endl ;
-	ucout << U("-v/--version \t- version") << std::endl ;
+	ucout << U("-c/--copy \t\t- copy all media to the target directory (cannot be combined with --embed)") << std::endl ;
+	ucout << U("-e/--embed \t\t- embed all resources as Data URIs (cannot be combined with --copy)") << std::endl ;
+	ucout << U("-h/--help \t\t- this message") << std::endl ;
+	ucout << U("-v/--version \t\t- version") << std::endl ;
 }
 
 static struct option long_options [] ={

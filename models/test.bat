@@ -2,10 +2,8 @@
 %~d0
 cd /d %~dp0
 
-for /d %%d in (*) do (
-	@echo Processing %%d
-	call test-function %%d %%d.fbx test
-)
+@echo Processing %1
+call test-function %1 %1.fbx test
 
 :end
 pause

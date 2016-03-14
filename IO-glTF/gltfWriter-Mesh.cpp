@@ -54,7 +54,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	pMesh->ComputeBBox () ;
 
 	// FBX Layers works like Photoshop layers
-	// - Vertices are not on layers, but every other elements can
+	// - Vertices, Polygons and Edges are not on layers, but every other elements can
 	// - Usually Normals are on Layer 0 (FBX default) but can eventually be on other layers
 	// - UV, vertex colors, etc... can have multiple layer representation or be on different layers,
 	//   the code below will try to retrieve each element recursevily to merge all elements from 
@@ -94,13 +94,13 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 
 	_uvSets =vbo.getUvSets () ;
 
-	web::json::value vertex=WriteArrayWithMinMax<FbxDouble3, float> (out_positions, pMesh->GetNode (), U("_Positions")) ;
+	web::json::value vertex =WriteArrayWithMinMax<FbxDouble3, float> (out_positions, pMesh->GetNode (), U("_Positions")) ;
 	MergeJsonObjects (localAccessorsAndBufferViews, vertex);
 	primitive [U("attributes")] [U("POSITION")] =web::json::value::string (GetJsonFirstKey (vertex [U("accessors")])) ;
 
 	if ( out_normals.size () ) {
 		utility::string_t st (U("_Normals")) ;
-		web::json::value ret=WriteArrayWithMinMax<FbxDouble3, float> (out_normals, pMesh->GetNode (), st.c_str ()) ;
+		web::json::value ret =WriteArrayWithMinMax<FbxDouble3, float> (out_normals, pMesh->GetNode (), st.c_str ()) ;
 		MergeJsonObjects (localAccessorsAndBufferViews, ret) ;
 		st=U("NORMAL") ;
 		primitive [U("attributes")] [st] =web::json::value::string (GetJsonFirstKey (ret [U("accessors")])) ;
@@ -109,7 +109,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	if ( out_uvs.size () ) { // todo more than 1
 		std::map<utility::string_t, utility::string_t>::iterator iter =_uvSets.begin () ;
 		utility::string_t st (U("_") + iter->second) ;
-		web::json::value ret=WriteArrayWithMinMax<FbxDouble2, float> (out_uvs, pMesh->GetNode (), st.c_str ()) ;
+		web::json::value ret =WriteArrayWithMinMax<FbxDouble2, float> (out_uvs, pMesh->GetNode (), st.c_str ()) ;
 		MergeJsonObjects (localAccessorsAndBufferViews, ret) ;
 		primitive [U("attributes")] [iter->second] =web::json::value::string (GetJsonFirstKey (ret [U("accessors")])) ;
 	}
@@ -120,7 +120,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 		for ( int i =0 ; i < nb ; i++ )
 			vertexColors_.push_back (FbxDouble4 (out_vcolors [i].mRed, out_vcolors [i].mGreen, out_vcolors [i].mBlue, out_vcolors [i].mAlpha)) ;
 		utility::string_t st (U("_Colors0")) ;
-		web::json::value ret=WriteArrayWithMinMax<FbxDouble4, float> (vertexColors_, pMesh->GetNode (), st.c_str ()) ;
+		web::json::value ret =WriteArrayWithMinMax<FbxDouble4, float> (vertexColors_, pMesh->GetNode (), st.c_str ()) ;
 		MergeJsonObjects (localAccessorsAndBufferViews, ret) ;
 		st =U("COLOR_0") ;
 		primitive [U("attributes")] [st] =web::json::value::string (GetJsonFirstKey (ret [U("accessors")])) ;
@@ -146,7 +146,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 		if ( ret.is_string () ) {
 			primitive [U("material")] =ret ;
 		} else {
-			primitive [U("material")]=web::json::value::string (GetJsonFirstKey (ret [U("materials")])) ;
+			primitive [U("material")] =web::json::value::string (GetJsonFirstKey (ret [U("materials")])) ;
 
 			MergeJsonObjects (materials [U("materials")], ret [U("materials")]) ;
 

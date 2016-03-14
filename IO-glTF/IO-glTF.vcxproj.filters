@@ -113,6 +113,9 @@
     <ClCompile Include="JsonPrettify.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gltfWriter-Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="glTF-0-8-defaults.json">

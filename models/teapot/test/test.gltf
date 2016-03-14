@@ -1,65 +1,76 @@
 {
 	"accessors": {
-		"Mesh_39_Normals": {
-			"bufferView": "Mesh_39_Normals_Buffer",
+		"Mesh_42_Normals": {
+			"bufferView": "Mesh_42_Normals_Buffer",
 			"byteOffset": 0,
 			"byteStride": 12,
 			"componentType": 5126,
 			"count": 684,
-			"max": [0.99959832429885864,
-			0.99989205598831177,
-			1],
-			"min": [-0.99780374765396118,
-			-0.99984991550445557,
-			-1],
-			"name": "Mesh_39_Normals",
+			"max": [
+				0.999598,
+				0.999892,
+				1
+			],
+			"min": [
+				-0.997804,
+				-0.99985,
+				-1
+			],
+			"name": "Mesh_42_Normals",
 			"type": "VEC3"
 		},
-		"Mesh_39_Polygons": {
-			"bufferView": "Mesh_39_Polygons_Buffer",
+		"Mesh_42_Polygons": {
+			"bufferView": "Mesh_42_Polygons_Buffer",
 			"byteOffset": 0,
 			"byteStride": 2,
 			"componentType": 5123,
 			"count": 3072,
-			"name": "Mesh_39_Polygons",
+			"name": "Mesh_42_Polygons",
 			"type": "SCALAR"
 		},
-		"Mesh_39_Positions": {
-			"bufferView": "Mesh_39_Positions_Buffer",
+		"Mesh_42_Positions": {
+			"bufferView": "Mesh_42_Positions_Buffer",
 			"byteOffset": 0,
 			"byteStride": 12,
 			"componentType": 5126,
 			"count": 684,
-			"max": [23.234088897705078,
-			13.55498218536377,
-			21.349098205566406],
-			"min": [-20.332473754882813,
-			-13.55498218536377,
-			0],
-			"name": "Mesh_39_Positions",
+			"max": [
+				23.2341,
+				13.555,
+				21.3491
+			],
+			"min": [
+				-20.3325,
+				-13.555,
+				0
+			],
+			"name": "Mesh_42_Positions",
 			"type": "VEC3"
 		},
-		"Mesh_39_TEXCOORD_0": {
-			"bufferView": "Mesh_39_TEXCOORD_0_Buffer",
+		"Mesh_42_TEXCOORD_0": {
+			"bufferView": "Mesh_42_TEXCOORD_0_Buffer",
 			"byteOffset": 0,
 			"byteStride": 8,
 			"componentType": 5126,
 			"count": 684,
-			"max": [2,
-			1],
-			"min": [0,
-			-1],
-			"name": "Mesh_39_TEXCOORD_0",
+			"max": [
+				2,
+				1
+			],
+			"min": [
+				0,
+				-1
+			],
+			"name": "Mesh_42_TEXCOORD_0",
 			"type": "VEC2"
 		}
 	},
 	"animations": {
-		
 	},
 	"asset": {
 		"copyright": "",
 		"generator": "FBX GLTF Exporter v1.0",
-		"premultipliedAlpha": false,
+		"premultipliedAlpha": 0,
 		"profile": {
 			"api": "WebGL",
 			"version": "1.0.3"
@@ -67,32 +78,32 @@
 		"version": "1.0"
 	},
 	"bufferViews": {
-		"Mesh_39_Normals_Buffer": {
+		"Mesh_42_Normals_Buffer": {
 			"buffer": "test",
 			"byteLength": 8208,
 			"byteOffset": 8208,
-			"name": "Mesh_39_Normals_Buffer",
+			"name": "Mesh_42_Normals_Buffer",
 			"target": 34962
 		},
-		"Mesh_39_Polygons_Buffer": {
+		"Mesh_42_Polygons_Buffer": {
 			"buffer": "test",
 			"byteLength": 6144,
 			"byteOffset": 21888,
-			"name": "Mesh_39_Polygons_Buffer",
+			"name": "Mesh_42_Polygons_Buffer",
 			"target": 34963
 		},
-		"Mesh_39_Positions_Buffer": {
+		"Mesh_42_Positions_Buffer": {
 			"buffer": "test",
 			"byteLength": 8208,
 			"byteOffset": 0,
-			"name": "Mesh_39_Positions_Buffer",
+			"name": "Mesh_42_Positions_Buffer",
 			"target": 34962
 		},
-		"Mesh_39_TEXCOORD_0_Buffer": {
+		"Mesh_42_TEXCOORD_0_Buffer": {
 			"buffer": "test",
 			"byteLength": 5472,
 			"byteOffset": 16416,
-			"name": "Mesh_39_TEXCOORD_0_Buffer",
+			"name": "Mesh_42_TEXCOORD_0_Buffer",
 			"target": 34962
 		}
 	},
@@ -105,114 +116,126 @@
 		}
 	},
 	"cameras": {
-		
 	},
 	"images": {
-		
 	},
 	"lights": {
-		
 	},
 	"materials": {
 		"defaultMaterial": {
 			"name": "defaultMaterial",
 			"technique": "defaultMaterial_technique_0",
 			"values": {
-				"diffuse": [0.59999999999999998,
-				0.89411764705882402,
-				0.72156862745098005,
-				1]
+				"diffuse": [
+					0.6,
+					0.894118,
+					0.721569,
+					1
+				]
 			}
 		}
 	},
 	"meshes": {
-		"Mesh_39": {
-			"name": "Mesh_39",
-			"primitives": [{
-				"attributes": {
-					"NORMAL": "Mesh_39_Normals",
-					"POSITION": "Mesh_39_Positions",
-					"TEXCOORD_0": "Mesh_39_TEXCOORD_0"
-				},
-				"indices": "Mesh_39_Polygons",
-				"material": "defaultMaterial",
-				"mode": 4
-			}]
+		"Mesh_42": {
+			"name": "Mesh_42",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "Mesh_42_Normals",
+						"POSITION": "Mesh_42_Positions",
+						"TEXCOORD_0": "Mesh_42_TEXCOORD_0"
+					},
+					"indices": "Mesh_42_Polygons",
+					"material": "defaultMaterial",
+					"mode": 4
+				}
+			]
 		}
 	},
 	"nodes": {
-		"Mesh_39": {
-			"children": [],
-			"matrix": [0.025399999999999999,
-			0,
-			0,
-			0,
-			0,
-			0.025399999999999999,
-			0,
-			0,
-			0,
-			0,
-			0.025399999999999999,
-			0,
-			-0.097620010375976632,
-			0,
-			0.2164778717041016,
-			1],
-			"meshes": ["Mesh_39"],
-			"name": "Mesh_39"
+		"RootNode_10": {
+			"children": [
+				"Teapot001_39"
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "RootNode_10"
 		},
-		"RootNode": {
-			"children": ["Mesh_39"],
-			"matrix": [1,
-			0,
-			0,
-			0,
-			0,
-			1,
-			0,
-			0,
-			0,
-			0,
-			1,
-			0,
-			0,
-			0,
-			0,
-			1],
-			"name": "RootNode"
+		"Teapot001_39": {
+			"children": [
+			],
+			"matrix": [
+				0.0254,
+				0,
+				0,
+				0,
+				0,
+				0.0254,
+				0,
+				0,
+				0,
+				0,
+				0.0254,
+				0,
+				-0.09762,
+				0,
+				0.216478,
+				1
+			],
+			"meshes": [
+				"Mesh_42"
+			],
+			"name": "Teapot001_39"
 		}
 	},
 	"programs": {
 		"program_0": {
-			"attributes": ["a_normal",
-			"a_position"],
-			"fragmentShader": "test0FS",
+			"attributes": [
+				"a_normal",
+				"a_position"
+			],
+			"fragmentShader": "program_0FS",
 			"name": "program_0",
-			"vertexShader": "test0VS"
+			"vertexShader": "program_0VS"
 		}
 	},
 	"samplers": {
-		
 	},
 	"scene": "test",
 	"scenes": {
 		"test": {
-			"nodes": ["RootNode"]
+			"nodes": [
+				"RootNode_10"
+			]
 		}
 	},
 	"shaders": {
-		"test0FS": {
+		"program_0FS": {
 			"type": 35632,
-			"uri": "test0FS.glsl"
+			"uri": "program_0FS.glsl"
 		},
-		"test0VS": {
+		"program_0VS": {
 			"type": 35633,
-			"uri": "test0VS.glsl"
+			"uri": "program_0VS.glsl"
 		}
 	},
 	"skins": {
-		
 	},
 	"techniques": {
 		"defaultMaterial_technique_0": {
@@ -221,7 +244,7 @@
 				"a_position": "position"
 			},
 			"extras": {
-				"doubleSided": false,
+				"doubleSided": 0,
 				"lightingModel": "Unknown",
 				"texcoordBindings": {
 					"diffuse": "TEXCOORD_0"
@@ -254,8 +277,10 @@
 			},
 			"program": "program_0",
 			"states": {
-				"enable": [2884,
-				2929]
+				"enable": [
+					2884,
+					2929
+				]
 			},
 			"uniforms": {
 				"u_diffuse": "diffuse",
@@ -266,6 +291,5 @@
 		}
 	},
 	"textures": {
-		
 	}
 }

@@ -20,6 +20,7 @@
 //
 #include "StdAfx.h"
 #include "JsonPrettify.h"
+#include <array>
 
 namespace _IOglTF_NS_ {
 
@@ -39,8 +40,9 @@ void JsonPrettify::indent (utility::ostream_t &stream) {
 
 void JsonPrettify::format_string (const utility::string_t &st, utility::ostream_t &stream) {
     stream << U('"') ;
-    //append_escape_string (str, key) ;
-	stream << st ; // todo: ok for glTF and no-embeeded
+	utility::string_t escaped ;
+	JsonPrettify::append_escape_string<utility::char_t> (escaped, st) ;
+	stream << escaped ;
     stream << U('"') ;
 }
 
@@ -118,6 +120,56 @@ void JsonPrettify::formatObject (web::json::object &obj, utility::ostream_t &str
 	}
 	indent (stream) ;
 	stream << U("}") ;
+}
+
+// Copied from Casablanca REST SDK - json_serialization.cpp #75
+template<typename CharType>
+void JsonPrettify::append_escape_string (std::basic_string<CharType> &str, const std::basic_string<CharType> &escaped) {
+    for ( const auto &ch : escaped ) {
+        switch ( ch ) {
+            case '\"':
+                str +='\\' ;
+                str +='\"' ;
+                break ;
+            case '\\':
+                str +='\\' ;
+                str +='\\' ;
+                break ;
+            case '\b':
+                str +='\\' ;
+                str +='b' ;
+                break ;
+            case '\f':
+                str +='\\' ;
+                str +='f' ;
+                break ;
+            case '\r':
+                str +='\\' ;
+                str +='r' ;
+                break ;
+            case '\n':
+                str +='\\' ;
+                str +='n' ;
+                break ;
+            case '\t':
+                str +='\\' ;
+                str +='t' ;
+                break ;
+            default:
+                // If a control character then must unicode escaped.
+                if ( ch >= 0 && ch <= 0x1F ) {
+                    static const std::array<CharType, 16> intToHex ={ { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' } } ;
+                    str +='\\' ;
+                    str +='u' ;
+                    str +='0' ;
+                    str +='0' ;
+                    str +=intToHex [(ch & 0xF0) >> 4] ;
+                    str +=intToHex [ch & 0x0F] ;
+                } else {
+                    str +=ch ;
+                }
+        }
+    }
 }
 
 }

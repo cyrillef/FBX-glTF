@@ -1,65 +1,76 @@
 {
 	"accessors": {
-		"LOD3spShape_Normals": {
-			"bufferView": "LOD3spShape_Normals_Buffer",
+		"LOD3spShape_53_Normals": {
+			"bufferView": "LOD3spShape_53_Normals_Buffer",
 			"byteOffset": 0,
 			"byteStride": 12,
 			"componentType": 5126,
 			"count": 2399,
-			"max": [0.99959897994995117,
-			0.999580979347229,
-			0.99843597412109375],
-			"min": [-0.9990839958190918,
-			-1,
-			-0.99983197450637817],
-			"name": "LOD3spShape_Normals",
+			"max": [
+				0.999599,
+				0.999581,
+				0.998436
+			],
+			"min": [
+				-0.999084,
+				-1,
+				-0.999832
+			],
+			"name": "LOD3spShape_53_Normals",
 			"type": "VEC3"
 		},
-		"LOD3spShape_Polygons": {
-			"bufferView": "LOD3spShape_Polygons_Buffer",
+		"LOD3spShape_53_Polygons": {
+			"bufferView": "LOD3spShape_53_Polygons_Buffer",
 			"byteOffset": 0,
 			"byteStride": 2,
 			"componentType": 5123,
 			"count": 12636,
-			"name": "LOD3spShape_Polygons",
+			"name": "LOD3spShape_53_Polygons",
 			"type": "SCALAR"
 		},
-		"LOD3spShape_Positions": {
-			"bufferView": "LOD3spShape_Positions_Buffer",
+		"LOD3spShape_53_Positions": {
+			"bufferView": "LOD3spShape_53_Positions_Buffer",
 			"byteOffset": 0,
 			"byteStride": 12,
 			"componentType": 5126,
 			"count": 2399,
-			"max": [96.179901123046875,
-			163.97000122070312,
-			53.925201416015625],
-			"min": [-69.298500061035156,
-			9.9293699264526367,
-			-61.328201293945313],
-			"name": "LOD3spShape_Positions",
+			"max": [
+				96.1799,
+				163.97,
+				53.9252
+			],
+			"min": [
+				-69.2985,
+				9.92937,
+				-61.3282
+			],
+			"name": "LOD3spShape_53_Positions",
 			"type": "VEC3"
 		},
-		"LOD3spShape_TEXCOORD_0": {
-			"bufferView": "LOD3spShape_TEXCOORD_0_Buffer",
+		"LOD3spShape_53_TEXCOORD_0": {
+			"bufferView": "LOD3spShape_53_TEXCOORD_0_Buffer",
 			"byteOffset": 0,
 			"byteStride": 8,
 			"componentType": 5126,
 			"count": 2399,
-			"max": [0.98334598541259766,
-			0.98003697395324707],
-			"min": [0.026409000158309937,
-			0.01996299996972084],
-			"name": "LOD3spShape_TEXCOORD_0",
+			"max": [
+				0.983346,
+				0.980037
+			],
+			"min": [
+				0.026409,
+				0.019963
+			],
+			"name": "LOD3spShape_53_TEXCOORD_0",
 			"type": "VEC2"
 		}
 	},
 	"animations": {
-		
 	},
 	"asset": {
 		"copyright": "gcorson",
 		"generator": "FBX GLTF Exporter v1.0",
-		"premultipliedAlpha": false,
+		"premultipliedAlpha": 0,
 		"profile": {
 			"api": "WebGL",
 			"version": "1.0.3"
@@ -67,32 +78,32 @@
 		"version": "1.0"
 	},
 	"bufferViews": {
-		"LOD3spShape_Normals_Buffer": {
+		"LOD3spShape_53_Normals_Buffer": {
 			"buffer": "test",
 			"byteLength": 28788,
 			"byteOffset": 28788,
-			"name": "LOD3spShape_Normals_Buffer",
+			"name": "LOD3spShape_53_Normals_Buffer",
 			"target": 34962
 		},
-		"LOD3spShape_Polygons_Buffer": {
+		"LOD3spShape_53_Polygons_Buffer": {
 			"buffer": "test",
 			"byteLength": 25272,
 			"byteOffset": 76768,
-			"name": "LOD3spShape_Polygons_Buffer",
+			"name": "LOD3spShape_53_Polygons_Buffer",
 			"target": 34963
 		},
-		"LOD3spShape_Positions_Buffer": {
+		"LOD3spShape_53_Positions_Buffer": {
 			"buffer": "test",
 			"byteLength": 28788,
 			"byteOffset": 0,
-			"name": "LOD3spShape_Positions_Buffer",
+			"name": "LOD3spShape_53_Positions_Buffer",
 			"target": 34962
 		},
-		"LOD3spShape_TEXCOORD_0_Buffer": {
+		"LOD3spShape_53_TEXCOORD_0_Buffer": {
 			"buffer": "test",
 			"byteLength": 19192,
 			"byteOffset": 57576,
-			"name": "LOD3spShape_TEXCOORD_0_Buffer",
+			"name": "LOD3spShape_53_TEXCOORD_0_Buffer",
 			"target": 34962
 		}
 	},
@@ -105,11 +116,11 @@
 		}
 	},
 	"cameras": {
-		"cameraShape1": {
-			"name": "cameraShape1",
+		"cameraShape1_43": {
+			"name": "cameraShape1_43",
 			"perspective": {
 				"aspectRatio": 1.5,
-				"yfov": 0.66059315924583784,
+				"yfov": 0.660593,
 				"zfar": 100,
 				"znear": 0.01
 			},
@@ -123,13 +134,15 @@
 		}
 	},
 	"lights": {
-		"directionalLightShape1": {
+		"directionalLightShape1_44": {
 			"directional": {
-				"color": [1,
-				1,
-				1]
+				"color": [
+					1,
+					1,
+					1
+				]
 			},
-			"name": "directionalLightShape1",
+			"name": "directionalLightShape1_44",
 			"type": "directional"
 		}
 	},
@@ -138,143 +151,172 @@
 			"name": "blinn3",
 			"technique": "blinn3_technique_0",
 			"values": {
-				"ambient": [0,
-				0,
-				0,
-				1],
+				"ambient": [
+					0,
+					0,
+					0,
+					1
+				],
 				"diffuse": "texture_file2",
-				"emission": [0,
-				0,
-				0,
-				1],
-				"reflective": [0,
-				0,
-				0,
-				1],
+				"emission": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflective": [
+					0,
+					0,
+					0,
+					1
+				],
 				"reflectivity": 0.5,
-				"shininess": 0.29999999999999999,
-				"specular": [0,
-				0,
-				0,
-				1],
+				"shininess": 0.3,
+				"specular": [
+					0,
+					0,
+					0,
+					1
+				],
 				"transparency": 1,
-				"transparent": [0,
-				0,
-				0,
-				1]
+				"transparent": [
+					0,
+					0,
+					0,
+					1
+				]
 			}
 		}
 	},
 	"meshes": {
-		"LOD3spShape": {
-			"name": "LOD3spShape",
-			"primitives": [{
-				"attributes": {
-					"NORMAL": "LOD3spShape_Normals",
-					"POSITION": "LOD3spShape_Positions",
-					"TEXCOORD_0": "LOD3spShape_TEXCOORD_0"
-				},
-				"indices": "LOD3spShape_Polygons",
-				"material": "blinn3",
-				"mode": 4
-			}]
+		"LOD3spShape_53": {
+			"name": "LOD3spShape_53",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "LOD3spShape_53_Normals",
+						"POSITION": "LOD3spShape_53_Positions",
+						"TEXCOORD_0": "LOD3spShape_53_TEXCOORD_0"
+					},
+					"indices": "LOD3spShape_53_Polygons",
+					"material": "blinn3",
+					"mode": 4
+				}
+			]
 		}
 	},
 	"nodes": {
-		"LOD3spShape": {
-			"children": [],
-			"matrix": [0.01,
-			0,
-			0,
-			0,
-			0,
-			0.01,
-			0,
-			0,
-			0,
-			0,
-			0.01,
-			0,
-			0,
-			0,
-			0,
-			1],
-			"meshes": ["LOD3spShape"],
-			"name": "LOD3spShape"
+		"LOD3sp_45": {
+			"children": [
+			],
+			"matrix": [
+				0.01,
+				0,
+				0,
+				0,
+				0,
+				0.01,
+				0,
+				0,
+				0,
+				0,
+				0.01,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"meshes": [
+				"LOD3spShape_53"
+			],
+			"name": "LOD3sp_45"
 		},
-		"RootNode": {
-			"children": ["LOD3spShape",
-			"cameraShape1",
-			"directionalLightShape1"],
-			"matrix": [1,
-			0,
-			0,
-			0,
-			0,
-			1,
-			0,
-			0,
-			0,
-			0,
-			1,
-			0,
-			0,
-			0,
-			0,
-			1],
-			"name": "RootNode"
+		"RootNode_10": {
+			"children": [
+				"LOD3sp_45",
+				"camera1_46",
+				"directionalLight1_47"
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "RootNode_10"
 		},
-		"cameraShape1": {
-			"camera": "cameraShape1",
-			"children": [],
-			"matrix": [-0.0072896862742141194,
-			-7.7984354396551399e-019,
-			-0.0068454710592868841,
-			0,
-			-0.0042520491534354605,
-			0.0078369345732583976,
-			0.0045279724481533659,
-			0,
-			0.0053647508814765174,
-			0.006211477802783103,
-			-0.0057128794390595827,
-			0,
-			4.0011299999999999,
-			4.6326400000000003,
-			-4.3107800000000003,
-			1],
-			"name": "cameraShape1"
+		"camera1_46": {
+			"camera": "cameraShape1_43",
+			"children": [
+			],
+			"matrix": [
+				-0.00728969,
+				-7.79844e-019,
+				-0.00684547,
+				0,
+				-0.00425205,
+				0.00783693,
+				0.00452797,
+				0,
+				0.00536475,
+				0.00621148,
+				-0.00571288,
+				0,
+				4.00113,
+				4.63264,
+				-4.31078,
+				1
+			],
+			"name": "camera1_46"
 		},
-		"directionalLightShape1": {
-			"children": [],
-			"light": "directionalLightShape1",
-			"matrix": [-0.0095469169781043639,
-			0.0021814333356197169,
-			-0.0020242837783842694,
-			0,
-			0.00014672150811696955,
-			0.0071388524201416326,
-			0.0070010898381961811,
-			0,
-			0.0029723473909081585,
-			0.0066541817472687793,
-			-0.0068474094562890331,
-			0,
-			1.48654,
-			1.8367199999999999,
-			-2.9217899999999997,
-			1],
-			"name": "directionalLightShape1"
+		"directionalLight1_47": {
+			"children": [
+			],
+			"light": "directionalLightShape1_44",
+			"matrix": [
+				-0.00954692,
+				0.00218143,
+				-0.00202428,
+				0,
+				0.000146722,
+				0.00713885,
+				0.00700109,
+				0,
+				0.00297235,
+				0.00665418,
+				-0.00684741,
+				0,
+				1.48654,
+				1.83672,
+				-2.92179,
+				1
+			],
+			"name": "directionalLight1_47"
 		}
 	},
 	"programs": {
 		"program_0": {
-			"attributes": ["a_normal",
-			"a_position",
-			"a_texcoord0"],
-			"fragmentShader": "test0FS",
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_0FS",
 			"name": "program_0",
-			"vertexShader": "test0VS"
+			"vertexShader": "program_0VS"
 		}
 	},
 	"samplers": {
@@ -289,21 +331,22 @@
 	"scene": "test",
 	"scenes": {
 		"test": {
-			"nodes": ["RootNode"]
+			"nodes": [
+				"RootNode_10"
+			]
 		}
 	},
 	"shaders": {
-		"test0FS": {
+		"program_0FS": {
 			"type": 35632,
-			"uri": "test0FS.glsl"
+			"uri": "program_0FS.glsl"
 		},
-		"test0VS": {
+		"program_0VS": {
 			"type": 35633,
-			"uri": "test0VS.glsl"
+			"uri": "program_0VS.glsl"
 		}
 	},
 	"skins": {
-		
 	},
 	"techniques": {
 		"blinn3_technique_0": {
@@ -313,7 +356,7 @@
 				"a_texcoord0": "texcoord0"
 			},
 			"extras": {
-				"doubleSided": false,
+				"doubleSided": 0,
 				"lightingModel": "Phong",
 				"texcoordBindings": {
 					"diffuse": "TEXCOORD_0"
@@ -331,12 +374,14 @@
 				},
 				"light0Color": {
 					"type": 35665,
-					"value": [1,
-					1,
-					1]
+					"value": [
+						1,
+						1,
+						1
+					]
 				},
 				"light0Transform": {
-					"node": "directionalLightShape1",
+					"node": "directionalLight1_47",
 					"semantic": "MODELVIEW",
 					"type": 35676
 				},
@@ -385,8 +430,10 @@
 			},
 			"program": "program_0",
 			"states": {
-				"enable": [2884,
-				2929]
+				"enable": [
+					2884,
+					2929
+				]
 			},
 			"uniforms": {
 				"u_ambient": "ambient",

@@ -569,7 +569,7 @@ void glslTech::finalizingShaders (web::json::value technique, web::json::value g
 	if ( parameters.has_field (U("emission")) )
 		_fragmentShader.appendCode (U("color.xyz +=emission.xyz ;\n")) ;
 
-	bool hasTransparency=parameters.has_field (U("transparency")) ;
+	bool hasTransparency =parameters.has_field (U("transparency")) ;
 	if ( hasTransparency )
 		_fragmentShader.appendCode (U("color =vec4(color.rgb * diffuse.a, diffuse.a * u_transparency) ;\n")) ;
 	else

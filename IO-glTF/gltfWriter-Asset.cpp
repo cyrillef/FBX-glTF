@@ -32,7 +32,6 @@ bool gltfWriter::WriteAsset (FbxDocumentInfo *pSceneInfo) {
 	// Up axis - Y up axis. The scene already got converted to Maya Y up axis
 	//FbxScene *pScene =sceneInfo->GetScene () ;
 	//FbxAxisSystem axisSystem =pScene->GetGlobalSettings ().GetAxisSystem () ;
-	
 
 	// FBX uses author and comments, not authoring_tool(i.e. generator), and copyright.
 	asset [U("copyright")] =web::json::value::string (utility::conversions::to_string_t (pSceneInfo->mAuthor.Buffer ())) ;

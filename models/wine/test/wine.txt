@@ -1,0 +1,8 @@
+Loading file: wine\wine.fbx...
+Converting to GLTF ...
+Warning: (Line - 21) ID215 not exported!
+Warning: (Line - 21) ID221 not exported!
+Warning: (Line - 21) ID225 not exported!
+Warning: (Mesh) ID88 got more than one material. glTF supports one material per primitive (FBX Layer).
+Warning: (Mesh) ID193 got more than one material. glTF supports one material per primitive (FBX Layer).
+done!

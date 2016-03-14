@@ -53,6 +53,7 @@ utility::string_t GetJsonObjectKeyAt (web::json::value &a, int i) {
 	{ FbxNodeAttribute::eCamera, &gltfWriter::WriteCamera }, // Camera
 	{ FbxNodeAttribute::eLight, &gltfWriter::WriteLight }, // Light
 	{ FbxNodeAttribute::eMesh, &gltfWriter::WriteMesh }, // Mesh
+//	{ FbxNodeAttribute::eLine, &gltfWriter::WriteLine }, // Mesh
 	{ FbxNodeAttribute::eNull, &gltfWriter::WriteNull } // Null
 
 	// Marker // Not implemented in COLLADA / glTF.
@@ -170,6 +171,8 @@ bool gltfWriter::IsGeometryNode (FbxNode *pNode) {
 		return (true) ;
 	else if ( pNodeAttribute->GetAttributeType () == FbxNodeAttribute::ePatch )
 		return (true) ;
+	else if ( pNodeAttribute->GetAttributeType () == FbxNodeAttribute::eLine )
+		return (true) ;
 	return (false) ;
 }
 
@@ -251,6 +254,15 @@ void gltfWriter::PreprocessNodeRecursive (FbxNode *pNode) {
 		//	postR [1] +=90 ;
 		//	pNode->SetPostRotation (FbxNode::eSourcePivot, postR) ;
 		//}
+#ifdef _TRIANGULATE_
+		FbxNodeAttribute::EType attributeType =nodeAttribute->GetAttributeType () ;
+		if ( attributeType == FbxNodeAttribute::eNurbs || attributeType == FbxNodeAttribute::ePatch ) {
+			FbxGeometryConverter geometryConverter (&mManager) ;
+			//geometryConverter.TriangulateInPlace (pNode) ;
+			FbxMesh *pMesh =pNode->GetMesh () ;
+			pMesh =FbxCast<FbxMesh>(geometryConverter.Triangulate (pMesh, true)) ;
+		}
+#endif
 	}
 	for ( int i =0 ; i < pNode->GetChildCount () ; ++i )
 		PreprocessNodeRecursive (pNode->GetChild (i)) ;

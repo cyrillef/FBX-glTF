@@ -56,6 +56,7 @@ public:
 
 	void ioSettings (
 		const utility::char_t *name =nullptr,
+		bool angleInDegree =false,
 		bool reverseTransparency =false,
 		bool defaultLighting =false,
 		bool copyMedia =false,

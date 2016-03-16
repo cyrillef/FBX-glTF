@@ -1,7 +1,7 @@
 <!doctype html>
-<html>
+<html lang="en">
     <head>
-        <title>three.js webgl - glTF</title>
+        <title>three.js glTF Loader</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <style>
@@ -11,9 +11,7 @@
                 margin: 0px;
                 overflow: hidden;
             }
-            
             #info {
-				color: #fff;
                 position: absolute;
                 top: 10px;
                 width: 100%;
@@ -30,14 +28,23 @@
             	z-index: -1;
             }
             
+            #rendercontainer {
+            	position: absolute;
+            	top: 0px;
+            	width:100%;
+            	height:100%;
+            	z-index: -1;
+            	background-color:Red;
+            }
+                        
             #controls {
             	position:absolute;
-            	width:250px;
+            	width:25%;
+            	left:75%;
             	bottom:0%;
-            	right:0%;
-            	height:100px;
+            	height:166px;
             	background-color:White;
-            	opacity:.9;
+            	opacity:.75;
             	font: 13px/1.231 "Lucida Grande", Lucida, Verdana, sans-serif;
             }
 
@@ -60,7 +67,7 @@
                         
             .controlValue {
             	position:absolute;
-            	left:36%;
+            	left:40%;
             	top:0%;
             }
             
@@ -79,17 +86,29 @@
             	top:72px;
             }
 
+            #buffer_geometry_control {
+            	position:absolute;
+            	top:104px;
+            }
+
+            #materials_extension_control {
+                position:absolute;
+                top:136px;
+            }
+
+
+            #uris_control {
+                position:absolute;
+                top:166px;
+            }
+
             #info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
         </style>
     </head>
 
     <body>
         <div id="info">
-			<a href="http://threejs.org" target="_blank">three.js</a> - 
-			<a href="http://gltf.gl/" target="_blank">glTF</a> loader - 
-			<br></br>
-			monster by <a href="http://www.3drt.com/downloads.htm" target="_blank">3drt</a> -
-			COLLADA duck by Sony
+        <a href="http://github.com/mrdoob/three.js" target="_blank">three.js</a> - glTF Loader
         </div>
 		<div id="container">
 		</div>
@@ -111,6 +130,18 @@
 				Animations
 				<div class="controlValue"><input type="checkbox" checked onclick="toggleAnimations();">Play</input></div>
 			</div>
+			<div class="control" id="buffer_geometry_control">
+				Geometry
+				<div class="controlValue">
+				<input type="checkbox" id="buffer_geometry_checkbox" checked onclick="toggleBufferGeometry();">BufferGeometry</input>
+			</div>
+			</div>
+            <div class="control" id="materials_extension_control">
+                Shaders
+                <div class="controlValue">
+                <input type="checkbox" id="materials_extension_checkbox" checked onclick="toggleMaterialsExtension();">Use built-in</input>
+                </div>
+            </div>
 		</div>
         <script src="three.min.js"></script>
         <script src="controls/OrbitControls.js"></script>
@@ -118,6 +149,8 @@
         <script src="loaders/gltf/glTFLoader.js"></script>
         <script src="loaders/gltf/glTFLoaderUtils.js"></script>
         <script src="loaders/gltf/glTFAnimation.js"></script>
+		<script src="loaders/gltf/glTFShaders.js"></script>
+		<script src="loaders/gltf/gltfUtilities.js"></script>
 
 		<script src="models.js"></script>
         <script>
@@ -158,15 +191,15 @@
                 var spot1 = null;
                 if (sceneInfo.addLights) {
                     
-                    var ambient = new THREE.AmbientLight( 0x888888 );
+                    var ambient = new THREE.AmbientLight( 0x222222 );
                     scene.add( ambient );
 
                 	var directionalLight = new THREE.DirectionalLight( 0xdddddd );
-                	directionalLight.position.set( 0, -1, 1 ).normalize();
+                	directionalLight.position.set( 0, 0, 1 ).normalize();
                 	scene.add( directionalLight );
                 
 	                spot1   = new THREE.SpotLight( 0xffffff, 1 );
-	                spot1.position.set( -100, 200, 100 );
+	                spot1.position.set( 100, 200, 100 );
 	                spot1.target.position.set( 0, 0, 0 );
 
 	                if (sceneInfo.shadows) {
@@ -188,9 +221,9 @@
                 renderer.setSize( container.offsetWidth, container.offsetHeight );
 
                 if (sceneInfo.shadows) {
-	                renderer.shadowMapEnabled = true;
-	                renderer.shadowMapSoft = true;
-	        		renderer.shadowMapType = THREE.PCFSoftShadowMap;
+	                renderer.shadowMap.enabled = true;
+	                renderer.shadowMap.soft = true;
+	        		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 }
                 				
                 container.appendChild( renderer.domElement );
@@ -199,7 +232,6 @@
 				if (sceneInfo.addGround) {
 	                var groundMaterial = new THREE.MeshPhongMaterial({
 	                        color: 0xFFFFFF,
-	                        ambient: 0x888888,
 	                        shading: THREE.SmoothShading,
 	                    });
 	                ground = new THREE.Mesh( new THREE.PlaneBufferGeometry(1024, 1024), groundMaterial);
@@ -220,11 +252,18 @@
 				}
 				
                 loader = new THREE.glTFLoader;
-
+                loader.useBufferGeometry = useBufferGeometry;
                 var loadStartTime = Date.now();
                 var status = document.getElementById("status");
                 status.innerHTML = "Loading...";
-                loader.load( sceneInfo.url, function(data) {
+                var url = sceneInfo.url;
+                var r = eval("/" + '\%s' + "/g");
+                var dir = useMaterialsExtension ? 'glTF-MaterialsCommon' :  'glTF';
+                if (sceneInfo.dataURIs)
+                    dir = 'glTF-Embedded';
+                url = url.replace(r, dir);
+
+                loader.load( url, function(data) {
 
                 	gltf = data;
                 	
@@ -327,6 +366,7 @@
             function animate() {
                 requestAnimationFrame( animate );
                 THREE.glTFAnimator.update();
+                THREE.glTFShaders.update(scene, camera);
                 if (cameraIndex == 0)
                     orbitControls.update();
                 render();
@@ -446,6 +486,22 @@
 				}
 			}
 
+			var usebuf = document.getElementById("buffer_geometry_checkbox");
+			var useBufferGeometry = usebuf.hasAttribute("checked");
+			function toggleBufferGeometry()
+			{
+				useBufferGeometry = !useBufferGeometry;
+				selectScene();
+			}
+
+            var useextmaterials = document.getElementById("materials_extension_checkbox");
+            var useMaterialsExtension = useextmaterials.hasAttribute("checked");
+            function toggleMaterialsExtension()
+            {
+                useMaterialsExtension = !useMaterialsExtension;
+                selectScene();
+            }
+
 			function cleanup() {
 
 				if (container && renderer)
@@ -458,7 +514,7 @@
 				cameraNames = [];
 				defaultCamera = null;
 				
-				if (!loader || !gltf.animations)
+				if (!loader || !gltf || !gltf.animations)
 					return;
 				
 				var i, len = gltf.animations.length;

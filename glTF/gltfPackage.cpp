@@ -77,6 +77,7 @@ gltfPackage::~gltfPackage () {
 
 void gltfPackage::ioSettings (
 	const utility::char_t *name /*=nullptr*/,
+	bool angleInDegree /*=false*/,
 	bool invertTransparency /*=false*/,
 	bool defaultLighting /*=false*/,
 	bool copyMedia /*=false*/,
@@ -84,6 +85,7 @@ void gltfPackage::ioSettings (
 ) {
 	FbxIOSettings *pIOSettings =fbxSdkMgr::Instance ()->fbxMgr ()->GetIOSettings () ;
 	_ioSettings._name =name == nullptr ? U("") : name ;
+	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_ANGLEINDEGREE, angleInDegree) ;
 	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_INVERTTRANSPARENCY, invertTransparency) ;
 	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_DEFAULTLIGHTING, defaultLighting) ;
 	pIOSettings->SetBoolProp (IOSN_FBX_GLTF_COPYMEDIA, copyMedia) ;
@@ -163,24 +165,76 @@ bool gltfPackage::LoadScene (const utility::string_t &fn) {
 	//if ( bStatus == false && pImporter->GetStatus ().GetCode () == FbxStatus::ePasswordError ) {
 	//}
 
-	FbxAxisSystem::MayaYUp.ConvertScene (_scene) ;
-	FbxSystemUnit sceneSystemUnit =_scene->GetGlobalSettings ().GetSystemUnit () ;
+	// Get current UpAxis of the FBX file.
+	// This have to be done before ConvertiAxisSystem(), cause the function will always change SceneAxisSystem to Y-up.
+	// First, however, if we have the ForcedFileAxis activated, we need to overwrite the global settings.
+	//switch ( IOS_REF.GetEnumProp (IMP_FILE_UP_AXIS, FbxMayaUtility::eUPAXIS_AUTO) ) {
+	//	default:
+	//	case FbxMayaUtility::eUPAXIS_AUTO:
+	//		break ;
+	//	case FbxMayaUtility::eUPAXIS_Y:
+	//		_scene->GetGlobalSettings ().SetAxisSystem (FbxAxisSystem::MayaYUp) ;
+	//		break ;
+	//	case FbxMayaUtility::eUPAXIS_Z:
+	//		_scene->GetGlobalSettings ().SetAxisSystem (FbxAxisSystem::MayaZUp) ;
+	//	break ;
+	//}
+	//FbxAxisSystem sceneAxisSystem =_scene->GetGlobalSettings ().GetAxisSystem () ;
+	//int lSign =0 ;
+	//FbxAxisSystem::EUpVector upVectorFromFile =sceneAxisSystem.GetUpVector (lSign) ;
+
+	FbxAxisSystem::MayaYUp.ConvertScene (_scene) ; // We want the Y up axis for glTF
+
+	FbxSystemUnit sceneSystemUnit =_scene->GetGlobalSettings ().GetSystemUnit () ; // We want meter as default unit for gltTF
 	if ( sceneSystemUnit != FbxSystemUnit::m ) {
-		const FbxSystemUnit::ConversionOptions conversionOptions ={
-			false, // mConvertRrsNodes
-			true, // mConvertAllLimits
-			true, // mConvertClusters
-			false, // mConvertLightIntensity
-			true, // mConvertPhotometricLProperties
-			false  // mConvertCameraClipPlanes
-		} ;
-		FbxSystemUnit::m.ConvertScene (_scene, conversionOptions) ;
+		//const FbxSystemUnit::ConversionOptions conversionOptions ={
+		//	false, // mConvertRrsNodes
+		//	true, // mConvertAllLimits
+		//	true, // mConvertClusters
+		//	false, // mConvertLightIntensity
+		//	true, // mConvertPhotometricLProperties
+		//	false  // mConvertCameraClipPlanes
+		//} ;
+		//FbxSystemUnit::m.ConvertScene (_scene, conversionOptions) ;
+		FbxSystemUnit::m.ConvertScene (_scene) ;
 	}
-	//if ( sceneSystemUnit.GetScaleFactor () != 1.0 )
-	//	FbxSystemUnit::m.ConvertScene (_scene) ;
+
+	FbxGeometryConverter converter (fbxSdkMgr::Instance ()->fbxMgr ()) ;
+	converter.Triangulate (_scene, true) ; // glTF supports triangles only
+	converter.SplitMeshesPerMaterial (_scene, true) ; // Split meshes per material, so we only have one material per mesh (VBO support)
 	
+	// Set the current peripheral to be the NULL so FBX geometries that have been imported can be flushed
+    _scene->SetPeripheral (NULL_PERIPHERAL) ;
+
+	//int nb =_scene->GetSrcObjectCount<FbxNodeAttribute> () ;
+	//int nbTot =5 * nb ;
+	//int nbRest =4 * nb ;
+	//int nbSteps =nbRest / 8 ;
+
+	//FbxArray<FbxNode *> pBadMeshes =RemoveBadPolygonsFromMeshes (_scene) ;
+
 	return (true) ;
 }
+
+//FbxArray<FbxNode *> RemoveBadPolygonsFromMeshes (FbxScene *pScene) {
+//	FbxArray<FbxNode *> pAffectedNodes ;
+//	FbxNode *pNode =pScene->GetRootNode () ;
+//	RemoveBadPolygonsFromMeshesRecursive (pNode, pAffectedNodes) ;
+//	return (pAffectedNodes) ;
+//}
+//
+//FbxArray<FbxNode *> RemoveBadPolygonsFromMeshesRecursive (FbxNode *pNode, FbxArray<FbxNode *> &pAffectedNodes) {
+//	FbxMesh *pMesh =pNode->GetMesh () ;
+//	if ( pMesh ) {
+//		if ( pMesh->RemoveBadPolygons () > 0 )
+//			pAffectedNodes.Add (pNode) ;
+//	}
+//	for ( int nChildIndex =0 ; nChildIndex < pNode->GetChildCount () ; nChildIndex++ ) {
+//		FbxNode *pChild =pNode->GetChild (nChildIndex) ;
+//		RemoveBadPolygonsFromMeshesRecursive (pChild, pAffectedNodes) ;
+//	}
+//	return (pAffectedNodes) ;
+//}
 
 bool gltfPackage::WriteScene (const utility::string_t &outdir) {
 	auto pMgr =fbxSdkMgr::Instance ()->fbxMgr () ;
@@ -189,10 +243,14 @@ bool gltfPackage::WriteScene (const utility::string_t &outdir) {
 		return (false) ;
 	FbxAutoDestroyPtr<FbxExporter> pExporter (FbxExporter::Create (pMgr, "")) ;
 	utility::string_t newFn =outdir + utility::conversions::to_string_t (_scene->GetName ()) + U(".gltf") ;
+	
 	bool bRet =pExporter->Initialize (utility::conversions::to_utf8string (newFn).c_str (), iFormat, pMgr->GetIOSettings ()) ;
 	_ASSERTE( bRet ) ;
 	if ( !bRet )
 		return (false) ;
+
+	// The next line will call the exporter
 	bRet =pExporter->Export (_scene) ;
+
 	return (bRet) ;
 }

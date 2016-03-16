@@ -545,10 +545,10 @@ Objects:  {
 	Video: 127753674320, "Video::file1", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg"
+			P: "Path", "KString", "XRefUrl", "", "tex_0.jpg"
 		}
 		UseMipMap: 0
-		Filename: "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg"
+		Filename: "tex_0.jpg"
 		RelativeFilename: "tex_0.jpg"
 	}
 	Texture: 127739858176, "Texture::file1", "" {
@@ -561,7 +561,7 @@ Objects:  {
 			P: "UseMaterial", "bool", "", "",1
 		}
 		Media: "Video::file1"
-		FileName: "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg"
+		FileName: "tex_0.jpg"
 		RelativeFilename: "tex_0.jpg"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1

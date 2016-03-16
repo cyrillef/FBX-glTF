@@ -20,14 +20,14 @@ app.get ("/models.js", function (req, res) {
 			js +="			{ \n\
 				name : \"" + name + "\", \n\
 				url : \"" + pathr.split (path.sep).join ("/") + "\", \n\
-				cameraPos: new THREE.Vector3(30, 10, 70), \n\
-				//objectScale: new THREE.Vector3(0.01, 0.01, 0.01), \n\
-				//objectPosition: new THREE.Vector3(0, 1, 0), \n\
-				//objectRotation: new THREE.Euler(-Math.PI / 2, 0, -Math.PI / 2), \n\
+				cameraPos: new THREE.Vector3 (0, 3, 5), \n\
+				//objectScale: new THREE.Vector3 (0.01, 0.01, 0.01), \n\
+				//objectPosition: new THREE.Vector3 (0, 1, 0), \n\
+				//objectRotation: new THREE.Euler (-Math.PI / 2, 0, -Math.PI / 2), \n\
 				animationTime: 3, \n\
 				addLights: true, \n\
 				//shadows: true, \n\
-				//addGround: true \n\
+				addGround: true \n\
 			}, \n" ;
 		}
 		js ='var sceneList =[\n' + js + '] ;\n' ;

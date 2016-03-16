@@ -78,6 +78,7 @@ public:
 	static const utility::char_t *szMAT2 ;
 	static const utility::char_t *szMAT3 ;
 	static const utility::char_t *szMAT4 ;
+	static const utility::char_t *szSAMPLER_2D ;
 	// bufferView::Target (https://github.com/KhronosGroup/glTF/blob/master/specification/bufferView.schema.json)
 	static const unsigned int ARRAY_BUFFER =34962 ;
 	static const unsigned int ELEMENT_ARRAY_BUFFER =34963 ;
@@ -135,7 +136,8 @@ public:
 	template<class T>
 	static const utility::char_t *accessorType (int size, int dim =1) ;
 	static unsigned int techniqueParameters (const utility::char_t *szType, int compType =FLOAT) ;
-	static const utility::char_t *glslType (unsigned int glType) ;
+	static const utility::char_t *glslAccessorType (unsigned int glType) ;
+	static const utility::string_t glslShaderType (unsigned int glType) ;
 	static const utility::char_t *mimeType (const utility::char_t *szFilename) ;
 	// Online uri generator: http://bran.name/dump/data-uri-generator/
 	static const utility::string_t dataURI (const utility::string_t fileName) ;

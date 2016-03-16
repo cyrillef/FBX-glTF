@@ -1,0 +1,228 @@
+{
+    "accessors": {
+        "accessor_21": {
+            "bufferView": "bufferView_29",
+            "byteOffset": 0,
+            "byteStride": 0,
+            "componentType": 5123,
+            "count": 3072,
+            "type": "SCALAR"
+        },
+        "accessor_23": {
+            "bufferView": "bufferView_30",
+            "byteOffset": 0,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 3072,
+            "max": [
+                0.590146,
+                0.344297,
+                0.542267
+            ],
+            "min": [
+                -0.516445,
+                -0.344297,
+                0
+            ],
+            "type": "VEC3"
+        },
+        "accessor_25": {
+            "bufferView": "bufferView_30",
+            "byteOffset": 36864,
+            "byteStride": 12,
+            "componentType": 5126,
+            "count": 3072,
+            "max": [
+                0.999598,
+                0.999892,
+                1
+            ],
+            "min": [
+                -0.997804,
+                -0.99985,
+                -1
+            ],
+            "type": "VEC3"
+        },
+        "accessor_27": {
+            "bufferView": "bufferView_30",
+            "byteOffset": 73728,
+            "byteStride": 8,
+            "componentType": 5126,
+            "count": 3072,
+            "max": [
+                2,
+                1
+            ],
+            "min": [
+                0,
+                -1
+            ],
+            "type": "VEC2"
+        }
+    },
+    "animations": {},
+    "asset": {
+        "generator": "collada2gltf@bc1fe2adaf3e0bec42750ade3bc1d763d0f298aa",
+        "premultipliedAlpha": true,
+        "profile": {
+            "api": "WebGL",
+            "version": "1.0.2"
+        },
+        "version": "1.0"
+    },
+    "bufferViews": {
+        "bufferView_29": {
+            "buffer": "teapot\\out\\teapot",
+            "byteLength": 6144,
+            "byteOffset": 0,
+            "target": 34963
+        },
+        "bufferView_30": {
+            "buffer": "teapot\\out\\teapot",
+            "byteLength": 98304,
+            "byteOffset": 6144,
+            "target": 34962
+        }
+    },
+    "buffers": {
+        "teapot\\out\\teapot": {
+            "byteLength": 104448,
+            "type": "arraybuffer",
+            "uri": "teapot\\out\\teapot.bin"
+        }
+    },
+    "materials": {
+        "__glTF__defaultMaterial0": {
+            "name": "__glTF__defaultMaterial0",
+            "technique": "technique0",
+            "values": {
+                "diffuse": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "meshes": {
+        "Teapot001-lib": {
+            "name": "Teapot001Mesh",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": "accessor_25",
+                        "POSITION": "accessor_23",
+                        "TEXCOORD_0": "accessor_27"
+                    },
+                    "indices": "accessor_21",
+                    "material": "__glTF__defaultMaterial0",
+                    "mode": 4
+                }
+            ]
+        }
+    },
+    "nodes": {
+        "Teapot001": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                -0.09762,
+                0,
+                0.216478,
+                1
+            ],
+            "meshes": [
+                "Teapot001-lib"
+            ],
+            "name": "Teapot001"
+        }
+    },
+    "programs": {
+        "program_0": {
+            "attributes": [
+                "a_normal",
+                "a_position"
+            ],
+            "fragmentShader": "teapot\\out\\teapot0FS",
+            "vertexShader": "teapot\\out\\teapot0VS"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "Teapot001"
+            ]
+        }
+    },
+    "shaders": {
+        "teapot\\out\\teapot0FS": {
+            "type": 35632,
+            "uri": "teapot\\out\\teapot0FS.glsl"
+        },
+        "teapot\\out\\teapot0VS": {
+            "type": 35633,
+            "uri": "teapot\\out\\teapot0VS.glsl"
+        }
+    },
+    "skins": {},
+    "techniques": {
+        "technique0": {
+            "attributes": {
+                "a_normal": "normal",
+                "a_position": "position"
+            },
+            "parameters": {
+                "diffuse": {
+                    "type": 35666
+                },
+                "modelViewMatrix": {
+                    "semantic": "MODELVIEW",
+                    "type": 35676
+                },
+                "normal": {
+                    "semantic": "NORMAL",
+                    "type": 35665
+                },
+                "normalMatrix": {
+                    "semantic": "MODELVIEWINVERSETRANSPOSE",
+                    "type": 35675
+                },
+                "position": {
+                    "semantic": "POSITION",
+                    "type": 35665
+                },
+                "projectionMatrix": {
+                    "semantic": "PROJECTION",
+                    "type": 35676
+                }
+            },
+            "program": "program_0",
+            "states": {
+                "enable": [
+                    2929,
+                    2884
+                ]
+            },
+            "uniforms": {
+                "u_diffuse": "diffuse",
+                "u_modelViewMatrix": "modelViewMatrix",
+                "u_normalMatrix": "normalMatrix",
+                "u_projectionMatrix": "projectionMatrix"
+            }
+        }
+    }
+}

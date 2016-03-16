@@ -23,15 +23,6 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePass.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassDetails.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassDetailsCommonProfile.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassDetailsCommonProfileTexcoordBindings.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassInstanceProgram.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassInstanceProgramAttribute.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassInstanceProgramUniform.schema.json
-// https://github.com/KhronosGroup/glTF/blob/master/specification/techniquePassStates.schema.json
-
 void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals /*=false*/) {
 	if ( bHasNormals ) {
 		techniqueParameters [U("normalMatrix")] =web::json::value::object ({ // normal matrix
@@ -75,13 +66,14 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 				{ U("value"), web::json::value::array ({{ pLight->Color.Get () [0], pLight->Color.Get () [1], pLight->Color.Get () [2] }}) }
 			}) ;
 		} else {
+			utility::string_t light_id =utility::conversions::to_string_t (nodeId (pLight->GetNode (), false)) ;
 			techniqueParameters [name + utility::conversions::to_string_t (i) + U("Color")] =web::json::value::object ({ // Color
 				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_VEC3) },
 				{ U("value"), web::json::value::array ({{ pLight->Color.Get () [0], pLight->Color.Get () [1], pLight->Color.Get () [2] }}) }
 			}) ;
 			techniqueParameters [name + utility::conversions::to_string_t (i) + U("Transform")] =web::json::value::object ({ // Transform
 				{ U("semantic"), web::json::value::string (U("MODELVIEW")) },
-				{ U("source"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
+				{ U("node"), web::json::value::string (light_id) },
 				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
 			}) ;
 			if ( pLight->LightType.Get () == FbxLight::EType::eDirectional ) {
@@ -106,7 +98,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 			if ( pLight->LightType.Get () == FbxLight::EType::eSpot ) {
 				techniqueParameters [name + utility::conversions::to_string_t (i) + U("InverseTransform")] =web::json::value::object ({
 					{ U("semantic"), web::json::value::string (U("MODELVIEWINVERSE")) },
-					{ U("source"), web::json::value::string (utility::conversions::to_string_t (pLight->GetNode ()->GetName ())) },
+					{ U("node"), web::json::value::string (utility::conversions::to_string_t (light_id)) },
 					{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
 				}) ;
 				techniqueParameters [name + utility::conversions::to_string_t (i) + U("FallOffAngle")] =web::json::value::object ({
@@ -122,7 +114,7 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 	}
 }
 
-void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors) {
+void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors, bool bHasMaterial) {
 	for ( const auto &iter : attributes.as_object () ) {
 		utility::string_t name =iter.first ;
 		std::transform (name.begin (), name.end (), name.begin (), ::tolower) ;
@@ -131,6 +123,8 @@ void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqu
 		utility::string_t upperName (iter.first) ;
 		std::transform (upperName.begin (), upperName.end (), upperName.begin (), ::toupper) ;
 		web::json::value accessor =accessors [iter.second.as_string ()] ;
+		if ( !bHasMaterial && utility::details::limitedCompareTo (name, U("texcoord")) == 0 )
+			continue ;
 		techniqueParameters [name] =web::json::value::object ({
 			{ U("semantic"), web::json::value::string (upperName) },
 			{ U("type"), web::json::value::number ((int)IOglTF::techniqueParameters (accessor [U("type")].as_string ().c_str (), accessor [U("componentType")].as_integer ())) }
@@ -139,11 +133,12 @@ void gltfWriter::TechniqueParameters (FbxNode *pNode, web::json::value &techniqu
 }
 
 web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, web::json::value &techniqueParameters) {
-	web::json::value commonProfile =web::json::value::object () ;
 	// The FBX SDK does not have such attribute. At best, it is an attribute of a Shader FX, CGFX or HLSL.
-	commonProfile [U("extras")] =web::json::value::object ({{ U("doubleSided"), web::json::value::boolean (false) }}) ;
-	commonProfile [U("lightingModel")] =web::json::value::string (LighthingModel (pMaterial)) ;
-	commonProfile [U("parameters")] =web::json::value::array () ;
+	web::json::value commonProfile =web::json::value::object ({{ U("doubleSided"), web::json::value::boolean (false) }}) ;
+	if ( pMaterial != nullptr )
+		commonProfile [U("lightingModel")] =web::json::value::string (LighthingModel (pMaterial)) ;
+	else
+		commonProfile [U("lightingModel")] =web::json::value::string (U("Unknown")) ;
 	if ( _uvSets.size () ) {
 		commonProfile [U("texcoordBindings")] =web::json::value::object () ;
 		for ( auto iter : _uvSets ) {
@@ -155,46 +150,45 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 			commonProfile [U("texcoordBindings")] [key] =web::json::value::string (iter.second) ;
 		}
 	}
+	/*commonProfile [U("parameters")] =web::json::value::array () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   (  utility::details::limitedCompareTo (iter.first, U("position")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("texcoord")) != 0)
 			|| iter.first == U("normalMatrix")
-			)
+		)
 			commonProfile [U("parameters")] [commonProfile [U("parameters")].size ()] =web::json::value::string (iter.first) ;
 
 		web::json::value param =iter.second ;
 		if ( param [U("type")].as_integer () == IOglTF::SAMPLER_2D ) {
-
+			// todo:
 		}
-	}
-
-	web::json::value details =web::json::value::object () ;
-	details [U("commonProfile")] =commonProfile ;
-	details [U("type")] =web::json::value::string (FBX_GLTF_COMMONPROFILE) ;
+	}*/
 
 	web::json::value attributes =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   utility::details::limitedCompareTo (iter.first, U("position")) == 0
 			|| (utility::details::limitedCompareTo (iter.first, U("normal")) == 0 && iter.first != U("normalMatrix"))
-			|| utility::details::limitedCompareTo (iter.first, U("texcoord")) == 0 )
+			|| (utility::details::limitedCompareTo (iter.first, U("texcoord")) == 0 && pMaterial != nullptr)
+		)
 			attributes [utility::string_t (U("a_")) + iter.first] =web::json::value::string (iter.first) ;
 	}
 
 	web::json::value instanceProgram=web::json::value::object () ;
 	instanceProgram [U("attributes")] =attributes ;
-	instanceProgram [U("program")] =web::json::value::string (createUniqueId (utility::string_t (U("program")), 0)) ;
+	instanceProgram [U("program")] =web::json::value::string (createUniqueName (utility::string_t (U("program")), 0)) ; // Start with 0, but will increase based on own many are yet registered
 	instanceProgram [U("uniforms")] =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   (  utility::details::limitedCompareTo (iter.first, U("position")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("texcoord")) != 0)
-			|| iter.first == U("normalMatrix") )
+			|| iter.first == U("normalMatrix")
+		)
 			instanceProgram [U("uniforms")] [utility::string_t (U("u_")) + iter.first] =web::json::value::string (iter.first) ;
 	}
 
 	web::json::value techStatesEnable =web::json::value::array () ;
-	if ( pNode->mCullingType != FbxNode::ECullingType::eCullingOff )
+	if ( pNode->mCullingType == FbxNode::ECullingType::eCullingOff )
 		techStatesEnable [techStatesEnable.size ()] =web::json::value::number ((int)IOglTF::CULL_FACE) ;
 	// TODO: should it always be this way?
 	techStatesEnable [techStatesEnable.size ()] =web::json::value::number ((int)IOglTF::DEPTH_TEST) ;
@@ -203,16 +197,16 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	techStates [U("enable")] =techStatesEnable ;
 	// TODO: needs to be implemented
 	//techStates [U("functions")] =
-
-	web::json::value techniquePass =web::json::value::object () ;
-	techniquePass [U("details")] =details ;
-	techniquePass [U("instanceProgram")] =instanceProgram ;
-	techniquePass [U("states")] =techStates ;
-
+	
 	web::json::value technique =web::json::value::object () ;
 	technique [U("parameters")] =techniqueParameters ;
-	technique [U("pass")] =web::json::value::string (U("defaultPass")) ;
-	technique [U("passes")] =web::json::value::object ({{ U("defaultPass"), techniquePass }}) ;
+	//technique [U("passes")] =web::json::value::object ({{ U("defaultPass"), techniquePass }}) ;
+	technique [U("program")] =instanceProgram [U("program")] ;
+	technique [U("states")] =techStates ;
+	technique [U("attributes")] =instanceProgram [U("attributes")] ;
+	technique [U("uniforms")] =instanceProgram [U("uniforms")] ;
+
+	technique [U("extras")] =commonProfile ;
 
 	return (technique) ;
 }

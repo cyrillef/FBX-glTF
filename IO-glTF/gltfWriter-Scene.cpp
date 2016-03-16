@@ -23,7 +23,6 @@
 
 namespace _IOglTF_NS_ {
 
-// https://github.com/KhronosGroup/glTF/blob/master/specification/scene.schema.json
 bool gltfWriter::WriteScene (FbxScene *pScene, int poseIndex /*=-1*/) {
 	FbxNode *pRoot =pScene->GetRootNode () ;
 	FbxPose *pPose =poseIndex >= 0 ? pScene->GetPose (poseIndex) : nullptr ;
@@ -36,6 +35,7 @@ bool gltfWriter::WriteScene (FbxScene *pScene, int poseIndex /*=-1*/) {
 	//FbxDouble3 scaling =pRoot->LclScaling.Get () ;
 
 	WriteSceneNodeRecursive (pRoot, pPose, true) ;
+
 	return (true) ;
 }
 

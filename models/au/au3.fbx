@@ -524,20 +524,20 @@ Objects:  {
 	Video: 734953483568, "Video::file1", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg"
+			P: "Path", "KString", "XRefUrl", "", "tex_0.jpg"
 		}
 		UseMipMap: 0
-		Filename: "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg"
+		Filename: "tex_0.jpg"
 		RelativeFilename: "tex_0.jpg"
 	}
 	Video: 734953475168, "Video::file2", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "C:/Users/cyrille/Pictures/200px-3D-Orc.png"
+			P: "Path", "KString", "XRefUrl", "", "200px-3D-Orc.png"
 		}
 		UseMipMap: 0
-		Filename: "C:/Users/cyrille/Pictures/200px-3D-Orc.png"
-		RelativeFilename: "..\..\..\..\..\..\..\Pictures\200px-3D-Orc.png"
+		Filename: "200px-3D-Orc.png"
+		RelativeFilename: "200px-3D-Orc.png"
 	}
 	Texture: 735212639936, "Texture::file1", "" {
 		Type: "TextureVideoClip"
@@ -549,7 +549,7 @@ Objects:  {
 			P: "UseMaterial", "bool", "", "",1
 		}
 		Media: "Video::file1"
-		FileName: "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg"
+		FileName: "tex_0.jpg"
 		RelativeFilename: "tex_0.jpg"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
@@ -566,8 +566,8 @@ Objects:  {
 			P: "UseMaterial", "bool", "", "",1
 		}
 		Media: "Video::file2"
-		FileName: "C:/Users/cyrille/Pictures/200px-3D-Orc.png"
-		RelativeFilename: "..\..\..\..\..\..\..\Pictures\200px-3D-Orc.png"
+		FileName: "200px-3D-Orc.png"
+		RelativeFilename: "200px-3D-Orc.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"

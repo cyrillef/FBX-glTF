@@ -1,0 +1,815 @@
+{
+	"accessors": {
+		"Mesh_89_Normals": {
+			"bufferView": "Mesh_89_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 434,
+			"max": [
+				715.308,
+				518.146,
+				708.943
+			],
+			"min": [
+				-687.587,
+				-200.647,
+				-710.506
+			],
+			"name": "Mesh_89_Normals",
+			"type": "VEC3"
+		},
+		"Mesh_89_Polygons": {
+			"bufferView": "Mesh_89_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 1296,
+			"name": "Mesh_89_Polygons",
+			"type": "SCALAR"
+		},
+		"Mesh_89_Positions": {
+			"bufferView": "Mesh_89_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 434,
+			"max": [
+				21.4487,
+				43.4725,
+				5.40183
+			],
+			"min": [
+				-33.2975,
+				-24.8471,
+				-48.6101
+			],
+			"name": "Mesh_89_Positions",
+			"type": "VEC3"
+		},
+		"Mesh_89_TEXCOORD_0": {
+			"bufferView": "Mesh_89_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 434,
+			"max": [
+				1,
+				1
+			],
+			"min": [
+				0,
+				0
+			],
+			"name": "Mesh_89_TEXCOORD_0",
+			"type": "VEC2"
+		},
+		"Mesh_90_Normals": {
+			"bufferView": "Mesh_90_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 32,
+			"max": [
+				1,
+				1,
+				1
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "Mesh_90_Normals",
+			"type": "VEC3"
+		},
+		"Mesh_90_Polygons": {
+			"bufferView": "Mesh_90_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 36,
+			"name": "Mesh_90_Polygons",
+			"type": "SCALAR"
+		},
+		"Mesh_90_Positions": {
+			"bufferView": "Mesh_90_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 32,
+			"max": [
+				1,
+				1,
+				1
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "Mesh_90_Positions",
+			"type": "VEC3"
+		},
+		"Mesh_90_TEXCOORD_0": {
+			"bufferView": "Mesh_90_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 32,
+			"max": [
+				1,
+				1
+			],
+			"min": [
+				0,
+				0
+			],
+			"name": "Mesh_90_TEXCOORD_0",
+			"type": "VEC2"
+		},
+		"Mesh_91_Normals": {
+			"bufferView": "Mesh_91_Normals_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 32,
+			"max": [
+				1,
+				1,
+				1
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "Mesh_91_Normals",
+			"type": "VEC3"
+		},
+		"Mesh_91_Polygons": {
+			"bufferView": "Mesh_91_Polygons_Buffer",
+			"byteOffset": 0,
+			"byteStride": 2,
+			"componentType": 5123,
+			"count": 36,
+			"name": "Mesh_91_Polygons",
+			"type": "SCALAR"
+		},
+		"Mesh_91_Positions": {
+			"bufferView": "Mesh_91_Positions_Buffer",
+			"byteOffset": 0,
+			"byteStride": 12,
+			"componentType": 5126,
+			"count": 32,
+			"max": [
+				1,
+				1,
+				1
+			],
+			"min": [
+				-1,
+				-1,
+				-1
+			],
+			"name": "Mesh_91_Positions",
+			"type": "VEC3"
+		},
+		"Mesh_91_TEXCOORD_0": {
+			"bufferView": "Mesh_91_TEXCOORD_0_Buffer",
+			"byteOffset": 0,
+			"byteStride": 8,
+			"componentType": 5126,
+			"count": 32,
+			"max": [
+				1,
+				1
+			],
+			"min": [
+				0,
+				0
+			],
+			"name": "Mesh_91_TEXCOORD_0",
+			"type": "VEC2"
+		}
+	},
+	"animations": {
+	},
+	"asset": {
+		"copyright": "",
+		"generator": "FBX GLTF Exporter v1.0",
+		"premultipliedAlpha": 0,
+		"profile": {
+			"api": "WebGL",
+			"version": "1.0.3"
+		},
+		"version": "1.0"
+	},
+	"bufferViews": {
+		"Mesh_89_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 5208,
+			"byteOffset": 5208,
+			"name": "Mesh_89_Normals_Buffer",
+			"target": 34962
+		},
+		"Mesh_89_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 2592,
+			"byteOffset": 13888,
+			"name": "Mesh_89_Polygons_Buffer",
+			"target": 34963
+		},
+		"Mesh_89_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 5208,
+			"byteOffset": 0,
+			"name": "Mesh_89_Positions_Buffer",
+			"target": 34962
+		},
+		"Mesh_89_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 3472,
+			"byteOffset": 10416,
+			"name": "Mesh_89_TEXCOORD_0_Buffer",
+			"target": 34962
+		},
+		"Mesh_90_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 384,
+			"byteOffset": 16864,
+			"name": "Mesh_90_Normals_Buffer",
+			"target": 34962
+		},
+		"Mesh_90_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 72,
+			"byteOffset": 17504,
+			"name": "Mesh_90_Polygons_Buffer",
+			"target": 34963
+		},
+		"Mesh_90_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 384,
+			"byteOffset": 16480,
+			"name": "Mesh_90_Positions_Buffer",
+			"target": 34962
+		},
+		"Mesh_90_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 256,
+			"byteOffset": 17248,
+			"name": "Mesh_90_TEXCOORD_0_Buffer",
+			"target": 34962
+		},
+		"Mesh_91_Normals_Buffer": {
+			"buffer": "test",
+			"byteLength": 384,
+			"byteOffset": 17960,
+			"name": "Mesh_91_Normals_Buffer",
+			"target": 34962
+		},
+		"Mesh_91_Polygons_Buffer": {
+			"buffer": "test",
+			"byteLength": 72,
+			"byteOffset": 18600,
+			"name": "Mesh_91_Polygons_Buffer",
+			"target": 34963
+		},
+		"Mesh_91_Positions_Buffer": {
+			"buffer": "test",
+			"byteLength": 384,
+			"byteOffset": 17576,
+			"name": "Mesh_91_Positions_Buffer",
+			"target": 34962
+		},
+		"Mesh_91_TEXCOORD_0_Buffer": {
+			"buffer": "test",
+			"byteLength": 256,
+			"byteOffset": 18344,
+			"name": "Mesh_91_TEXCOORD_0_Buffer",
+			"target": 34962
+		}
+	},
+	"buffers": {
+		"test": {
+			"byteLength": 18672,
+			"name": "test",
+			"type": "arraybuffer",
+			"uri": "test.bin"
+		}
+	},
+	"cameras": {
+	},
+	"images": {
+		"Texture bub_in.tif": {
+			"name": "Texture bub_in.tif",
+			"uri": "ParticleBubbles.fbm\\bub_in.tif"
+		},
+		"jar_file1": {
+			"name": "jar_file1",
+			"uri": "ParticleBubbles.fbm\\growt_alpha.tif"
+		}
+	},
+	"lights": {
+	},
+	"materials": {
+		"Material 2": {
+			"name": "Material 2",
+			"technique": "Material 2_technique_0",
+			"values": {
+				"ambient": [
+					1,
+					1,
+					1,
+					1
+				],
+				"diffuse": "texture_Texture bub_in.tif",
+				"emission": [
+					1,
+					1,
+					1,
+					1
+				],
+				"reflective": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflectivity": 0.3,
+				"shininess": 5,
+				"specular": [
+					0.2,
+					0.2,
+					0.2,
+					1
+				],
+				"transparency": 1,
+				"transparent": [
+					0,
+					0,
+					0,
+					1
+				]
+			}
+		},
+		"liquid": {
+			"name": "liquid",
+			"technique": "liquid_technique_0",
+			"values": {
+				"ambient": [
+					0.2,
+					0.2,
+					0.2,
+					1
+				],
+				"diffuse": "texture_jar_file1",
+				"emission": [
+					0.24569,
+					0.134494,
+					0.235145,
+					1
+				],
+				"reflective": [
+					0,
+					0,
+					0,
+					1
+				],
+				"reflectivity": 0.3,
+				"shininess": 5,
+				"specular": [
+					0.2,
+					0.2,
+					0.2,
+					1
+				],
+				"transparency": 1,
+				"transparent": [
+					0,
+					0,
+					0,
+					1
+				]
+			}
+		}
+	},
+	"meshes": {
+		"Mesh_89": {
+			"name": "Mesh_89",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "Mesh_89_Normals",
+						"POSITION": "Mesh_89_Positions",
+						"TEXCOORD_0": "Mesh_89_TEXCOORD_0"
+					},
+					"indices": "Mesh_89_Polygons",
+					"material": "liquid",
+					"mode": 4
+				}
+			]
+		},
+		"Mesh_90": {
+			"name": "Mesh_90",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "Mesh_90_Normals",
+						"POSITION": "Mesh_90_Positions",
+						"TEXCOORD_0": "Mesh_90_TEXCOORD_0"
+					},
+					"indices": "Mesh_90_Polygons",
+					"material": "Material 2",
+					"mode": 4
+				}
+			]
+		},
+		"Mesh_91": {
+			"name": "Mesh_91",
+			"primitives": [
+				{
+					"attributes": {
+						"NORMAL": "Mesh_91_Normals",
+						"POSITION": "Mesh_91_Positions",
+						"TEXCOORD_0": "Mesh_91_TEXCOORD_0"
+					},
+					"indices": "Mesh_91_Polygons",
+					"material": "Material 2",
+					"mode": 4
+				}
+			]
+		}
+	},
+	"nodes": {
+		"RootNode_10": {
+			"children": [
+				"jar2_45"
+			],
+			"matrix": [
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1,
+				0,
+				0,
+				0,
+				0,
+				1
+			],
+			"name": "RootNode_10"
+		},
+		"bubbles_in2_48": {
+			"children": [
+				"bubbles_out2_51"
+			],
+			"matrix": [
+				-8.90591,
+				-1.09066e-015,
+				10.8319,
+				0,
+				-0.00157505,
+				0.438216,
+				-0.00129499,
+				0,
+				-10.8318,
+				-0.0652501,
+				-8.90582,
+				0,
+				-5.28309,
+				-19.1077,
+				-21.8583,
+				1
+			],
+			"meshes": [
+				"Mesh_90"
+			],
+			"name": "bubbles_in2_48"
+		},
+		"bubbles_out2_51": {
+			"children": [
+			],
+			"matrix": [
+				0.760916,
+				2.97359,
+				1.04233,
+				0,
+				-0.00429136,
+				5.22267,
+				-0.0114174,
+				0,
+				-1.03623,
+				0.816437,
+				0.754186,
+				0,
+				-6.75993e-008,
+				129.741,
+				-0.0188657,
+				1
+			],
+			"meshes": [
+				"Mesh_91"
+			],
+			"name": "bubbles_out2_51"
+		},
+		"jar2_45": {
+			"children": [
+				"bubbles_in2_48"
+			],
+			"matrix": [
+				0.00270118,
+				0,
+				0,
+				0,
+				0,
+				0.00270118,
+				0,
+				0,
+				0,
+				0,
+				0.00270118,
+				0,
+				-0.000613815,
+				0.176396,
+				-0.0422473,
+				1
+			],
+			"meshes": [
+				"Mesh_89"
+			],
+			"name": "jar2_45"
+		}
+	},
+	"programs": {
+		"program_0": {
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_0FS",
+			"name": "program_0",
+			"vertexShader": "program_0VS"
+		},
+		"program_1": {
+			"attributes": [
+				"a_normal",
+				"a_position",
+				"a_texcoord0"
+			],
+			"fragmentShader": "program_1FS",
+			"name": "program_1",
+			"vertexShader": "program_1VS"
+		}
+	},
+	"samplers": {
+		"sampler_Texture bub_in.tif": {
+			"magFilter": 9729,
+			"minFilter": 9987,
+			"name": "sampler_Texture bub_in.tif",
+			"wrapS": 10497,
+			"wrapT": 10497
+		},
+		"sampler_jar_file1": {
+			"magFilter": 9729,
+			"minFilter": 9987,
+			"name": "sampler_jar_file1",
+			"wrapS": 10497,
+			"wrapT": 10497
+		}
+	},
+	"scene": "test",
+	"scenes": {
+		"test": {
+			"nodes": [
+				"RootNode_10"
+			]
+		}
+	},
+	"shaders": {
+		"program_0FS": {
+			"type": 35632,
+			"uri": "program_0FS.glsl"
+		},
+		"program_0VS": {
+			"type": 35633,
+			"uri": "program_0VS.glsl"
+		},
+		"program_1FS": {
+			"type": 35632,
+			"uri": "program_1FS.glsl"
+		},
+		"program_1VS": {
+			"type": 35633,
+			"uri": "program_1VS.glsl"
+		}
+	},
+	"skins": {
+	},
+	"techniques": {
+		"Material 2_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position",
+				"a_texcoord0": "texcoord0"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Phong",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"ambient": {
+					"type": 35666
+				},
+				"diffuse": {
+					"type": 35678
+				},
+				"emission": {
+					"type": 35666
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				},
+				"reflective": {
+					"type": 35666
+				},
+				"reflectivity": {
+					"type": 5126
+				},
+				"shininess": {
+					"type": 5126
+				},
+				"specular": {
+					"type": 35666
+				},
+				"texcoord0": {
+					"semantic": "TEXCOORD_0",
+					"type": 35664
+				},
+				"transparency": {
+					"type": 5126
+				},
+				"transparent": {
+					"type": 35666
+				}
+			},
+			"program": "program_1",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_ambient": "ambient",
+				"u_diffuse": "diffuse",
+				"u_emission": "emission",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix",
+				"u_reflective": "reflective",
+				"u_reflectivity": "reflectivity",
+				"u_shininess": "shininess",
+				"u_specular": "specular",
+				"u_transparency": "transparency",
+				"u_transparent": "transparent"
+			}
+		},
+		"liquid_technique_0": {
+			"attributes": {
+				"a_normal": "normal",
+				"a_position": "position",
+				"a_texcoord0": "texcoord0"
+			},
+			"extras": {
+				"doubleSided": 0,
+				"lightingModel": "Phong",
+				"texcoordBindings": {
+					"diffuse": "TEXCOORD_0"
+				}
+			},
+			"parameters": {
+				"ambient": {
+					"type": 35666
+				},
+				"diffuse": {
+					"type": 35678
+				},
+				"emission": {
+					"type": 35666
+				},
+				"modelViewMatrix": {
+					"semantic": "MODELVIEW",
+					"type": 35676
+				},
+				"normal": {
+					"semantic": "NORMAL",
+					"type": 35665
+				},
+				"normalMatrix": {
+					"semantic": "MODELVIEWINVERSETRANSPOSE",
+					"type": 35675
+				},
+				"position": {
+					"semantic": "POSITION",
+					"type": 35665
+				},
+				"projectionMatrix": {
+					"semantic": "PROJECTION",
+					"type": 35676
+				},
+				"reflective": {
+					"type": 35666
+				},
+				"reflectivity": {
+					"type": 5126
+				},
+				"shininess": {
+					"type": 5126
+				},
+				"specular": {
+					"type": 35666
+				},
+				"texcoord0": {
+					"semantic": "TEXCOORD_0",
+					"type": 35664
+				},
+				"transparency": {
+					"type": 5126
+				},
+				"transparent": {
+					"type": 35666
+				}
+			},
+			"program": "program_0",
+			"states": {
+				"enable": [
+					2884,
+					2929
+				]
+			},
+			"uniforms": {
+				"u_ambient": "ambient",
+				"u_diffuse": "diffuse",
+				"u_emission": "emission",
+				"u_modelViewMatrix": "modelViewMatrix",
+				"u_normalMatrix": "normalMatrix",
+				"u_projectionMatrix": "projectionMatrix",
+				"u_reflective": "reflective",
+				"u_reflectivity": "reflectivity",
+				"u_shininess": "shininess",
+				"u_specular": "specular",
+				"u_transparency": "transparency",
+				"u_transparent": "transparent"
+			}
+		}
+	},
+	"textures": {
+		"texture_Texture bub_in.tif": {
+			"format": 6408,
+			"internalFormat": 6408,
+			"name": "texture_Texture bub_in.tif",
+			"sampler": "sampler_Texture bub_in.tif",
+			"source": "Texture bub_in.tif",
+			"target": 3553,
+			"type": 5121
+		},
+		"texture_jar_file1": {
+			"format": 6408,
+			"internalFormat": 6408,
+			"name": "texture_jar_file1",
+			"sampler": "sampler_jar_file1",
+			"source": "jar_file1",
+			"target": 3553,
+			"type": 5121
+		}
+	}
+}

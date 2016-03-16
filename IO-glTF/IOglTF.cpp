@@ -62,7 +62,7 @@ bool IOglTF::SpecificInitialize () {
 //-----------------------------------------------------------------------------
 
 /*static*/ const char *IOglTF::PLUGIN_NAME ="IO-glTF" ;
-/*static*/ const char *IOglTF::PLUGIN_VERSION ="0.1.0" ;
+/*static*/ const char *IOglTF::PLUGIN_VERSION ="1.0.0" ;
 
 #ifdef __APPLE__
 /*static*/ const unsigned int IOglTF::BYTE ;
@@ -109,6 +109,7 @@ bool IOglTF::SpecificInitialize () {
 /*static*/ const utility::char_t *IOglTF::szMAT2 =U("MAT2") ;
 /*static*/ const utility::char_t *IOglTF::szMAT3 =U("MAT3") ;
 /*static*/ const utility::char_t *IOglTF::szMAT4 =U("MAT4") ;
+/*static*/ const utility::char_t *IOglTF::szSAMPLER_2D =U("sampler2D") ;
 #ifdef __APPLE__
 /*static*/ const unsigned int IOglTF::ARRAY_BUFFER ;
 /*static*/ const unsigned int IOglTF::ELEMENT_ARRAY_BUFFER ;
@@ -189,7 +190,7 @@ void *_gltfFormatInfo (FbxWriter::EInfoRequest pRequest, int pId) {
 	return (0) ;
 }
 
-/*static*/ const utility::char_t *IOglTF::glslType (unsigned int glType) {
+/*static*/ const utility::char_t *IOglTF::glslAccessorType (unsigned int glType) {
 	switch ( glType ) {
 		case FLOAT:
 		case INT:
@@ -200,10 +201,12 @@ void *_gltfFormatInfo (FbxWriter::EInfoRequest pRequest, int pId) {
 		case FLOAT_VEC2:
 		case INT_VEC2:
 		case BOOL_VEC2:
+		case SAMPLER_2D:
 			return (szVEC2) ;
 		case FLOAT_VEC3:
 		case INT_VEC3:
 		case BOOL_VEC3:
+		case SAMPLER_CUBE:
 			return (szVEC3) ;
 		case FLOAT_VEC4:
 		case INT_VEC4:
@@ -217,6 +220,52 @@ void *_gltfFormatInfo (FbxWriter::EInfoRequest pRequest, int pId) {
 			return (szMAT4) ;
 	}
 	return (U("")) ;
+}
+
+/*static*/ const utility::string_t IOglTF::glslShaderType (unsigned int glType) {
+	utility::string_t szType ;
+	switch ( glType ) {
+		case FLOAT:
+			szType =szFLOAT ;
+			break ;
+		case INT:
+		case BOOL:
+		case UNSIGNED_SHORT:
+		case UNSIGNED_INT:
+			szType =szSCALAR ;
+			break ;
+		case FLOAT_VEC2:
+		case INT_VEC2:
+		case BOOL_VEC2:
+			szType =szVEC2 ;
+			break ;
+		case FLOAT_VEC3:
+		case INT_VEC3:
+		case BOOL_VEC3:
+		case SAMPLER_CUBE:
+			szType =szVEC3 ;
+			break ;
+		case FLOAT_VEC4:
+		case INT_VEC4:
+		case BOOL_VEC4:
+			szType =szVEC4 ;
+			break ;
+		case FLOAT_MAT2:
+			szType =szMAT2 ;
+			break ;
+		case FLOAT_MAT3:
+			szType =szMAT3 ;
+			break ;
+		case FLOAT_MAT4:
+			szType =szMAT4 ;
+			break ;
+		case SAMPLER_2D:
+			return (szSAMPLER_2D) ;
+		default:
+			break ;
+	}
+	std::transform (szType.begin (), szType.end (), szType.begin (), ::tolower) ;
+	return (szType) ;
 }
 
 /*static*/ const utility::char_t *IOglTF::mimeType (const utility::char_t *szFilename) {

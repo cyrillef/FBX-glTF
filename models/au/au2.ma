@@ -112,7 +112,7 @@ createNode shadingEngine -n "blinn1SG";
 	setAttr ".ro" yes;
 createNode materialInfo -n "materialInfo1";
 createNode file -n "file1";
-	setAttr ".ftn" -type "string" "C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg";
+	setAttr ".ftn" -type "string" "tex_0.jpg";
 	setAttr ".cs" -type "string" "sRGB";
 createNode place2dTexture -n "place2dTexture1";
 createNode lambert -n "file1Material";
@@ -200,7 +200,7 @@ createNode polyAutoProj -n "polyAutoProj1";
 	setAttr ".ps" 0.20000000298023224;
 	setAttr ".dl" yes;
 createNode file -n "file2";
-	setAttr ".ftn" -type "string" "C:/Users/cyrille/Pictures/200px-3D-Orc.png";
+	setAttr ".ftn" -type "string" "200px-3D-Orc.png";
 	setAttr ".cs" -type "string" "sRGB";
 createNode place2dTexture -n "place2dTexture2";
 createNode uvChooser -n "uvChooser1";
@@ -337,6 +337,6 @@ connectAttr "file1.msg" ":defaultTextureList1.tx" -na;
 connectAttr "file2.msg" ":defaultTextureList1.tx" -na;
 connectAttr "directionalLight1.iog" ":defaultLightSet.dsm" -na;
 dataStructure -fmt "raw" -as "name=externalContentTable:string=node:string=key:string=upath:uint32=upathcrc:string=rpath:string=roles";
-applyMetadata -fmt "raw" -v "channel\nname externalContentTable\nstream\nname v1.0\nindexType numeric\nstructure externalContentTable\n0\n\"|directionalLight1|directionalLightShape1\" \"dmapName\" \"depthmap\" 2097411553 \"\" \"sourceImages\"\n1\n\"file1\" \"fileTextureName\" \"C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg\" 1329901429 \"C:/Users/cyrille/Documents/Visual Studio 2013/Projects/glTF/montagejs-glTF/model/au/tex_0.jpg\" \"sourceImages\"\n2\n\"file2\" \"fileTextureName\" \"C:/Users/cyrille/Pictures/200px-3D-Orc.png\" 1665679590 \"C:/Users/cyrille/Pictures/200px-3D-Orc.png\" \"sourceImages\"\nendStream\nendChannel\nendAssociations\n" 
+applyMetadata -fmt "raw" -v "channel\nname externalContentTable\nstream\nname v1.0\nindexType numeric\nstructure externalContentTable\n0\n\"|directionalLight1|directionalLightShape1\" \"dmapName\" \"depthmap\" 2097411553 \"\" \"sourceImages\"\n1\n\"file1\" \"fileTextureName\" \"tex_0.jpg\" 1329901429 \"tex_0.jpg\" \"sourceImages\"\n2\n\"file2\" \"fileTextureName\" \"200px-3D-Orc.png\" 1665679590 \"200px-3D-Orc.png\" \"sourceImages\"\nendStream\nendChannel\nendAssociations\n" 
 		-scn;
 // End of au2.ma

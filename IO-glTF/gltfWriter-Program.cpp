@@ -20,11 +20,8 @@
 //
 #include "StdAfx.h"
 #include "gltfWriter.h"
-#include "glslShader.h"
 
 namespace _IOglTF_NS_ {
-
-// https://github.com/KhronosGroup/glTF/blob/master/specification/program.schema.json
 
 web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, utility::string_t programName, web::json::value &attributes) {
 	web::json::value programAttributes =web::json::value::array () ;
@@ -32,30 +29,34 @@ web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *p
 		programAttributes [programAttributes.size ()] =web::json::value::string (iter.first) ;
 
 	// Get the implementation to see if it's a hardware shader.
-	//const FbxImplementation *pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_HLSL) ;
-	//if ( !pImplementation )
-	//	pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_CGFX) ;
-	//if ( pImplementation ) {
-	//	const FbxBindingTable *pRootTable =pImplementation->GetRootTable () ;
-	//	FbxString fileName =pRootTable->DescAbsoluteURL.Get () ;
-	//	FbxString pTechniqueName =pRootTable->DescTAG.Get () ;
-	//	const FbxBindingTable *pTable =pImplementation->GetRootTable () ;
-	//	size_t entryNum =pTable->GetEntryCount () ;
-	//	for ( size_t i =0 ; i < entryNum ; i++ ) {
-	//		const FbxBindingTableEntry &entry =pTable->GetEntry (i) ;
-	//		const char *pszEntrySrcType =entry.GetEntryType (true) ;
-	//	}
-	//} else {
-	//	int nb =pNode->GetImplementationCount () ;
-	//	//pImplementation =pNode->GetImplementation (0) ;
-	//}
+	if ( pMaterial != nullptr ) {
+		//const FbxImplementation *pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_HLSL) ;
+		//if ( !pImplementation )
+		//	pImplementation =GetImplementation (pMaterial, FBXSDK_IMPLEMENTATION_CGFX) ;
+		//if ( pImplementation ) {
+		//	const FbxBindingTable *pRootTable =pImplementation->GetRootTable () ;
+		//	FbxString fileName =pRootTable->DescAbsoluteURL.Get () ;
+		//	FbxString pTechniqueName =pRootTable->DescTAG.Get () ;
+		//	const FbxBindingTable *pTable =pImplementation->GetRootTable () ;
+		//	size_t entryNum =pTable->GetEntryCount () ;
+		//	for ( size_t i =0 ; i < entryNum ; i++ ) {
+		//		const FbxBindingTableEntry &entry =pTable->GetEntry (i) ;
+		//		const char *pszEntrySrcType =entry.GetEntryType (true) ;
+		//	}
+		//} else {
+		//	int nb =pNode->GetImplementationCount () ;
+		//	//pImplementation =pNode->GetImplementation (0) ;
+		//}
+	}
 	FbxString filename =FbxPathUtils::GetFileName (utility::conversions::to_utf8string (_fileName).c_str (), false) ;
 
 	web::json::value program =web::json::value::object ({
 		{ U("attributes"), programAttributes },
-		{ U("name"), web::json::value::string (programName) }, // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
-		{ U("fragmentShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0FS")) },
-		{ U("vertexShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0VS")) }
+		{ U("name"), web::json::value::string (programName) },
+		//{ U("fragmentShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0FS")) },
+		//{ U("vertexShader"), web::json::value::string (utility::conversions::to_string_t (filename.Buffer ()) + U("0VS")) }
+		{ U("fragmentShader"), web::json::value::string (programName + U("FS")) },
+		{ U("vertexShader"), web::json::value::string (programName + U("VS")) }
 	}) ;
 	web::json::value lib =web::json::value::object ({{ programName, program }}) ;
 
@@ -63,8 +64,6 @@ web::json::value gltfWriter::WriteProgram (FbxNode *pNode, FbxSurfaceMaterial *p
 
 	return (web::json::value::object ({ { U("programs"), lib }, { U("shaders"), shaders } })) ;
 }
-
-// https://github.com/KhronosGroup/glTF/blob/master/specification/shader.schema.json
 
 web::json::value gltfWriter::WriteShaders (FbxNode *pNode, web::json::value &program) {
 	web::json::value fragmentShader =web::json::value::object ({

@@ -27,7 +27,7 @@ namespace _IOglTF_NS_ {
 
 class glslShader {
 
-private:
+protected:
 	utility::string_t _name ;
 	utility::string_t _declarations ;
 	utility::string_t _body ;
@@ -37,15 +37,62 @@ public:
 	glslShader (const utility::char_t *glslVersion =nullptr) ;
 	virtual ~glslShader () ;
 
-	void setName (utility::string_t name) ;
-	utility::string_t getName () ;
+	utility::string_t &name () ;
+protected:
 	void _addDeclaration (utility::string_t qualifier, utility::string_t symbol, unsigned int type, size_t count, bool forcesAsAnArray =false) ;
-	void addAttribute (utility::string_t symbol, unsigned int type) ;
-	void addUniform (utility::string_t symbol, unsigned int type, size_t count, bool forcesAsAnArray =false) ;
-	void addVarying (utility::string_t symbol, unsigned int type) ;
-	void appendCode (const char * format, ...) ;
-	utility::string_t source () ;
+	utility::string_t body () ;
+public:
+	void addAttribute (utility::string_t symbol, unsigned int type, size_t count =1, bool forcesAsAnArray =false) ;
+	void addUniform (utility::string_t symbol, unsigned int type, size_t count =1, bool forcesAsAnArray =false) ;
+	void addVarying (utility::string_t symbol, unsigned int type, size_t count =1, bool forcesAsAnArray =false) ;
 	bool hasSymbol (const utility::string_t &symbol) ;
+
+	void appendCode (const char *format, ...) ;
+	void appendCode (const utility::char_t *format, ...) ;
+	//void appendCode (const utility::char_t *code) ;
+	utility::string_t source () ;
+
+	static bool isVertexShaderSemantic (const utility::char_t *semantic) ;
+	static bool isFragmentShaderSemantic (const utility::char_t *semantic) ;
+
+} ;
+
+class glslTech {
+	bool _bHasNormals ;
+	bool _bHasJoint ;
+	bool _bHasWeight ;
+	bool _bHasSkin ;
+	bool _bHasTexTangent ;
+	bool _bHasTexBinormal ;
+	bool _bModelContainsLights ;
+	bool _bLightingIsEnabled ;
+	bool _bHasAmbientLight ;
+	bool _bHasSpecularLight ;
+	bool _bHasNormalMap ;
+
+protected:
+	glslShader _vertexShader ;
+	glslShader _fragmentShader ;
+
+public:
+	glslTech (web::json::value technique, web::json::value values, web::json::value gltf, const utility::char_t *glslVersion =nullptr) ;
+	virtual ~glslTech () ;
+
+	glslShader &vertexShader () { return (_vertexShader) ; }
+	glslShader &fragmentShader () { return (_fragmentShader) ; }
+
+protected:
+	static utility::string_t format (const utility::char_t *format, ...) ;
+	const utility::string_t needsVarying (const utility::char_t *semantic) ;
+	static bool isVertexShaderSemantic (const utility::char_t *semantic) ;
+	static bool isFragmentShaderSemantic (const utility::char_t *semantic) ;
+	void prepareParameters (web::json::value technique) ;
+	void hwSkinning () ;
+	bool lighting1 (web::json::value technique, web::json::value gltf) ;
+	void texcoords (web::json::value technique) ;
+	web::json::value lightNodes (web::json::value gltf) ;
+	void lighting2 (web::json::value technique, web::json::value gltf) ;
+	void finalizingShaders (web::json::value technique, web::json::value gltf) ;
 
 } ;
 

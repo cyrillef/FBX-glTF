@@ -23,12 +23,10 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v0.1")
-//#define FBX_GLTF_COMMONPROFILE U("COLLADA-1.4.1/commonProfile")
-#define FBX_GLTF_COMMONPROFILE U("MAYA")
-#define WebGL_1_0_2 U("WebGL 1.0.2")
-#define GLTF_VERSION 0.8
-#define szGLTF_VERSION U(#GLTF_VERSION)
+#define FBX_GLTF_EXPORTER U("FBX GLTF Exporter v1.0")
+#define PROFILE_API U("WebGL")
+#define PROFILE_VERSION U("1.0.3")
+#define GLTF_VERSION U("1.0")
 
 #define DEG2RAD(a) a * M_PI / 180.0
 #define MergeJsonObjects_(a, b) \
@@ -40,6 +38,9 @@
 //	for ( const auto &iter : b2.as_object () ) \
 //		a [iter.first] =iter.second ; \
 //	}
+
+#define GLTF_ANGLE(a) \
+	GetIOSettings ()->GetBoolProp (IOSN_FBX_GLTF_ANGLEINDEGREE, false) ? a : DEG2RAD(a)
 
 namespace _IOglTF_NS_ {
 
@@ -55,10 +56,14 @@ private:
 
 	web::json::value _json ;
 
-	bool _triangulate, _writeDefaults ;
+	bool _writeDefaults ;
 	double _samplingPeriod ;
-	std::vector<utility::string_t> _registeredIDs ;
+	std::map<FbxUInt64, utility::string_t> _IDs ;
+	std::vector<utility::string_t> _registeredNames ;
 	std::map<utility::string_t, utility::string_t> _uvSets ;
+#ifdef _DEBUG
+	std::vector<utility::string_t> _path ;
+#endif
 
 public:
 	gltfWriter (FbxManager &pManager, int id) ;
@@ -79,14 +84,19 @@ public:
 protected:
 	void PrepareForSerialization () ;
 
-	utility::string_t registerId (utility::string_t id) ;
-	bool isIdRegistered (utility::string_t id) ;
+protected:
+	bool recordId (FbxUInt64 uniqid, utility::string_t id) ;
+	bool isKnownId (FbxUInt64 uniqid) ;
+	bool isKnownId (utility::string_t id) ;
 public:
-	utility::string_t nodeId (utility::string_t type, FbxUInt64 id) ;
-	utility::string_t nodeId (const utility::char_t *pszType, FbxUInt64 id) ;
-	utility::string_t nodeId (FbxNode *pNode) ;
-	utility::string_t createUniqueId (utility::string_t type, FbxUInt64 id) ;
-	utility::string_t createUniqueId (FbxNode *pNode) ;
+	utility::string_t nodeId (FbxNode *pNode, bool bNodeAttribute =false, bool bRecord =false) ;
+
+protected:
+	utility::string_t registerName (utility::string_t name) ;
+	bool isNameRegistered (utility::string_t id) ;
+public:
+	utility::string_t createUniqueName (utility::string_t type, FbxUInt64 id) ;
+
 	inline utility::string_t createSamplerName (FbxString &szname) { return (U ("sampler_") + utility::conversions::to_string_t (szname.Buffer ())) ; }
 	inline utility::string_t createSamplerName (const char *pszName) { return (U ("sampler_") + utility::conversions::to_string_t (pszName)) ; }
 	inline utility::string_t createTextureName (FbxString &szname) { return (U("texture_") + utility::conversions::to_string_t (szname.Buffer ())) ; }
@@ -95,11 +105,10 @@ public:
 protected:
 	web::json::value WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *pPose =nullptr, bool bRoot =false) ;
 	web::json::value WriteSceneNode (FbxNode *pNode, FbxPose *pPose =nullptr) ;
+	FbxNodeAttribute::EType nodeType (FbxNode *pNode) ;
 
 	bool IsGeometryNode (FbxNode *pNode) ;
-	bool TriangulateGeometry (FbxNode *pNode) ;
 	bool CheckMaterials (FbxNode *pNode) ;
-	bool InitNodes (FbxNode *pNode) ;
 	void PreprocessNodeRecursive (FbxNode *pNode) ;
 	web::json::value WriteNode (FbxNode *pNode) ;
 	web::json::value GetTransform (FbxNode *pNode) ;
@@ -112,7 +121,7 @@ protected:
 	// buffer
 	bool WriteBuffer () ;
 	// camera
-	void cameraFOV (FbxCamera *pCamera, web::json::value &cameraDef) ;
+	double cameraYFOV (FbxCamera *pCamera) ;
 	web::json::value WriteCamera (FbxNode *pNode) ;
 	// light
 	void lightAttenuation (FbxLight *pLight, web::json::value &lightDef) ;
@@ -120,18 +129,24 @@ protected:
 	web::json::value WriteAmbientLight (FbxScene &pScene) ;
 	// material
 	utility::string_t LighthingModel (FbxSurfaceMaterial *pMaterial) ;
+	web::json::value WriteMaterialTransparencyParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, FbxPropertyT<FbxDouble3> &propertyColor, FbxProperty &propertyOpaque, web::json::value &values, web::json::value &techniqueParameters) ;
+	//web::json::value WriteMaterialTransparencyParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble3> &property, double factor, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxPropertyT<FbxDouble> &property, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterialParameter (const utility::char_t *pszName, FbxSurfaceMaterial *pMaterial, const char *propertyName, const char *factorName, web::json::value &values, web::json::value &techniqueParameters) ;
 	web::json::value WriteMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
+	web::json::value WriteDefaultMaterial (FbxNode *pNode) ;
 	web::json::value WritePhongMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteLambertMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteConstantShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteBlinnShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteDefaultShadingModelWithCGFXMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
 	web::json::value WriteDefaultShadingModelMaterial (FbxNode *pNode, FbxSurfaceMaterial *pMaterial) ;
+	web::json::value WriteDefaultShadingModelMaterial (FbxNode *pNode) ;
 	// mesh
 	web::json::value WriteMesh (FbxNode *pNode) ;
+	// line
+	//web::json::value WriteLine (FbxNode *pNode) ;
 	// null
 	web::json::value WriteNull (FbxNode *pNode) ;
 	// program
@@ -142,12 +157,14 @@ protected:
 	web::json::value WriteShaders (FbxNode *pNode, web::json::value &program) ;
 	// technique
 	void AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals =false) ;
-	void TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors) ;
+	void TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors, bool bHasMaterial =true) ;
 	web::json::value WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, web::json::value &techniqueParameters) ;
 	// textures
 	web::json::value WriteTextureBindings (FbxMesh *pMesh, FbxSurfaceMaterial *pMaterial, web::json::value &params) ;
 	web::json::value WriteTexture (FbxTexture *pTexture) ;
 
+	// buffer
+	bool WriteShaders () ;
 
 private:
 	typedef web::json::value (gltfWriter::*ExporterRouteFct) (FbxNode *pNode) ;
@@ -185,7 +202,7 @@ web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxN
 	for ( iteratorType iter =data.begin () ; iter != data.end () ; iter++ )
 		_bin.write ((uint8_t *)&(*iter), sizeof (Type)) ;
 #endif
-	// bufferView - https://github.com/KhronosGroup/glTF/blob/master/specification/bufferView.schema.json
+	// bufferView
 	web::json::value viewDef =web::json::value::object () ;
 	FbxString filename =FbxPathUtils::GetFileName (utility::conversions::to_utf8string (_fileName).c_str (), false) ;
 	viewDef [U("buffer")] =web::json::value::string (utility::conversions::to_string_t (filename.Buffer ())) ;
@@ -198,15 +215,15 @@ web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxN
 	// Element array buffers (ELEMENT_ARRAY_BUFFER) : This type of buffer is used mainly for the element pointer in glDraw [Range]Elements ().
 	// It contains only indices of elements.
 	viewDef [U("target")] =size == 1 ? IOglTF::ELEMENT_ARRAY_BUFFER : IOglTF::ARRAY_BUFFER ; // Valid values are 34962 (ARRAY_BUFFER) or 34963 (ELEMENT_ARRAY_BUFFER)
-	viewDef [U("name")] =web::json::value::string (nodeId (pNode) + suffix + U("_Buffer")) ; // https://github.com/KhronosGroup/glTF/blob/master/specification/glTFChildOfRootProperty.schema.json
+	viewDef [U("name")] =web::json::value::string (nodeId (pNode, true) + suffix + U("_Buffer")) ;
 	web::json::value view =web::json::value::object ({ {
-			nodeId (pNode) + suffix + U("_Buffer"),
-			viewDef
-		} }) ;
+		nodeId (pNode, true) + suffix + U("_Buffer"),
+		viewDef
+	} }) ;
 
-	// Accessor - https://github.com/KhronosGroup/glTF/blob/master/specification/accessor.schema.json
+	// Accessor
 	web::json::value accDef =web::json::value::object () ;
-	accDef [U("bufferView")] =web::json::value::string (nodeId (pNode) + suffix + U("_Buffer")) ;
+	accDef [U("bufferView")] =web::json::value::string (nodeId (pNode, true) + suffix + U("_Buffer")) ;
 	accDef [U("byteOffset")] =web::json::value::number ((int)0) ;
 	accDef [U("byteStride")] =web::json::value::number (/*size == 1 ? 0 :*/ (int)sizeof (Type) * size) ;
 	accDef [U("componentType")] =web::json::value::number ((int)IOglTF::accessorComponentType<Type> ()) ;
@@ -214,11 +231,11 @@ web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxN
 	//accDef [U("min")] =web::json::value::array ({ { (float)bMin.Buffer () [0], (float)bMin.Buffer () [1], (float)bMin.Buffer () [2] } }) ;
 	//accDef [U("max")] =web::json::value::array ({ { (float)bMax.Buffer () [0], (float)bMax.Buffer () [1], (float)bMax.Buffer () [2] } }) ;
 	accDef [U("type")] =web::json::value::string (IOglTF::accessorType<Type> (size, 1)) ;
-	accDef [U("name")] =web::json::value::string (nodeId (pNode) + suffix) ;
+	accDef [U("name")] =web::json::value::string (nodeId (pNode, true) + suffix) ;
 	web::json::value acc =web::json::value::object ({ {
-			nodeId (pNode) + suffix,
-			accDef
-		} }) ;
+		nodeId (pNode, true) + suffix,
+		accDef
+	} }) ;
 
 	return (web::json::value::object ({ { U("accessors"), acc }, { U("bufferViews"), view } })) ;
 }

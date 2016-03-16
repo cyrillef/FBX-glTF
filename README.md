@@ -9,7 +9,7 @@ glTF is a draft specification, it may change before ratification.  Everyone is e
 
 ## Specification  
 
-[glTF Specification 0.8](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md)
+[glTF Specification 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md)
 
 
 ## Converter

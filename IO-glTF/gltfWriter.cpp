@@ -405,8 +405,8 @@ web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *p
 	//	//return (GetStatus ().SetCode (FbxStatus::eFailure, "Could not export node " + pNode->GetName () + "!"), false) ;
 	//	return (false) ;
 #ifdef _DEBUG_VERBOSE
-	utility::string_t name =utility::conversions::to_string_t (pNode->GetNameOnly ().Buffer ()) ;
-	_path.push_back (name) ;
+	//utility::string_t name =utility::conversions::to_string_t (pNode->GetNameOnly ().Buffer ()) ;
+	//_path.push_back (name) ;
 #endif
 
 	web::json::value node =WriteSceneNode (pNode, pPose) ;
@@ -464,7 +464,7 @@ web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *p
 	}
 
 #ifdef _DEBUG_VERBOSE
-	_path.pop_back () ;
+	//_path.pop_back () ;
 #endif
 	return (node) ;
 }

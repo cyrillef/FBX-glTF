@@ -187,7 +187,7 @@ web::json::value gltfWriter::WriteDefaultMaterial (FbxNode *pNode) {
 
 web::json::value gltfWriter::WriteMaterialTransparencyParameter (
 	const utility::char_t *pszName, 
-	FbxPropertyT<FbxDouble> &property, FbxPropertyT<FbxDouble3> &propertyColor, FbxProperty &propertyOpaque,
+	FbxPropertyT<FbxDouble> &property, FbxPropertyT<FbxDouble3> &propertyColor, const FbxProperty &propertyOpaque,
 	web::json::value &values, web::json::value &techniqueParameters
 ) {
 	web::json::value ret =web::json::value::null () ;

@@ -19,6 +19,9 @@
 // UNINTERRUPTED OR ERROR FREE.
 //
 #pragma once
+#if !defined(_WIN32) || defined(_WIN64)
+#include <wchar.h>
+#endif
 
 // http://stackoverflow.com/questions/13624124/online-webgl-glsl-shader-editor
 // http://glslsandbox.com/
@@ -48,7 +51,12 @@ public:
 	bool hasSymbol (const utility::string_t &symbol) ;
 
 	void appendCode (const char *format, ...) ;
+#if defined(_WIN32) || defined(_WIN64)
 	void appendCode (const utility::char_t *format, ...) ;
+#else
+	void appendCode (const wchar_t *format, ...) ;
+#endif
+
 	//void appendCode (const utility::char_t *code) ;
 	utility::string_t source () ;
 

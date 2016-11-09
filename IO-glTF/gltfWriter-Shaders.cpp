@@ -65,23 +65,28 @@ bool gltfWriter::WriteShaders () {
 		utility::string_t vsName =_json [U("programs")] [programName] [U("vertexShader")].as_string () ;
 		utility::string_t fsName =_json [U("programs")] [programName] [U("fragmentShader")].as_string () ;
 		
+		FbxString gltfFilename (utility::conversions::to_utf8string (_fileName).c_str ()) ;
+		
 		if ( GetIOSettings ()->GetBoolProp (IOSN_FBX_GLTF_EMBEDMEDIA, false) ) {
 			// data:[<mime type>][;charset=<charset>][;base64],<encoded data>
 			_json [U("shaders")] [vsName] [U("uri")] =web::json::value::string (IOglTF::dataURI (tech.vertexShader ().source ())) ;
 			_json [U("shaders")] [fsName] [U("uri")] =web::json::value::string (IOglTF::dataURI (tech.fragmentShader ().source ())) ;
 		} else {
-			FbxString gltfFilename (utility::conversions::to_utf8string (_fileName).c_str ()) ;
 			utility::string_t vsFilename =_json [U("shaders")] [vsName] [U("uri")].as_string () ;
 			{
 				FbxString shaderFilename (utility::conversions::to_utf8string (vsFilename).c_str ()) ;
 #if defined(_WIN32) || defined(_WIN64)
 				shaderFilename =FbxPathUtils::GetFolderName (gltfFilename) + "\\" + shaderFilename ;
 #else
-				shaderFilename =FbxPathUtils::GetFolderName (fileName) + "/" + shaderFilename ;
+				shaderFilename =FbxPathUtils::GetFolderName (gltfFilename) + "/" + shaderFilename ;
 #endif
 				std::wfstream shaderFile (shaderFilename, std::ios::out | std::ofstream::binary) ;
 				//_bin.seekg (0, std::ios_base::beg) ;
+#if defined(_WIN32) || defined(_WIN64)
 				shaderFile.write (tech.vertexShader ().source ().c_str (), tech.vertexShader ().source ().length ()) ;
+#else
+				shaderFile.write ((const wchar_t *)tech.vertexShader ().source ().c_str(), tech.vertexShader ().source ().length ()) ;
+#endif
 				shaderFile.close () ;
 			}
 			utility::string_t fsFileame =_json [U("shaders")] [fsName] [U("uri")].as_string () ;
@@ -90,11 +95,15 @@ bool gltfWriter::WriteShaders () {
 #if defined(_WIN32) || defined(_WIN64)
 				shaderFilename =FbxPathUtils::GetFolderName (gltfFilename) + "\\" + shaderFilename ;
 #else
-				shaderFilename =FbxPathUtils::GetFolderName (fileName) + "/" + shaderFilename ;
+				shaderFilename =FbxPathUtils::GetFolderName (gltfFilename) + "/" + shaderFilename ;
 #endif
 				std::wfstream shaderFile (shaderFilename, std::ios::out | std::ofstream::binary) ;
 				//_bin.seekg (0, std::ios_base::beg) ;
+#if defined(_WIN32) || defined(_WIN64)
 				shaderFile.write (tech.fragmentShader ().source ().c_str (), tech.fragmentShader ().source ().length ()) ;
+#else
+				shaderFile.write ((const wchar_t *)tech.fragmentShader ().source ().c_str (), tech.fragmentShader ().source ().length ()) ;
+#endif
 				shaderFile.close () ;
 			}
 		}

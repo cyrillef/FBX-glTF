@@ -85,7 +85,8 @@ bool gltfWriter::WriteShaders () {
 #if defined(_WIN32) || defined(_WIN64)
 				shaderFile.write (tech.vertexShader ().source ().c_str (), tech.vertexShader ().source ().length ()) ;
 #else
-				shaderFile.write ((const wchar_t *)tech.vertexShader ().source ().c_str(), tech.vertexShader ().source ().length ()) ;
+				shaderFile << tech.vertexShader ().source ().c_str();
+
 #endif
 				shaderFile.close () ;
 			}
@@ -102,7 +103,7 @@ bool gltfWriter::WriteShaders () {
 #if defined(_WIN32) || defined(_WIN64)
 				shaderFile.write (tech.fragmentShader ().source ().c_str (), tech.fragmentShader ().source ().length ()) ;
 #else
-				shaderFile.write ((const wchar_t *)tech.fragmentShader ().source ().c_str (), tech.fragmentShader ().source ().length ()) ;
+				shaderFile << tech.fragmentShader ().source ().c_str ();
 #endif
 				shaderFile.close () ;
 			}

@@ -54,13 +54,13 @@ utility::string_t GetJsonObjectKeyAt (web::json::value &a, int i) {
 	{ FbxNodeAttribute::eLight, &gltfWriter::WriteLight }, // Light
 	{ FbxNodeAttribute::eMesh, &gltfWriter::WriteMesh }, // Mesh
 //	{ FbxNodeAttribute::eLine, &gltfWriter::WriteLine }, // Mesh
+	{ FbxNodeAttribute::eSkeleton, &gltfWriter::WriteSkeleton},//Skeleton
 	{ FbxNodeAttribute::eNull, &gltfWriter::WriteNull } // Null
 
 	// Marker // Not implemented in COLLADA / glTF.
 	// CameraSwitcher // Not implemented in COLLADA / glTF.
 	//FbxNodeAttribute::eNurbs -> converted to Mesh // Not implemented in COLLADA / glTF.
 	//FbxNodeAttribute::ePatch -> converted to Mesh // Not implemented in COLLADA / glTF.
-	//FbxNodeAttribute::eSkeleton
 	//FbxNodeAttribute::eMarker
 } ;
 
@@ -140,12 +140,12 @@ bool gltfWriter::Write (FbxDocument *pDocument) {
 		return (false) ;
 
 	FbxDocumentInfo *pSceneInfo =pScene->GetSceneInfo () ;
+	if ( !WriteAnimation (pScene) )
+		return (false) ;
 	if ( !WriteAsset (pSceneInfo) )
 		return (false) ;
 	if ( !WriteScene (pScene) )
 		return (false) ;
-	//if ( !ExportAnimation (pScene->GetRootNode ()) )
-	//	return (false) ;
 	//if ( !ExportLibraries () )
 	//	return (false) ;
 
@@ -369,7 +369,7 @@ utility::string_t gltfWriter::nodeId (FbxNode *pNode, bool bNodeAttribute /*=fal
 	) ;
 	if ( name == U("") )
 		name =utility::conversions::to_string_t (pNode->GetTypeName ()) ;
-	//if ( isKnownId (name) ) // Comment if it should be consistent?
+	if ( isKnownId (name) ) // Comment if it should be consistent?
 		name +=U("_") + utility::conversions::to_string_t ((int)id) ;
 	if ( bRecord )
 		recordId (id, name) ;

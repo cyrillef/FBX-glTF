@@ -27,9 +27,18 @@ std::vector<float> WriteCurveKeys(FbxAnimCurve* pCurve);
 
 web::json::value gltfWriter::WriteSkeleton(FbxNode *pNode) {
 
+    FbxSkeleton* lSkeleton = (FbxSkeleton*) pNode->GetNodeAttribute();
+
+    if (lSkeleton->GetSkeletonType() == FbxSkeleton::eLimbNode &&
+        pNode->GetParent() &&
+        pNode->GetParent()->GetNodeAttribute() &&
+        pNode->GetParent()->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+    {
 	web::json::value node = WriteNode (pNode) ;
-	web::json::value ret  = web::json::value::object ({ { U("nodes"), node } }) ;
+        web::json::value ret  = web::json::value::object ({ { U("nodes"), node } }) ;
 	return ret;	
+    }
+return (web::json::value::null());
 }
 
 void gltfWriter::WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, bool isSwitcher)

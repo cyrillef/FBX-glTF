@@ -62,7 +62,7 @@ static int InterpolationFlagToIndex(int flags)
 }
 
 
-void WriteKeyTimeAndValues(FbxAnimCurve* xyzAnimCurve, std::vector<float>& xyzKeyValues, std::vector<float>& KeyValues, std::vector<unsigned int>& KeyTime) {
+void WriteKeyTimeAndValues(FbxAnimCurve* xyzAnimCurve, std::vector<float>& xyzKeyValues, std::vector<float>& KeyValues, std::vector<float>& KeyTime) {
 if (xyzAnimCurve) {
                 xyzKeyValues = WriteCurveKeys(xyzAnimCurve);
                 KeyValues.insert(std::end(KeyValues), std::begin(xyzKeyValues), std::end(xyzKeyValues));
@@ -102,8 +102,7 @@ web::json::value gltfWriter::WriteCurveChannels(utility::string_t aName, utility
 return animationChannel;
 }
 
-template<class Type>
-web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<Type> KeyValues, int animAccessorCount, utility::string_t trs) {
+web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount, utility::string_t trs) {
 
    utility::string_t animAccName;
    web::json::value ret;
@@ -116,7 +115,7 @@ web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<Typ
     animAccName += utility::conversions::to_string_t (trs) ; 
     animAccName += utility::conversions::to_string_t (U("_")) ;
     animAccName += utility::conversions::to_string_t ((int)animAccessorCount);
-    web::json::value animAccessor =WriteArray <Type>(KeyValues, 1, pNode, animAccName.c_str()) ;
+    web::json::value animAccessor =WriteArray <float>(KeyValues, 1, pNode, animAccName.c_str()) ;
     ret = web::json::value::string (GetJsonFirstKey (animAccessor [U("accessors")])) ;
     MergeJsonObjects (accessorsAndBufferViews, animAccessor) ;
     MergeJsonObjects (_json, accessorsAndBufferViews) ;
@@ -159,7 +158,7 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
     std::vector<float> txKeyValues, tyKeyValues, tzKeyValues;
     std::vector<float> rxKeyValues, ryKeyValues, rzKeyValues;
     std::vector<float> sxKeyValues, syKeyValues, szKeyValues;
-    std::vector<unsigned int> trsKeyTime;
+    std::vector<float> trsKeyTime;
 
    // Write general curves.
     if (!isSwitcher)
@@ -210,7 +209,7 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
         }
 		// [parameters][time]
 	       parameters[U("TIME")] = WriteAnimParameters(pNode, trsKeyTime, ++animAccessorCount, "TIME");
-		if (channels.size()){
+		if (channels.size() && parameters.size()){
 		//Write channels and parameters
                 _json [U("animations")][aName][U("channels")] = channels;
                 _json [U("animations")][aName][U("parameters")] = parameters;

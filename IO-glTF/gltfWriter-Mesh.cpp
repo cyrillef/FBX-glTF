@@ -213,7 +213,11 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	web::json::value node =WriteNode (pNode) ;
 	//if ( pMesh->GetShapeCount () )
 	//	WriteControllerShape (pMesh) ; // Create a controller
-
+	//skin
+	if (pMesh->GetDeformerCount(FbxDeformer::eSkin)) {
+	    web::json::value ret = WriteSkin(pMesh);
+		_json[U("skins")] = ret;
+	}
 	web::json::value ret =web::json::value::object ({ { U("meshes"), lib }, { U("nodes"), node } }) ;
 	MergeJsonObjects (ret, accessorsAndBufferViews) ;
 	MergeJsonObjects (ret, images) ;

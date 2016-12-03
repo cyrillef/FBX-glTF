@@ -92,7 +92,9 @@ web::json::value gltfWriter::WriteCurveChannels(utility::string_t aName, utility
 			) ;
     web::json::value samplerDef =web::json::value::object () ;
     samplerDef [U("input")] = web::json::value::string (U("TIME"));
-    samplerDef [U("interpolation")] = web::json::value::string (interPolation[ InterpolationFlagToIndex(xAnimCurve->KeyGetInterpolation(0)) ]); 
+    // glTF 1.0 animation samplers support only linear interpolation.
+    samplerDef [U("interpolation")] = web::json::value::string (U("LINEAR")); 
+    //samplerDef [U("interpolation")] = web::json::value::string (interPolation[ InterpolationFlagToIndex(xAnimCurve->KeyGetInterpolation(0)) ]); 
     samplerDef [U("output")] = web::json::value::string (utility::conversions::to_string_t(trs));
     _json [U("animations")][aName][U("samplers")] [samplerName]= samplerDef;
 
@@ -111,6 +113,8 @@ web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<Typ
         }) ;
 
     animAccName = utility::conversions::to_string_t (U("_animAccessor_")) ; 
+    animAccName += utility::conversions::to_string_t (trs) ; 
+    animAccName += utility::conversions::to_string_t (U("_")) ;
     animAccName += utility::conversions::to_string_t ((int)animAccessorCount);
     web::json::value animAccessor =WriteArray <Type>(KeyValues, 1, pNode, animAccName.c_str()) ;
     ret = web::json::value::string (GetJsonFirstKey (animAccessor [U("accessors")])) ;

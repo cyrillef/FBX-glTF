@@ -42,7 +42,6 @@ web::json::value gltfWriter::WriteSkinArray(FbxNode *pNode, std::vector<FbxVecto
 return ret;
 }
 
-
 web::json::value gltfWriter::WriteSkin(FbxMesh *pMesh) {
 	int lClusterCount = 0;
         web::json::value skins = web::json::value::object ();
@@ -76,7 +75,9 @@ web::json::value gltfWriter::WriteSkin(FbxMesh *pMesh) {
 			// We are interested only in joints
 			if(!pLink->GetLink()) continue;
 			// JointNames should be unique and it should be as same as skeletons array
-			jointNames[jointNames.size()] = web::json::value::string (utility::conversions::to_string_t (pLink->GetLink()->GetName()));
+			utility::string_t name = utility::conversions::to_string_t(pLink->GetLink()->GetName());
+			spaceToUnderscore(name);
+			jointNames[jointNames.size()] = web::json::value::string (name);
 
 			FbxAMatrix jointPosition =pLink->GetLink ()->EvaluateGlobalTransform () ;
 			FbxAMatrix transformLink ;

@@ -23,7 +23,24 @@
 
 namespace _IOglTF_NS_ {
 
-std::vector<float> WriteCurveKeys(FbxAnimCurve* pCurve);
+int GetNumberOfAnimationFrames(FbxScene* pScene)
+{
+    FbxTimeSpan interval;
+    FbxNode* pRootNode = pScene->GetRootNode();
+
+	if (pRootNode->GetAnimationInterval(interval))
+	{
+		FbxTime start = interval.GetStart();
+		FbxTime end = interval.GetStop();
+
+		FbxLongLong longstart = start.GetFrameCount();
+		FbxLongLong longend = end.GetFrameCount();
+
+		return int(longend - longstart);
+	}
+
+	return 0;
+}
 
 web::json::value gltfWriter::WriteSkeleton(FbxNode *pNode) {
 
@@ -36,6 +53,7 @@ web::json::value gltfWriter::WriteSkeleton(FbxNode *pNode) {
     {
 	web::json::value node = WriteNode (pNode) ;
         web::json::value ret  = web::json::value::object ({ { U("nodes"), node } }) ;
+	//WriteAnimation(pNode->GetScene(), pNode);
 	return ret;	
     }
 return (web::json::value::null());
@@ -45,7 +63,7 @@ void gltfWriter::WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, b
 {
     int lModelCount;
 
-    WriteAnimationChannels(pNode, pAnimLayer, WriteCurveKeys, false);
+    WriteAnimationChannels(pNode, pAnimLayer);
 
     for(lModelCount = 0; lModelCount < pNode->GetChildCount(); lModelCount++)
     {
@@ -53,27 +71,22 @@ void gltfWriter::WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, b
     }
 }
 
-static int InterpolationFlagToIndex(int flags)
-{
-    if( (flags & FbxAnimCurveDef::eInterpolationConstant) == FbxAnimCurveDef::eInterpolationConstant ) return 1;
-    if( (flags & FbxAnimCurveDef::eInterpolationLinear) == FbxAnimCurveDef::eInterpolationLinear ) return 2;
-    if( (flags & FbxAnimCurveDef::eInterpolationCubic) == FbxAnimCurveDef::eInterpolationCubic ) return 3;
-    return 0;
-}
-
-
-void WriteKeyTimeAndValues(FbxAnimCurve* xyzAnimCurve, std::vector<float>& xyzKeyValues, std::vector<float>& KeyValues, std::vector<float>& KeyTime) {
-if (xyzAnimCurve) {
-                xyzKeyValues = WriteCurveKeys(xyzAnimCurve);
-                KeyValues.insert(std::end(KeyValues), std::begin(xyzKeyValues), std::end(xyzKeyValues));
-                for (unsigned int index=0; index < xyzKeyValues.size(); index++)
-                        KeyTime.push_back(index);
+void WriteKeyTimeAndValues(FbxAnimCurve* trsAnimCurve, std::vector<float>& trsKeyValues, std::vector<float>& KeyValues, std::vector<float>& KeyTime) {
+if (trsAnimCurve) {
+                int keyCount = trsAnimCurve->KeyGetCount();
+                FbxTime time;
+                for (int index=0; index < keyCount; index++)
+                {
+                        time = trsAnimCurve->KeyGetTime(index);
+                        KeyTime.push_back((float)time.GetSecondDouble());
+                        trsKeyValues.push_back(trsAnimCurve->KeyGetValue(index));
+                }
+                KeyValues.insert(std::end(KeyValues), std::begin(trsKeyValues), std::end(trsKeyValues));
         }
 }
 
 web::json::value gltfWriter::WriteCurveChannels(utility::string_t aName, utility::string_t trs, FbxAnimCurve* xAnimCurve, FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount) {
 
-    static const char* interPolation[] = { "?", "constant", "linear", "cubic"};
     utility::string_t animAccName;
     
     web::json::value samplers   = web::json::value::object () ;
@@ -94,7 +107,6 @@ web::json::value gltfWriter::WriteCurveChannels(utility::string_t aName, utility
     samplerDef [U("input")] = web::json::value::string (U("TIME"));
     // glTF 1.0 animation samplers support only linear interpolation.
     samplerDef [U("interpolation")] = web::json::value::string (U("LINEAR")); 
-    //samplerDef [U("interpolation")] = web::json::value::string (interPolation[ InterpolationFlagToIndex(xAnimCurve->KeyGetInterpolation(0)) ]); 
     samplerDef [U("output")] = web::json::value::string (utility::conversions::to_string_t(trs));
     _json [U("animations")][aName][U("samplers")] [samplerName]= samplerDef;
 
@@ -111,10 +123,7 @@ web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<flo
                 { U("bufferViews"), web::json::value::object () }
         }) ;
 
-    animAccName = utility::conversions::to_string_t (U("_animAccessor_")) ; 
-    animAccName += utility::conversions::to_string_t (trs) ; 
-    animAccName += utility::conversions::to_string_t (U("_")) ;
-    animAccName += utility::conversions::to_string_t ((int)animAccessorCount);
+    animAccName = createUniqueName (U("_animAccessor"), animAccessorCount);
     web::json::value animAccessor =WriteArray <float>(KeyValues, 1, pNode, animAccName.c_str()) ;
     ret = web::json::value::string (GetJsonFirstKey (animAccessor [U("accessors")])) ;
     MergeJsonObjects (accessorsAndBufferViews, animAccessor) ;
@@ -123,9 +132,8 @@ web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<flo
    return ret;
 }
 
-void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer, std::vector<float> (*WriteCurve) (FbxAnimCurve* pCurve), bool isSwitcher)
+void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer)
 {
-
 
     FbxAnimCurve* lAnimCurve = NULL;
     int     lCount;
@@ -151,8 +159,7 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
 
     utility::string_t aName;
     utility::string_t animAccName;
-    aName = utility::conversions::to_string_t (U("animation_")) ; 
-    aName += utility::conversions::to_string_t ((int)++animCount);
+    aName = createUniqueName (U("animation"), ++animCount);
 
     std::vector<float> transKeyValues, rotKeyValues, scaleKeyValues;
     std::vector<float> txKeyValues, tyKeyValues, tzKeyValues;
@@ -161,8 +168,6 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
     std::vector<float> trsKeyTime;
 
    // Write general curves.
-    if (!isSwitcher)
-    {
 	// translation 
 	FbxAnimCurve* txAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
 	FbxAnimCurve* tyAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
@@ -207,36 +212,20 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
 	       channels[channels.size()] = WriteCurveChannels(aName, "scale", sxAnimCurve, pNode, scaleKeyValues, ++animAccessorCount); 
 	       parameters[U("scale")]    = WriteAnimParameters(pNode, scaleKeyValues, ++animAccessorCount, "scale");
         }
+		if (channels.size() && parameters.size()){
 		// [parameters][time]
 	       parameters[U("TIME")] = WriteAnimParameters(pNode, trsKeyTime, ++animAccessorCount, "TIME");
-		if (channels.size() && parameters.size()){
 		//Write channels and parameters
                 _json [U("animations")][aName][U("channels")] = channels;
                 _json [U("animations")][aName][U("parameters")] = parameters;
 		}
-    } 
-}
-
-std::vector<float> WriteCurveKeys(FbxAnimCurve* pCurve)
-{
-    float   lKeyValue;
-    int     lCount;
-    int     lKeyCount = pCurve->KeyGetCount();
-    std::vector<float> trsKeyValues;
-
-
-    for(lCount = 0; lCount < lKeyCount; lCount++)
-    {
-        lKeyValue = static_cast<float>(pCurve->KeyGetValue(lCount));
-	trsKeyValues.push_back(lKeyValue);
-    }
-
-return trsKeyValues;
 }
 
 bool gltfWriter::WriteAnimation (FbxScene *pScene) 
 {
     int nAnimStack, nAnimLayer;
+    
+    std::cout << "Animation frames "<< GetNumberOfAnimationFrames(pScene) << "\n";
 
     for (nAnimStack = 0; nAnimStack < pScene->GetSrcObjectCount<FbxAnimStack>(); nAnimStack++)
     {
@@ -252,5 +241,4 @@ bool gltfWriter::WriteAnimation (FbxScene *pScene)
     
 return true;
 }
-
 }

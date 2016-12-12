@@ -373,6 +373,9 @@ utility::string_t gltfWriter::nodeId (FbxNode *pNode, bool bNodeAttribute /*=fal
 		name +=U("_") + utility::conversions::to_string_t ((int)id) ;
 	if ( bRecord )
 		recordId (id, name) ;
+
+	spaceToUnderscore(name);
+
 	return (name) ;
 }
 
@@ -384,6 +387,12 @@ utility::string_t gltfWriter::registerName (utility::string_t name) {
 
 bool gltfWriter::isNameRegistered (utility::string_t id) {
 	return (std::find (_registeredNames.begin (), _registeredNames.end (), id) != _registeredNames.end ()) ;
+}
+
+void gltfWriter::spaceToUnderscore(utility::string_t& name) {
+std::transform (name.begin(), name.end(), name.begin(), [](char ch) {
+        return ch == ' ' ? '_' : ch;
+        });
 }
 
 utility::string_t gltfWriter::createUniqueName (utility::string_t type, FbxUInt64 id) {

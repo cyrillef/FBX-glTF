@@ -95,6 +95,7 @@ protected:
 	utility::string_t registerName (utility::string_t name) ;
 	bool isNameRegistered (utility::string_t id) ;
 public:
+	void spaceToUnderscore(utility::string_t& name);
 	utility::string_t createUniqueName (utility::string_t type, FbxUInt64 id) ;
 
 	inline utility::string_t createSamplerName (FbxString &szname) { return (U ("sampler_") + utility::conversions::to_string_t (szname.Buffer ())) ; }
@@ -124,7 +125,7 @@ protected:
 	bool WriteAnimation (FbxScene *pScene) ;
 	web::json::value WriteSkeleton(FbxNode *pNode) ;
 	void WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, bool isSwitcher = false);
-        void WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer, std::vector<float> (*WriteCurve) (FbxAnimCurve* pCurve), bool isSwitcher);
+        void WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer);
 	web::json::value WriteCurveChannels(utility::string_t aName, utility::string_t trs, FbxAnimCurve* xAnimCurve, FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount);
         web::json::value WriteAnimParameters(FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount, utility::string_t trs); 
 

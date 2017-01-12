@@ -78,7 +78,7 @@ if (trsAnimCurve) {
                 for (int index=0; index < keyCount; index++)
                 {
                         time = trsAnimCurve->KeyGetTime(index);
-                        KeyTime.push_back((float)time.GetSecondDouble());
+                        KeyTime.push_back(time.GetMilliSeconds());
                         trsKeyValues.push_back(trsAnimCurve->KeyGetValue(index));
                 }
                 KeyValues.insert(std::end(KeyValues), std::begin(trsKeyValues), std::end(trsKeyValues));

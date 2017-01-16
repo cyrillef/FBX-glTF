@@ -79,7 +79,7 @@ if (trsAnimCurve) {
                 {
                         time = trsAnimCurve->KeyGetTime(index);
                         KeyTime.push_back(time.GetMilliSeconds());
-                        trsKeyValues.push_back(trsAnimCurve->KeyGetValue(index));
+                        trsKeyValues.push_back(trsAnimCurve->Evaluate(time));
                 }
                 KeyValues.insert(std::end(KeyValues), std::begin(trsKeyValues), std::end(trsKeyValues));
         }
@@ -175,7 +175,7 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
 
 	if (txAnimCurve) WriteKeyTimeAndValues(txAnimCurve, txKeyValues, transKeyValues, trsKeyTime);
 	if (tyAnimCurve) WriteKeyTimeAndValues(tyAnimCurve, tyKeyValues, transKeyValues, trsKeyTime);
-	if (tzAnimCurve) WriteKeyTimeAndValues(txAnimCurve, tzKeyValues, transKeyValues, trsKeyTime);
+	if (tzAnimCurve) WriteKeyTimeAndValues(tzAnimCurve, tzKeyValues, transKeyValues, trsKeyTime);
 
         if (txAnimCurve || tyAnimCurve || tzAnimCurve)
         {
@@ -190,7 +190,7 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
 
 	if (rxAnimCurve) WriteKeyTimeAndValues(rxAnimCurve, rxKeyValues, rotKeyValues, trsKeyTime);
 	if (ryAnimCurve) WriteKeyTimeAndValues(ryAnimCurve, ryKeyValues, rotKeyValues, trsKeyTime);
-	if (rzAnimCurve) WriteKeyTimeAndValues(rxAnimCurve, rzKeyValues, rotKeyValues, trsKeyTime);
+	if (rzAnimCurve) WriteKeyTimeAndValues(rzAnimCurve, rzKeyValues, rotKeyValues, trsKeyTime);
 
         if (rxAnimCurve || ryAnimCurve || rzAnimCurve)
         {
@@ -205,7 +205,7 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
 
 	if (sxAnimCurve) WriteKeyTimeAndValues(sxAnimCurve, sxKeyValues, scaleKeyValues, trsKeyTime);
 	if (syAnimCurve) WriteKeyTimeAndValues(syAnimCurve, syKeyValues, scaleKeyValues, trsKeyTime);
-	if (szAnimCurve) WriteKeyTimeAndValues(sxAnimCurve, szKeyValues, scaleKeyValues, trsKeyTime);
+	if (szAnimCurve) WriteKeyTimeAndValues(szAnimCurve, szKeyValues, scaleKeyValues, trsKeyTime);
 	
        if(sxAnimCurve || syAnimCurve || szAnimCurve)
         {

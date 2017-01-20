@@ -71,21 +71,7 @@ void gltfWriter::WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, b
     }
 }
 
-void WriteKeyTimeAndValues(FbxAnimCurve* trsAnimCurve, std::vector<float>& trsKeyValues, std::vector<float>& KeyValues, std::vector<float>& KeyTime) {
-if (trsAnimCurve) {
-                int keyCount = trsAnimCurve->KeyGetCount();
-                FbxTime time;
-                for (int index=0; index < keyCount; index++)
-                {
-                        time = trsAnimCurve->KeyGetTime(index);
-                        KeyTime.push_back(time.GetMilliSeconds());
-                        trsKeyValues.push_back(trsAnimCurve->Evaluate(time));
-                }
-                KeyValues.insert(std::end(KeyValues), std::begin(trsKeyValues), std::end(trsKeyValues));
-        }
-}
-
-web::json::value gltfWriter::WriteCurveChannels(utility::string_t aName, utility::string_t trs, FbxAnimCurve* xAnimCurve, FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount) {
+web::json::value gltfWriter::WriteCurveChannels(utility::string_t aName, utility::string_t trs, FbxNode *pNode, int animAccessorCount) {
 
     utility::string_t animAccName;
     
@@ -118,18 +104,62 @@ web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<flo
 
    utility::string_t animAccName;
    web::json::value ret;
+
+
    web::json::value accessorsAndBufferViews =web::json::value::object ({
                 { U("accessors"), web::json::value::object () },
                 { U("bufferViews"), web::json::value::object () }
         }) ;
 
     animAccName = createUniqueName (U("_animAccessor"), animAccessorCount);
-    web::json::value animAccessor =WriteArray <float>(KeyValues, 1, pNode, animAccName.c_str()) ;
+    web::json::value animAccessor =WriteArray <float>(KeyValues,1, pNode, animAccName.c_str()) ;
     ret = web::json::value::string (GetJsonFirstKey (animAccessor [U("accessors")])) ;
     MergeJsonObjects (accessorsAndBufferViews, animAccessor) ;
     MergeJsonObjects (_json, accessorsAndBufferViews) ;
 
    return ret;
+}
+template <class T>
+web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<T> KeyValues, int animAccessorCount, utility::string_t trs) {
+
+   utility::string_t animAccName;
+   web::json::value ret;
+
+
+   web::json::value accessorsAndBufferViews =web::json::value::object ({
+                { U("accessors"), web::json::value::object () },
+                { U("bufferViews"), web::json::value::object () }
+        }) ;
+
+    animAccName = createUniqueName (U("_animAccessor"), animAccessorCount);
+    web::json::value animAccessor =WriteArray <T,float>(KeyValues,pNode, animAccName.c_str()) ;
+    ret = web::json::value::string (GetJsonFirstKey (animAccessor [U("accessors")])) ;
+    MergeJsonObjects (accessorsAndBufferViews, animAccessor) ;
+    MergeJsonObjects (_json, accessorsAndBufferViews) ;
+
+   return ret;
+}
+
+void getTRS(FbxAnimEvaluator *animEvaluator, FbxAnimCurve* animCurve, FbxNode* pNode, std::vector<float> &trsKeyTime, std::vector<FbxDouble3> &transAtTime, std::vector<FbxDouble4> &rotAtTime, std::vector<FbxDouble3> &scaleAtTime)
+{
+	if(animCurve) {
+            int keyCount = animCurve->KeyGetCount();
+            for (int index=0; index < keyCount; index++)
+            {
+            	    FbxTime time;
+                    time = animCurve->KeyGetTime(index);
+		    FbxDouble3 trans = animEvaluator->GetNodeLocalTranslation(pNode, time);
+                    FbxDouble4 rot   = animEvaluator->GetNodeLocalRotation(pNode, time);
+                    FbxDouble3 scale = animEvaluator->GetNodeLocalScaling(pNode, time);
+                    trsKeyTime.push_back(time.GetSecondDouble());
+			rotAtTime.push_back(rot);
+			transAtTime.push_back(trans);
+			scaleAtTime.push_back(scale);
+		    
+
+            }
+    }
+
 }
 
 void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer)
@@ -155,70 +185,51 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
                 { U("bufferViews"), web::json::value::object () }
    }) ;
    
-    utility::string_t samplerName;
 
-    utility::string_t aName;
-    utility::string_t animAccName;
-    aName = createUniqueName (U("animation"), ++animCount);
+    utility::string_t aName = createUniqueName (U("animation"), ++animCount);
 
-    std::vector<float> transKeyValues, rotKeyValues, scaleKeyValues;
-    std::vector<float> txKeyValues, tyKeyValues, tzKeyValues;
-    std::vector<float> rxKeyValues, ryKeyValues, rzKeyValues;
-    std::vector<float> sxKeyValues, syKeyValues, szKeyValues;
+    std::vector<FbxDouble3> transAtTime, scaleAtTime;
+    std::vector<FbxDouble4> rotAtTime;
     std::vector<float> trsKeyTime;
 
-   // Write general curves.
-	// translation 
-	FbxAnimCurve* txAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* tyAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* tzAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+    FbxAnimEvaluator *animEvaluator = pNode->GetAnimationEvaluator();
 
-	if (txAnimCurve) WriteKeyTimeAndValues(txAnimCurve, txKeyValues, transKeyValues, trsKeyTime);
-	if (tyAnimCurve) WriteKeyTimeAndValues(tyAnimCurve, tyKeyValues, transKeyValues, trsKeyTime);
-	if (tzAnimCurve) WriteKeyTimeAndValues(tzAnimCurve, tzKeyValues, transKeyValues, trsKeyTime);
+    FbxAnimCurve* txAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	    getTRS(animEvaluator, txAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* tyAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	    getTRS(animEvaluator, tyAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* tzAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	    getTRS(animEvaluator, tzAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* rxAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	    getTRS(animEvaluator, rxAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* ryAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	    getTRS(animEvaluator, ryAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* rzAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	    getTRS(animEvaluator, rzAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* sxAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	    getTRS(animEvaluator, sxAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* syAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	    getTRS(animEvaluator, syAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+    FbxAnimCurve* szAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	    getTRS(animEvaluator, szAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
 
-        if (txAnimCurve || tyAnimCurve || tzAnimCurve)
-        {
-	    channels[channels.size()] = WriteCurveChannels(aName, "translation", txAnimCurve, pNode, transKeyValues, ++animAccessorCount);;
-	    parameters[U("translation")] = WriteAnimParameters(pNode, transKeyValues, ++animAccessorCount, "translation");
-         }
 
-	// rotation 
-	FbxAnimCurve* rxAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* ryAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* rzAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+    if(txAnimCurve|| tyAnimCurve || tzAnimCurve || rxAnimCurve || ryAnimCurve || rzAnimCurve || sxAnimCurve || syAnimCurve || szAnimCurve) {	
 
-	if (rxAnimCurve) WriteKeyTimeAndValues(rxAnimCurve, rxKeyValues, rotKeyValues, trsKeyTime);
-	if (ryAnimCurve) WriteKeyTimeAndValues(ryAnimCurve, ryKeyValues, rotKeyValues, trsKeyTime);
-	if (rzAnimCurve) WriteKeyTimeAndValues(rzAnimCurve, rzKeyValues, rotKeyValues, trsKeyTime);
 
-        if (rxAnimCurve || ryAnimCurve || rzAnimCurve)
-        {
-	       channels[channels.size()] = WriteCurveChannels(aName, "rotation", rxAnimCurve, pNode, rotKeyValues, ++animAccessorCount); 
-	       parameters[U("rotation")] = WriteAnimParameters(pNode, rotKeyValues, ++animAccessorCount, "rotation");
-        } 
+	    channels[channels.size()] = WriteCurveChannels(aName, "translation", pNode, ++animAccessorCount);;
+	    parameters[U("translation")] = WriteAnimParameters(pNode, transAtTime, ++animAccessorCount, "translation");
+	    channels[channels.size()] = WriteCurveChannels(aName, "rotation", pNode, ++animAccessorCount); 
+	    parameters[U("rotation")] = WriteAnimParameters(pNode, rotAtTime, ++animAccessorCount, "rotation");
+	    channels[channels.size()] = WriteCurveChannels(aName, "scale", pNode, ++animAccessorCount); 
+	    parameters[U("scale")]    = WriteAnimParameters(pNode, scaleAtTime, ++animAccessorCount, "scale");
+    }
 
-	// scaling 
-	FbxAnimCurve* sxAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* syAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* szAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-
-	if (sxAnimCurve) WriteKeyTimeAndValues(sxAnimCurve, sxKeyValues, scaleKeyValues, trsKeyTime);
-	if (syAnimCurve) WriteKeyTimeAndValues(syAnimCurve, syKeyValues, scaleKeyValues, trsKeyTime);
-	if (szAnimCurve) WriteKeyTimeAndValues(szAnimCurve, szKeyValues, scaleKeyValues, trsKeyTime);
-	
-       if(sxAnimCurve || syAnimCurve || szAnimCurve)
-        {
-	       channels[channels.size()] = WriteCurveChannels(aName, "scale", sxAnimCurve, pNode, scaleKeyValues, ++animAccessorCount); 
-	       parameters[U("scale")]    = WriteAnimParameters(pNode, scaleKeyValues, ++animAccessorCount, "scale");
-        }
-		if (channels.size() && parameters.size()){
-		// [parameters][time]
-	       parameters[U("TIME")] = WriteAnimParameters(pNode, trsKeyTime, ++animAccessorCount, "TIME");
-		//Write channels and parameters
-                _json [U("animations")][aName][U("channels")] = channels;
-                _json [U("animations")][aName][U("parameters")] = parameters;
-		}
+    if (channels.size() && parameters.size()){
+	    parameters[U("TIME")] = WriteAnimParameters(pNode, trsKeyTime, ++animAccessorCount, "TIME");
+	    _json [U("animations")][aName][U("channels")] = channels;
+	    _json [U("animations")][aName][U("parameters")] = parameters;
+    }
 }
 
 bool gltfWriter::WriteAnimation (FbxScene *pScene) 

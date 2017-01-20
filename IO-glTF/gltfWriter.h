@@ -126,8 +126,10 @@ protected:
 	web::json::value WriteSkeleton(FbxNode *pNode) ;
 	void WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, bool isSwitcher = false);
         void WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer);
-	web::json::value WriteCurveChannels(utility::string_t aName, utility::string_t trs, FbxAnimCurve* xAnimCurve, FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount);
+	web::json::value WriteCurveChannels(utility::string_t aName, utility::string_t trs, FbxNode *pNode, int animAccessorCount);
         web::json::value WriteAnimParameters(FbxNode *pNode, std::vector<float> KeyValues, int animAccessorCount, utility::string_t trs); 
+	template <class T>
+        web::json::value WriteAnimParameters(FbxNode *pNode, std::vector<T> KeyValues, int animAccessorCount, utility::string_t trs); 
 
 	// asset
 	bool WriteAsset (FbxDocumentInfo *pSceneInfo) ;

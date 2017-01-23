@@ -140,25 +140,38 @@ web::json::value gltfWriter::WriteAnimParameters(FbxNode *pNode, std::vector<T> 
    return ret;
 }
 
-void getTRS(FbxAnimEvaluator *animEvaluator, FbxAnimCurve* animCurve, FbxNode* pNode, std::vector<float> &trsKeyTime, std::vector<FbxDouble3> &transAtTime, std::vector<FbxDouble4> &rotAtTime, std::vector<FbxDouble3> &scaleAtTime)
+void getTRS(FbxAnimCurve* animCurve, FbxNode* pNode, std::vector<float> &trsKeyTime, std::vector<FbxDouble3> &transAtTime, std::vector<FbxDouble4> &rotAtTime, std::vector<FbxDouble3> &scaleAtTime)
 {
 	if(animCurve) {
-            int keyCount = animCurve->KeyGetCount();
-            for (int index=0; index < keyCount; index++)
-            {
-            	    FbxTime time;
-                    time = animCurve->KeyGetTime(index);
-		    FbxDouble3 trans = animEvaluator->GetNodeLocalTranslation(pNode, time);
-                    FbxDouble4 rot   = animEvaluator->GetNodeLocalRotation(pNode, time);
-                    FbxDouble3 scale = animEvaluator->GetNodeLocalScaling(pNode, time);
-                    trsKeyTime.push_back(time.GetSecondDouble());
+		int keyCount = animCurve->KeyGetCount();
+		for (int index=0; index < keyCount; index++)
+		{
+
+			FbxTime time;
+			time = animCurve->KeyGetTime(index);
+			FbxAMatrix localAffineMtx = pNode->EvaluateGlobalTransform(time);
+			FbxMatrix localMtx(localAffineMtx);
+
+			// Decompose.
+			double sign;
+			FbxVector4 T, S, Sh;
+			FbxQuaternion Rq;
+			localMtx.GetElements(T, Rq, Sh, S, sign);
+			FbxDouble3 trans, scale;
+			FbxDouble4 rot;
+
+			// Store
+			for (int i = 0; i < 3; i++) trans[i] = T[i];
+			for (int i = 0; i < 4; i++) rot[i] = Rq.GetAt(i);
+			for (int i = 0; i < 3; i++) scale[i] = S[i];
+			trsKeyTime.push_back(time.GetSecondDouble());
 			rotAtTime.push_back(rot);
 			transAtTime.push_back(trans);
 			scaleAtTime.push_back(scale);
-		    
 
-            }
-    }
+
+		}
+	}
 
 }
 
@@ -192,26 +205,24 @@ void gltfWriter::WriteAnimationChannels(FbxNode* pNode, FbxAnimLayer* pAnimLayer
     std::vector<FbxDouble4> rotAtTime;
     std::vector<float> trsKeyTime;
 
-    FbxAnimEvaluator *animEvaluator = pNode->GetAnimationEvaluator();
-
     FbxAnimCurve* txAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	    getTRS(animEvaluator, txAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(txAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* tyAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	    getTRS(animEvaluator, tyAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(tyAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* tzAnimCurve = pNode->LclTranslation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-	    getTRS(animEvaluator, tzAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(tzAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* rxAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	    getTRS(animEvaluator, rxAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(rxAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* ryAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	    getTRS(animEvaluator, ryAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(ryAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* rzAnimCurve = pNode->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-	    getTRS(animEvaluator, rzAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(rzAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* sxAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	    getTRS(animEvaluator, sxAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(sxAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* syAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	    getTRS(animEvaluator, syAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(syAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
     FbxAnimCurve* szAnimCurve = pNode->LclScaling.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-	    getTRS(animEvaluator, szAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
+	    getTRS(szAnimCurve, pNode, trsKeyTime, transAtTime, rotAtTime, scaleAtTime);
 
 
     if(txAnimCurve|| tyAnimCurve || tzAnimCurve || rxAnimCurve || ryAnimCurve || rzAnimCurve || sxAnimCurve || syAnimCurve || szAnimCurve) {	

@@ -61,6 +61,9 @@ private:
 	std::map<FbxUInt64, utility::string_t> _IDs ;
 	std::vector<utility::string_t> _registeredNames ;
 	std::map<utility::string_t, utility::string_t> _uvSets ;
+	web::json::value _jointNames;
+	std::map<int, std::vector<double>> _skinJointIndexes;
+        std::map<int, std::vector<double>> _skinVertexWeights;
 #ifdef _DEBUG
 	std::vector<utility::string_t> _path ;
 #endif
@@ -119,7 +122,8 @@ protected:
 
 	// skin
 	web::json::value WriteSkin(FbxMesh *pMesh);
-	web::json::value WriteSkinArray(FbxNode *pNode, std::vector<FbxVector4> vertexArray, int skinAccessorCount, utility::string_t suffix); 
+	web::json::value getJointNames() {return _jointNames; }
+	web::json::value WriteSkinArray(FbxNode *pNode, std::vector<FbxAMatrix> vertexArray, int skinAccessorCount, utility::string_t suffix); 
 
 	// animation
 	bool WriteAnimation (FbxScene *pScene) ;
@@ -187,9 +191,11 @@ private:
 	static ExporterRoutes _routes ;
 
 	template<class Type /*, const utility::char_t *Type*/>
-	web::json::value WriteArray (std::vector<Type> &data, int size, FbxNode *pNode, const utility::char_t *suffix) ;
+	web::json::value WriteArray (std::vector<Type> &data, int size, FbxNode *pNode, const utility::char_t *suffix, int dim=1) ;
 	template<class T, class Type /*, const utility::char_t *Type*/>
 	web::json::value WriteArray (FbxArray<T> &data, FbxNode *pNode, const utility::char_t *suffix) ;
+	template<class T, class Type /*, const utility::char_t *Type*/>
+	web::json::value WriteMatrixArray (std::vector<T> &data, FbxNode *pNode, const utility::char_t *suffix) ;
 	template<class T, class Type /*, const utility::char_t *Type*/>
 	web::json::value WriteArray (std::vector<T> &data, FbxNode *pNode, const utility::char_t *suffix) ;
 
@@ -206,7 +212,7 @@ private:
 
 //-----------------------------------------------------------------------------
 template<class Type>
-web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxNode *pNode, const utility::char_t *suffix) {
+web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxNode *pNode, const utility::char_t *suffix, int dim) {
 	std::ofstream::pos_type offset =_bin.tellg () ;
 	//std::copy (data.begin (), data.end (), std::ostream_iterator<Type> (_bin)) ;
 #if defined(_WIN32) || defined(_WIN64)
@@ -240,12 +246,14 @@ web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxN
 	web::json::value accDef =web::json::value::object () ;
 	accDef [U("bufferView")] =web::json::value::string (nodeId (pNode, true) + suffix + U("_Buffer")) ;
 	accDef [U("byteOffset")] =web::json::value::number ((int)0) ;
+	//if (dim == 1)accDef [U("byteStride")] =web::json::value::number (/*size == 1 ? 0 :*/ (int)sizeof (Type) * size) ;
 	accDef [U("byteStride")] =web::json::value::number (/*size == 1 ? 0 :*/ (int)sizeof (Type) * size) ;
 	accDef [U("componentType")] =web::json::value::number ((int)IOglTF::accessorComponentType<Type> ()) ;
+	//if (dim==2) nb /=16;
 	accDef [U("count")] =web::json::value::number ((int)nb) ;
 	//accDef [U("min")] =web::json::value::array ({ { (float)bMin.Buffer () [0], (float)bMin.Buffer () [1], (float)bMin.Buffer () [2] } }) ;
 	//accDef [U("max")] =web::json::value::array ({ { (float)bMax.Buffer () [0], (float)bMax.Buffer () [1], (float)bMax.Buffer () [2] } }) ;
-	accDef [U("type")] =web::json::value::string (IOglTF::accessorType<Type> (size, 1)) ;
+	accDef [U("type")] =web::json::value::string (IOglTF::accessorType<Type> (size, dim)) ;
 	accDef [U("name")] =web::json::value::string (nodeId (pNode, true) + suffix) ;
 	web::json::value acc =web::json::value::object ({ {
 		nodeId (pNode, true) + suffix,
@@ -255,6 +263,21 @@ web::json::value gltfWriter::WriteArray (std::vector<Type> &data, int size, FbxN
 	return (web::json::value::object ({ { U("accessors"), acc }, { U("bufferViews"), view } })) ;
 }
 
+template<class T, class Type>
+web::json::value gltfWriter::WriteMatrixArray (std::vector<T> &data, FbxNode *pNode, const utility::char_t *suffix) {
+	// glTF/Collada do not support double, convert to float (or Type)
+	int size =sizeof (decltype(std::declval<T> ().mData)) / sizeof (decltype(std::declval<T> ().mData [0][0])) ;// size of matrix 4x4=16
+	int nb =(int)data.size () ; // number of matrices
+	std::vector<Type> fdata (nb * size ) ;
+	for ( int i =0 ; i < nb ; i++ )
+		for ( int row =0 ; row < 4 ; row++ ) 
+			for ( int col =0 ; col < 4; col++ ) 
+					fdata [i * size + row+col] =data[i].mData[row][col] ;
+	//for (int i=0; i< fdata.size(); i++)
+	//	std::cout << "i: " << i << ";" << fdata[i] << "\n"; 
+					
+	return (WriteArray<Type> (fdata, size, pNode, suffix, 2)) ;
+}
 template<class T, class Type>
 web::json::value gltfWriter::WriteArray (FbxArray<T> &data, FbxNode *pNode, const utility::char_t *suffix) {
 	// glTF/Collada do not support double, convert to float (or Type)

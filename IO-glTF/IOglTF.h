@@ -198,6 +198,7 @@ template<class T>
 			case 2: return (szMAT2) ;
 			case 3: return (szMAT3) ;
 			case 4: return (szMAT4) ;
+			case 16: return (szMAT4) ;
 		}
 	}
 	_ASSERTE( false ) ;

@@ -94,6 +94,58 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 
 	_uvSets =vbo.getUvSets () ;
 
+	//skin
+	if (pMesh->GetDeformerCount(FbxDeformer::eSkin)) {
+	    web::json::value ret = WriteSkin(pMesh);
+		_json[U("skins")] = ret;
+	}
+
+	std::vector<FbxVector4> joints;
+	std::vector<FbxVector4> weights;
+
+	std::cout << "in mesh " << _skinJointIndexes.size() << _skinVertexWeights.size() << std::endl;
+	std::cout << "postions: " << out_positions.size() << std::endl;
+
+	for(int i=0; i <_skinJointIndexes.size(); i++) {
+		FbxVector4 indices;
+		int size = _skinJointIndexes[i].size();
+		for(int j=0; j < size && j < 4; j++) {
+			indices[j] = _skinJointIndexes[i][j];
+
+		}
+		if (size < 4) { // append 0's
+			for(int k=size; k < 4; k++) {
+				indices[k] = 0;
+
+			}
+		}
+
+		joints.push_back(indices);
+	}
+	for(int i=0; i <_skinVertexWeights.size(); i++) {
+		FbxVector4 w;
+		int size = _skinVertexWeights[i].size();
+		for(int j=0; j < size && j < 4; j++) {
+			w[j] = _skinVertexWeights[i][j];
+
+		}
+		if (size < 4) { // append 0's
+			for(int k=size; k < 4; k++) {
+				w[k] = 0;
+
+			}
+		}
+		weights.push_back(w);
+	}
+
+	web::json::value vertexJoints =WriteArrayWithMinMax<FbxVector4, float> (joints, pMesh->GetNode (), U("_Joints")) ;
+	MergeJsonObjects (localAccessorsAndBufferViews, vertexJoints);
+	primitive [U("attributes")] [U("JOINT")] =web::json::value::string (GetJsonFirstKey (vertexJoints [U("accessors")])) ;
+
+	web::json::value vertexWeights =WriteArrayWithMinMax<FbxVector4, float> (weights, pMesh->GetNode (), U("_Weights")) ;
+	MergeJsonObjects (localAccessorsAndBufferViews, vertexWeights);
+	primitive [U("attributes")] [U("WEIGHT")] =web::json::value::string (GetJsonFirstKey (vertexWeights [U("accessors")])) ;
+
 	web::json::value vertex =WriteArrayWithMinMax<FbxDouble3, float> (out_positions, pMesh->GetNode (), U("_Positions")) ;
 	MergeJsonObjects (localAccessorsAndBufferViews, vertex);
 	primitive [U("attributes")] [U("POSITION")] =web::json::value::string (GetJsonFirstKey (vertex [U("accessors")])) ;
@@ -210,14 +262,10 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 
 	web::json::value lib =web::json::value::object ({ { nodeId (pNode, true, true), meshDef } }) ;
 
-	web::json::value node =WriteNode (pNode) ;
 	//if ( pMesh->GetShapeCount () )
 	//	WriteControllerShape (pMesh) ; // Create a controller
-	//skin
-	if (pMesh->GetDeformerCount(FbxDeformer::eSkin)) {
-	    web::json::value ret = WriteSkin(pMesh);
-		_json[U("skins")] = ret;
-	}
+	web::json::value node =WriteNode (pNode) ;
+
 	web::json::value ret =web::json::value::object ({ { U("meshes"), lib }, { U("nodes"), node } }) ;
 	MergeJsonObjects (ret, accessorsAndBufferViews) ;
 	MergeJsonObjects (ret, images) ;

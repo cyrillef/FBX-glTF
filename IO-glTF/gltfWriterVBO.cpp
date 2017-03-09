@@ -91,6 +91,8 @@ FbxArray<FbxVector4> gltfwriterVBO::GetVertexPositions (bool bInGeometry, bool b
 	for ( int i =0 ; i < nbControlPoints ; i++ )
 		controlPoints.Add (pTemp [i]) ;
 
+	std::cout << "GetVertexPositions: vertex count: " << controlPoints.Size() << std::endl;
+
 	if ( bExportControlPoints ) {
 		if ( !bInGeometry ) {
 			FbxAMatrix transform =_pMesh->GetNode ()->EvaluateGlobalTransform () ;
@@ -99,7 +101,6 @@ FbxArray<FbxVector4> gltfwriterVBO::GetVertexPositions (bool bInGeometry, bool b
 		}
 		return (controlPoints) ;
 	}
-
 	// Initialize positions
 	FbxArray<FbxVector4> positions (nbControlPoints) ;
 	// Get the transformed control points.

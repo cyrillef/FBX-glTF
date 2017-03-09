@@ -610,12 +610,41 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 	const FbxNodeAttribute *nodeAttribute =pNode->GetNodeAttribute () ;
 	if ( nodeAttribute && nodeAttribute->GetAttributeType () == FbxNodeAttribute::eSkeleton ) {
 		// The only difference between a node containing a nullptr and one containing a SKELETON is the property type JOINT.
-		nodeDef [U("jointName")] =web::json::value::string (U("JOINT")) ;
+		//nodeDef [U("jointName")] =web::json::value::string (U("JOINT")) ;
+		nodeDef [U("jointName")] =web::json::value::string (id) ;
+		web::json::value translation;
+		web::json::value rotation;
+		web::json::value scale;
+
+		FbxDouble3 T =  pNode->LclTranslation.Get();
+		FbxDouble3 R =  pNode->LclRotation.Get();
+		FbxDouble3 S =  pNode->LclScaling.Get();
+
+                        // Store
+                        for (int i = 0; i < 3; i++) translation[translation.size()] = T[i];
+                        for (int i = 0; i < 3; i++) rotation[rotation.size()]= R[i];
+                        for (int i = 0; i < 3; i++) scale[scale.size()] = S[i];
+		nodeDef [U("translation")] =translation;
+		nodeDef [U("rotation")] =rotation;
+		nodeDef [U("scale")] =scale;
+
+
 	}
-	
+
 	//if ( szType == U("mesh") )
-	if ( pNode->GetNodeAttribute () && pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eMesh )
+	if ( pNode->GetNodeAttribute () && pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eMesh ){
 		nodeDef [U("meshes")] =web::json::value::array ({{ web::json::value (nodeId (pNode, true)) }}) ;
+		// Link skin and mesh in gltf file
+		utility::string_t skinName;
+		web::json::value skeletons;
+		skinName  = utility::conversions::to_string_t (id);
+		skinName += utility::conversions::to_string_t (U("_skin")) ;
+		nodeDef [U("skin")] =web::json::value::string (skinName);
+		skeletons[skeletons.size()] = _jointNames[0]; // need to get the root joint
+		nodeDef [U("skeletons")] = skeletons;
+		//nodeDef [U("skeletons")] = _jointNames;
+	}
+		//}
 	//if ( szType == U("camera") || szType == U("light") )
 	if (   pNode->GetNodeAttribute ()
 		&& (   pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eCamera

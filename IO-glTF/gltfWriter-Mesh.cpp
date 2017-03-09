@@ -98,11 +98,11 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	if (pMesh->GetDeformerCount(FbxDeformer::eSkin)) {
 	    web::json::value ret = WriteSkin(pMesh);
 		_json[U("skins")] = ret;
-	}
 
 	std::vector<FbxVector4> joints;
 	std::vector<FbxVector4> weights;
 
+	if (_skinJointIndexes.size() && _skinVertexWeights.size()) {
 	std::cout << "in mesh " << _skinJointIndexes.size() << _skinVertexWeights.size() << std::endl;
 	std::cout << "postions: " << out_positions.size() << std::endl;
 
@@ -145,6 +145,8 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	web::json::value vertexWeights =WriteArrayWithMinMax<FbxVector4, float> (weights, pMesh->GetNode (), U("_Weights")) ;
 	MergeJsonObjects (localAccessorsAndBufferViews, vertexWeights);
 	primitive [U("attributes")] [U("WEIGHT")] =web::json::value::string (GetJsonFirstKey (vertexWeights [U("accessors")])) ;
+	}
+	}
 
 	web::json::value vertex =WriteArrayWithMinMax<FbxDouble3, float> (out_positions, pMesh->GetNode (), U("_Positions")) ;
 	MergeJsonObjects (localAccessorsAndBufferViews, vertex);

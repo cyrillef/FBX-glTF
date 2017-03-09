@@ -168,6 +168,8 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	web::json::value attributes =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   utility::details::limitedCompareTo (iter.first, U("position")) == 0
+		        || (utility::details::limitedCompareTo (iter.first, U("weight")) == 0)
+		        || (utility::details::limitedCompareTo (iter.first, U("joint")) == 0)
 			|| (utility::details::limitedCompareTo (iter.first, U("normal")) == 0 && iter.first != U("normalMatrix"))
 			|| (utility::details::limitedCompareTo (iter.first, U("texcoord")) == 0 && pMaterial != nullptr)
 		)
@@ -180,6 +182,8 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	instanceProgram [U("uniforms")] =web::json::value::object () ;
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   (  utility::details::limitedCompareTo (iter.first, U("position")) != 0
+			   && utility::details::limitedCompareTo (iter.first, U("joint")) != 0
+			   && utility::details::limitedCompareTo (iter.first, U("weight")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("texcoord")) != 0)
 			|| iter.first == U("normalMatrix")

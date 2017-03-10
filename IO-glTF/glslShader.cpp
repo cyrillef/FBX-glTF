@@ -203,7 +203,7 @@ const utility::string_t glslTech::needsVarying (const utility::char_t *semantic)
 
 /*static*/ bool glslTech::isVertexShaderSemantic (const utility::char_t *semantic) {
 	static utility::string_t vs_semantics [] ={
-		U("^position$"), U("^normal$"), U("^normalMatrix$"), U("^modelViewMatrix$"), U("^projectionMatrix$"),
+		U("^position$"), U("^normal$"), U("^weight$"), U("^joint$"), U("^jointMat$"),U("^normalMatrix$"), U("^modelViewMatrix$"), U("^projectionMatrix$"),
 		U("^texcoord([0-9]+)$"), U("^light([0-9]+)Transform$")
 	} ;
 	int nb =sizeof (vs_semantics) / sizeof (utility::string_t) ;
@@ -241,7 +241,12 @@ void glslTech::prepareParameters (web::json::value technique) {
 			if ( bIsAttribute )
 				_vertexShader.addAttribute (iter->first, iType) ;
 			else
-				_vertexShader.addUniform (iter->first, iType) ;
+				 if(iter->first == U("jointMat") ) {
+					unsigned int matSize =iter->second.as_object () [U("count")].as_integer () ;
+					utility::string_t jointMat =glslTech::format (U("%s[%d]"), iter->first.c_str(), matSize) ;
+					_vertexShader.addUniform (jointMat, iType) ;
+				 } else 
+					_vertexShader.addUniform (iter->first, iType) ;
 			utility::string_t v =needsVarying (iter->first.c_str ()) ;
 			if ( v != U("") ) {
 				_vertexShader.addVarying (iter->first, iType) ;

@@ -175,7 +175,7 @@ protected:
 	// shaders
 	web::json::value WriteShaders (FbxNode *pNode, web::json::value &program) ;
 	// technique
-	void AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals =false) ;
+	void AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals =false, bool hasSkining =false) ;
 	void TechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, web::json::value &attributes, web::json::value &accessors, bool bHasMaterial =true) ;
 	web::json::value WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial *pMaterial, web::json::value &techniqueParameters) ;
 	// textures

@@ -206,7 +206,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 
 			utility::string_t techniqueName =GetJsonFirstKey (ret [U("techniques")]) ;
 			web::json::value techniqueParameters =ret [U("techniques")] [techniqueName] [U("parameters")] ;
-			AdditionalTechniqueParameters (pNode, techniqueParameters, out_normals.size () != 0) ;
+			AdditionalTechniqueParameters (pNode, techniqueParameters, out_normals.size () != 0, _skinJointIndexes.size() && _skinVertexWeights.size()) ;
 			TechniqueParameters (pNode, techniqueParameters, primitive [U("attributes")], localAccessorsAndBufferViews [U("accessors")], false) ;
 			ret =WriteTechnique (pNode, nullptr, techniqueParameters) ;
 			//MergeJsonObjects (techniques, ret) ;
@@ -247,7 +247,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 
 			utility::string_t techniqueName =GetJsonFirstKey (ret [U("techniques")]) ;
 			web::json::value techniqueParameters =ret [U("techniques")] [techniqueName] [U("parameters")] ;
-			AdditionalTechniqueParameters (pNode, techniqueParameters, out_normals.size () != 0) ;
+			AdditionalTechniqueParameters (pNode, techniqueParameters, out_normals.size () != 0, _skinJointIndexes.size() && _skinVertexWeights.size()) ;
 			TechniqueParameters (pNode, techniqueParameters, primitive [U("attributes")], localAccessorsAndBufferViews [U("accessors")]) ;
 			ret =WriteTechnique (pNode, pNode->GetMaterial (i), techniqueParameters) ;
 			//MergeJsonObjects (techniques, ret) ;

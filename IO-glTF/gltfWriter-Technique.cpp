@@ -23,7 +23,7 @@
 
 namespace _IOglTF_NS_ {
 
-void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals /*=false*/) {
+void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value &techniqueParameters, bool bHasNormals /*=false*/, bool hasSkinning /*=false*/) {
 	if ( bHasNormals ) {
 		techniqueParameters [U("normalMatrix")] =web::json::value::object ({ // normal matrix
 			{ U("semantic"), web::json::value::string (U("MODELVIEWINVERSETRANSPOSE")) },
@@ -40,16 +40,14 @@ void gltfWriter::AdditionalTechniqueParameters (FbxNode *pNode, web::json::value
 	}) ;
 
 //d:\projects\gltf\converter\collada2gltf\shaders\commonprofileshaders.cpp #905
-	//if ( hasSkinning ) {
-	//	addSemantic ("vs", "attribute",
-	//				 "JOINT", "joint", 1, false);
-	//	addSemantic ("vs", "attribute",
-	//				 "WEIGHT", "weight", 1, false);
+	if ( hasSkinning ) {
+		techniqueParameters [U("jointMat")] =web::json::value::object ({ // joint matrix
+				{ U("count"), web::json::value::number((int) _jointNames.size()) },
+				{ U("semantic"), web::json::value::string (U("JOINTMATRIX")) },
+				{ U("type"), web::json::value::number ((int)IOglTF::FLOAT_MAT4) }
+				}) ;
 
-	//	assert (techniqueExtras != nullptr);
-	//	addSemantic ("vs", "uniform",
-	//				 JOINTMATRIX, "jointMat", jointsCount, false, true /* force as an array */);
-	//}
+	}
 
 	// We ignore lighting if the only light we have is ambient
 	int lightCount =pNode->GetScene ()->RootProperty.GetSrcObjectCount<FbxLight> () ;
@@ -169,7 +167,7 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 	for ( const auto &iter : techniqueParameters.as_object () ) {
 		if (   utility::details::limitedCompareTo (iter.first, U("position")) == 0
 		        || (utility::details::limitedCompareTo (iter.first, U("weight")) == 0)
-		        || (utility::details::limitedCompareTo (iter.first, U("joint")) == 0)
+		        || (utility::details::limitedCompareTo (iter.first, U("joint")) == 0 && iter.first != U("jointMat"))
 			|| (utility::details::limitedCompareTo (iter.first, U("normal")) == 0 && iter.first != U("normalMatrix"))
 			|| (utility::details::limitedCompareTo (iter.first, U("texcoord")) == 0 && pMaterial != nullptr)
 		)
@@ -187,6 +185,7 @@ web::json::value gltfWriter::WriteTechnique (FbxNode *pNode, FbxSurfaceMaterial 
 			   && utility::details::limitedCompareTo (iter.first, U("normal")) != 0
 			   && utility::details::limitedCompareTo (iter.first, U("texcoord")) != 0)
 			|| iter.first == U("normalMatrix")
+			|| iter.first == U("jointMat")
 		)
 			instanceProgram [U("uniforms")] [utility::string_t (U("u_")) + iter.first] =web::json::value::string (iter.first) ;
 	}

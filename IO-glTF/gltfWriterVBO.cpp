@@ -218,7 +218,6 @@ void gltfwriterVBO::GetLayerElements (bool bInGeometry /*=true*/) {
 	FbxGeometryElementBinormal *pLayerBinormals =elementBinormals () ; // Binormals
 	FbxLayerElementVertexColor *pLayerElementColors =elementVcolors () ; // Vertex Color
 
-	std::vector<int> listVertexID;
 	int nb =_pMesh->GetPolygonCount () ;
 	for ( int i =0, index =0 ; i < nb ; i++ ) {
 		int count =_pMesh->GetPolygonSize (i) ;
@@ -228,13 +227,8 @@ void gltfwriterVBO::GetLayerElements (bool bInGeometry /*=true*/) {
 			// In an ordinary geometry, export the control points.
 			// In a binded geometry, export transformed control points...
 			// In a controller, export the control points.
-			std::vector<int>::iterator it;
-			it = std::find (listVertexID.begin(), listVertexID.end(), vertexID);
-			if (it == listVertexID.end()) { // vertexID NOT found, insert data
-				listVertexID.push_back(vertexID);
-				FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
-				_in_positions.push_back (position) ;
-			}
+			FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
+			_in_positions.push_back (position) ;
 
 			GetLayerElement (pLayerElementNormals, normalIndex, FbxVector4, normal, index, [this] (FbxVector4 &V) {
 				_in_normals.push_back (V) ;

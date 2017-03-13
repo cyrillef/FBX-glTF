@@ -259,6 +259,7 @@ void gltfWriter::PreprocessNodeRecursive (FbxNode *pNode) {
 		if ( attributeType == FbxNodeAttribute::eNurbs || attributeType == FbxNodeAttribute::ePatch ) {
 			FbxGeometryConverter geometryConverter (&mManager) ;
 			//geometryConverter.TriangulateInPlace (pNode) ;
+	std::cout<< "geometry converter ..... triangualte" << std::endl;
 			FbxMesh *pMesh =pNode->GetMesh () ;
 			pMesh =FbxCast<FbxMesh>(geometryConverter.Triangulate (pMesh, true)) ;
 		}
@@ -606,6 +607,7 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 
 	nodeDef [U("children")] =web::json::value::array () ;
 	//nodeDef [U("instanceSkin")] = ;
+		// Link skin and mesh in gltf file
 
 	const FbxNodeAttribute *nodeAttribute =pNode->GetNodeAttribute () ;
 	if ( nodeAttribute && nodeAttribute->GetAttributeType () == FbxNodeAttribute::eSkeleton ) {
@@ -627,10 +629,13 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 		nodeDef [U("translation")] =translation;
 		nodeDef [U("rotation")] =rotation;
 		nodeDef [U("scale")] =scale;
+	
 
-
+		//FbxSkeleton* lSkeleton = (FbxSkeleton*) pNode->GetNodeAttribute();
+		//if (lSkeleton->GetSkeletonType() == FbxSkeleton::eRoot){
+		//	rootJoint = utility::conversions::to_string_t (id);
+		//}
 	}
-
 	//if ( szType == U("mesh") )
 	if ( pNode->GetNodeAttribute () && pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eMesh ){
 		nodeDef [U("meshes")] =web::json::value::array ({{ web::json::value (nodeId (pNode, true)) }}) ;
@@ -640,9 +645,8 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 		skinName  = utility::conversions::to_string_t (id);
 		skinName += utility::conversions::to_string_t (U("_skin")) ;
 		nodeDef [U("skin")] =web::json::value::string (skinName);
-		skeletons[skeletons.size()] = _jointNames[0]; // need to get the root joint
+		skeletons[skeletons.size()] = _jointNames[0];
 		nodeDef [U("skeletons")] = skeletons;
-		//nodeDef [U("skeletons")] = _jointNames;
 	}
 		//}
 	//if ( szType == U("camera") || szType == U("light") )

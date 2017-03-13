@@ -229,18 +229,15 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
                                FbxTime& pTime, 
                                FbxVector4* pVertexArray,
 			       FbxPose* pPose,
-			       std::vector<std::string> &jointNames,
-			       std::vector<FbxAMatrix> &inverseBindMatrices, 
+			       std::vector<FbxAMatrix> &inverseBindMatrices,
+			       std::vector<std::string> &jointNames, 
 			       std::map<int, std::vector<double>>& skinJointIndexes,
                                std::map<int, std::vector<double>>& skinVextexWeights)
 {
-	//std::map<int, std::vector<double>> _skinJointIndexes;
-	//std::map<int, std::vector<double>> _skinVextexWeights;
 	// All the links must have the same link mode.
 	FbxCluster::ELinkMode lClusterMode = ((FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin))->GetCluster(0)->GetLinkMode();
 
 	int lVertexCount = pMesh->GetControlPointsCount();
-	std::cout << "vertex count: " << lVertexCount << std::endl;
 	FbxAMatrix* lClusterDeformation = new FbxAMatrix[lVertexCount];
 	memset(lClusterDeformation, 0, lVertexCount * sizeof(FbxAMatrix));
 
@@ -273,25 +270,17 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 			ComputeClusterDeformation(pGlobalPosition, pMesh, lCluster, lVertexTransformMatrix, pTime, pPose);
 			inverseBindMatrices.push_back(lVertexTransformMatrix);
 
-			jointNames.push_back(lCluster->GetLink()->GetName());
-			for(int i=0; i<4; i++) {
-				FbxVector4 lRow = lVertexTransformMatrix.GetRow(i);
-				//printf("%9.4f %9.4f %9.4f %9.4f\n", lRow[0], lRow[1], lRow[2], lRow[3]);
-			}
-
 			int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
 			for (int k = 0; k < lVertexIndexCount; ++k) 
 			{            
 				int lIndex = lCluster->GetControlPointIndices()[k];
 				double lWeight = lCluster->GetControlPointWeights()[k];
 
-				//////////////
-
-
-				//std::cout << "lWeight: " << lWeight << " k: "<< k << "\n";
-				//std::cout << "lIndex: " << lIndex << "\n";
-				//std::cout << "joint: " << lCluster->GetLink()->GetName() << "jointIndex: "<< jointIndex <<"\n";
-				auto it = std::find(jointNames.begin(), jointNames.end(), lCluster->GetLink()->GetName());
+				std::string findString(lCluster->GetLink()->GetName());
+				std::transform (findString.begin(), findString.end(), findString.begin(), [](char ch) {
+        			return ch == ' ' ? '_' : ch;
+        			});
+				auto it = std::find(jointNames.begin(), jointNames.end(), findString);
 				int jointIndex;
 				if (it != jointNames.end())
 					jointIndex = std::distance(jointNames.begin(), it);
@@ -367,8 +356,8 @@ void ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition,
 									 FbxTime& pTime, 
 									 FbxVector4* pVertexArray,
 									 FbxPose* pPose,
-									 std::vector<std::string> &jointNames,
 									 std::vector<FbxAMatrix> &inverseBindMatrices,
+									 std::vector<std::string> &jointNames,
 									 std::map<int, std::vector<double>>& skinJointIndexes,
                                                                          std::map<int, std::vector<double>>& skinVextexWeights)
 {
@@ -400,12 +389,6 @@ void ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition,
 			ComputeClusterDeformation(pGlobalPosition, pMesh, lCluster, lVertexTransformMatrix, pTime, pPose);
 
 			inverseBindMatrices.push_back(lVertexTransformMatrix);
-			printf("Cluster name %s \n", lCluster->GetLink()->GetName());
-			jointNames.push_back(lCluster->GetLink()->GetName());
-			for(int i=0; i<4; i++) {
-				FbxVector4 lRow = lVertexTransformMatrix.GetRow(i);
-				//printf("%9.4f %9.4f %9.4f %9.4f\n", lRow[0], lRow[1], lRow[2], lRow[3]);
-			}
 
 			FbxQuaternion lQ = lVertexTransformMatrix.GetQ();
 			FbxVector4 lT = lVertexTransformMatrix.GetT();
@@ -417,7 +400,11 @@ void ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition,
 				int lIndex = lCluster->GetControlPointIndices()[k];
 				double lWeight = lCluster->GetControlPointWeights()[k];
 
-				auto it = std::find(jointNames.begin(), jointNames.end(), lCluster->GetLink()->GetName());
+				std::string findString(lCluster->GetLink()->GetName());
+				std::transform (findString.begin(), findString.end(), findString.begin(), [](char ch) {
+        			return ch == ' ' ? '_' : ch;
+        			});
+				auto it = std::find(jointNames.begin(), jointNames.end(), findString);
 				int jointIndex;
 				if (it != jointNames.end())
 					jointIndex = std::distance(jointNames.begin(), it);
@@ -506,8 +493,8 @@ void ComputeSkinDeformation(FbxAMatrix& pGlobalPosition,
 									 FbxTime& pTime, 
 									 FbxVector4* pVertexArray,
 									 FbxPose* pPose,
-									 std::vector<std::string> &jointNames,
 									 std::vector<FbxAMatrix> &inverseBindMatrices,
+									 std::vector<std::string> &jointNames,
 									 std::map<int, std::vector<double>>& skinJointIndexes, 
 									 std::map<int, std::vector<double>>& skinVextexWeights)
 {
@@ -516,11 +503,11 @@ void ComputeSkinDeformation(FbxAMatrix& pGlobalPosition,
 
 	if(lSkinningType == FbxSkin::eLinear || lSkinningType == FbxSkin::eRigid)
 	{
-		ComputeLinearDeformation(pGlobalPosition, pMesh, pTime, pVertexArray, pPose, jointNames, inverseBindMatrices, skinJointIndexes, skinVextexWeights);
+		ComputeLinearDeformation(pGlobalPosition, pMesh, pTime, pVertexArray, pPose, inverseBindMatrices, jointNames, skinJointIndexes, skinVextexWeights);
 	}
 	else if(lSkinningType == FbxSkin::eDualQuaternion)
 	{
-		ComputeDualQuaternionDeformation(pGlobalPosition, pMesh, pTime, pVertexArray, pPose, jointNames, inverseBindMatrices, skinJointIndexes, skinVextexWeights);
+		ComputeDualQuaternionDeformation(pGlobalPosition, pMesh, pTime, pVertexArray, pPose, inverseBindMatrices, jointNames, skinJointIndexes, skinVextexWeights);
 	}
 	else if(lSkinningType == FbxSkin::eBlend)
 	{
@@ -532,8 +519,8 @@ void ComputeSkinDeformation(FbxAMatrix& pGlobalPosition,
 		FbxVector4* lVertexArrayDQ = new FbxVector4[lVertexCount];
 		memcpy(lVertexArrayDQ, pMesh->GetControlPoints(), lVertexCount * sizeof(FbxVector4));
 
-		ComputeLinearDeformation(pGlobalPosition, pMesh, pTime, lVertexArrayLinear, pPose, jointNames, inverseBindMatrices, skinJointIndexes, skinVextexWeights);
-		ComputeDualQuaternionDeformation(pGlobalPosition, pMesh, pTime, lVertexArrayDQ, pPose, jointNames, inverseBindMatrices, skinJointIndexes, skinVextexWeights);
+		ComputeLinearDeformation(pGlobalPosition, pMesh, pTime, lVertexArrayLinear, pPose, inverseBindMatrices, jointNames, skinJointIndexes, skinVextexWeights);
+		ComputeDualQuaternionDeformation(pGlobalPosition, pMesh, pTime, lVertexArrayDQ, pPose, inverseBindMatrices, jointNames, skinJointIndexes, skinVextexWeights);
 
 		// To blend the skinning according to the blend weights
 		// Final vertex = DQSVertex * blend weight + LinearVertex * (1- blend weight)
@@ -571,7 +558,6 @@ return ret;
 web::json::value gltfWriter::WriteSkin(FbxMesh *pMesh) {
 	int lClusterCount = 0;
         web::json::value skins = web::json::value::object ();
-        //web::json::value _jointNames;
 	std::vector<FbxAMatrix> inverseBindMatrices;
 
 	utility::string_t skinName;
@@ -579,12 +565,16 @@ web::json::value gltfWriter::WriteSkin(FbxMesh *pMesh) {
 	skinName += utility::conversions::to_string_t (U("_skin")) ;
 
 	FbxAMatrix globalPosition;
-	std::vector<std::string> jointNames;
 	FbxTime pTime;
 	FbxPose *pPose;
 	const int pVertexCount = pMesh->GetControlPointsCount();
-	std::cout << "pVertexCount: " << pVertexCount << std::endl; 
 	FbxVector4* pVertexArray = NULL;
+
+	std::vector<std::string> jointNames;
+	for(int i=0; i < _jointNames.size(); i++)
+		jointNames.push_back(_jointNames[i].as_string());
+		
+
 	if (pVertexCount) {
 		pVertexArray = new FbxVector4[pVertexCount];
 		memcpy(pVertexArray, pMesh->GetControlPoints(), pVertexCount * sizeof(FbxVector4));
@@ -598,14 +588,7 @@ web::json::value gltfWriter::WriteSkin(FbxMesh *pMesh) {
 	if (pClusterCount)
 	{
 		// Deform the vertex array with the skin deformer.
-		ComputeSkinDeformation(globalPosition, pMesh, pTime, pVertexArray, pPose, jointNames, inverseBindMatrices, _skinJointIndexes, _skinVertexWeights);
-	}
-	std::cout << "After _skinJointIndexes: "<< _skinJointIndexes.size() << " _skinVertexWeights: " << _skinVertexWeights.size() << std::endl;
-	// JointNames should be unique and it should be as same as skeletons array
-	for (int i=0; i<jointNames.size(); i++) {
-		utility::string_t name = utility::conversions::to_string_t(jointNames[i]);
-		spaceToUnderscore(name);
-		_jointNames[_jointNames.size()] = web::json::value::string (name);
+		ComputeSkinDeformation(globalPosition, pMesh, pTime, pVertexArray, pPose, inverseBindMatrices, jointNames, _skinJointIndexes, _skinVertexWeights);
 	}
 
 	web::json::value shapeMat;

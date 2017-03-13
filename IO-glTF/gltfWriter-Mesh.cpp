@@ -106,19 +106,7 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	if (_skinJointIndexes.size() && _skinVertexWeights.size()) {
 		std::vector<FbxVector4> joints;
 		std::vector<FbxVector4> weights;
-		if (_skinJointIndexes.size() < out_positions.size()) {
-			for (int i=_skinJointIndexes.size()+1; i < out_positions.size(); i++)
-			{
-				_skinJointIndexes[i].push_back(0);
-			}
-		}
-	if (_skinVertexWeights.size() < out_positions.size()) {
-			for (int i=_skinVertexWeights.size()+1; i < out_positions.size(); i++)
-			{
-				_skinVertexWeights[i].push_back(0);
-			}
-		}
-
+	
 		for(int i=0; i <_skinJointIndexes.size(); i++) {
 			FbxVector4 indices;
 			int size = _skinJointIndexes[i].size();
@@ -151,11 +139,6 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 			weights.push_back(w);
 		}
 
-	std::cout << "_skinJointIndexes.size() " << _skinJointIndexes.size() << std::endl;
-	std::cout << "__skinVertexWeights.size() " << _skinVertexWeights.size() << std::endl;
-	std::cout << "out_positions.size() " << out_positions.size() << std::endl;
-	std::cout << "out_indices.size() " << out_indices.size() << std::endl;
-	
 	web::json::value vertexJoints =WriteArrayWithMinMax<FbxVector4, float> (joints, pMesh->GetNode (), U("_Joints")) ;
 	MergeJsonObjects (localAccessorsAndBufferViews, vertexJoints);
 	primitive [U("attributes")] [U("JOINT")] =web::json::value::string (GetJsonFirstKey (vertexJoints [U("accessors")])) ;

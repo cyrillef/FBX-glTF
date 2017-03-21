@@ -48,7 +48,11 @@ void gltfwriterVBO::indexVBO () {
 		FbxDouble3 in_binormal =i < _in_binormals.size () ? _in_binormals [i] : FbxDouble3 () ;
 		FbxColor in_vcolor =i < _in_vcolors.size () ? _in_vcolors [i] : FbxColor () ;
 
-		PackedVertex packed ={ _in_positions [i], in_uv, in_normal, in_tangent, in_binormal, in_vcolor } ;
+		PackedVertex packed;
+		if (_in_joints.size() && _in_weights.size())
+		packed ={ _in_positions [i], _in_joints[i], _in_weights[i], in_uv, in_normal, in_tangent, in_binormal, in_vcolor } ;
+		else
+		packed ={ _in_positions [i], {0,0,0,0},{0,0,0,0},in_uv, in_normal, in_tangent, in_binormal, in_vcolor } ;
 
 		// Try to find a similar vertex in out_XXXX
 		unsigned short index ;
@@ -57,6 +61,10 @@ void gltfwriterVBO::indexVBO () {
 			_out_indices.push_back (index) ;
 		} else { // If not, it needs to be added in the output data.
 			_out_positions.push_back (_in_positions [i]) ;
+			if (_in_joints.size() && _in_weights.size()) {
+				_out_joints.push_back (_in_joints [i]) ;
+				_out_weights.push_back (_in_weights [i]) ;
+			}
 			if ( _in_uvs.size () )
 				_out_uvs.push_back (in_uv) ;
 			if ( _in_normals.size () )
@@ -81,7 +89,7 @@ FbxArray<FbxVector4> gltfwriterVBO::GetVertexPositions (bool bInGeometry, bool b
 	// In an ordinary geometry, export the control points.
 	// In a binded geometry, export transformed control points...
 	// In a controller, export the control points.
-	bExportControlPoints =true ;
+	// bExportControlPoints =true ;
 
 	FbxArray<FbxVector4> controlPoints ;
 	// Get Control points.
@@ -101,28 +109,62 @@ FbxArray<FbxVector4> gltfwriterVBO::GetVertexPositions (bool bInGeometry, bool b
 	}
 	// Initialize positions
 	FbxArray<FbxVector4> positions (nbControlPoints) ;
+	std::cout << "position size "<< positions.Size() << std::endl;
 	// Get the transformed control points.
-	int deformerCount =_pMesh->GetDeformerCount (FbxDeformer::eSkin) ;
-	_ASSERTE (deformerCount <= 1); // Unexpected number of skin greater than 1
-	// It is expected for deformerCount to be equal to 1
-	for ( int i =0 ; i < deformerCount ; i++ ) {
-		int clusterCount =FbxCast<FbxSkin> (_pMesh->GetDeformer (FbxDeformer::eSkin))->GetClusterCount () ;
+	int deformerCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
+        for ( int lSkinIndex=0; lSkinIndex<deformerCount; ++lSkinIndex)
+        {
+		FbxSkin * lSkinDeformer = (FbxSkin *)_pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
+                int clusterCount = lSkinDeformer->GetClusterCount();
+
 		for ( int indexLink =0 ; indexLink < clusterCount ; indexLink++ ) {
-			FbxCluster *pLink =FbxCast<FbxSkin> (_pMesh->GetDeformer (FbxDeformer::eSkin))->GetCluster (indexLink) ;
-			FbxAMatrix jointPosition =pLink->GetLink ()->EvaluateGlobalTransform () ;
+			FbxCluster* pLink = lSkinDeformer->GetCluster(indexLink);
+			FbxAMatrix jointPosition = pLink->GetLink ()->EvaluateGlobalTransform () ;
 			FbxAMatrix transformLink ;
 			pLink->GetTransformLinkMatrix (transformLink) ;
 			FbxAMatrix m =transformLink.Inverse () * jointPosition ;
+
+			_inverseBindMatrices.push_back(m);
+
 			for ( int j =0 ; j < pLink->GetControlPointIndicesCount () ; j++ ) {
+                        	int jointIndex = -1;
 				int index =pLink->GetControlPointIndices () [j] ;
 				FbxVector4 controlPoint =controlPoints [index] ;
 				double weight =pLink->GetControlPointWeights () [j] ;
+
 				FbxVector4 pos =m.MultT (controlPoint) ;
 				pos =pos * weight ;
-				positions [index] =positions [index] + pos ;
+				//positions [index] =positions [index] + pos ;
+				positions.InsertAt(index, positions [index] + pos) ;
+
+				std::string findString(pLink->GetLink()->GetName());
+                                std::transform (findString.begin(), findString.end(), findString.begin(), [](char ch) {
+                                return ch == ' ' ? '_' : ch;
+                                });
+                                auto it = std::find(_jointNames.begin(), _jointNames.end(), findString);
+                                if (it != _jointNames.end())
+                                        jointIndex = std::distance(_jointNames.begin(), it);
+				if (jointIndex == -1)
+                                    jointIndex = 0;
+                                _skinJointIndexes[index].push_back(jointIndex);
+                                _skinVertexWeights[index].push_back(weight);
 			}
 		}
 	}
+	/*std::cout << "before return positions size " << positions.Size() << std::endl;
+	std::cout << "_skinJointIndexes " << _skinJointIndexes.size() << std::endl;
+	for (auto &it :_skinJointIndexes) {
+		std::cout << "jindex " << it.first << " size " << it.second.size() << std::endl; 	
+		for (int i=0; i < it.second.size(); i++)
+		std::cout << " " << it.second[i] ;
+		std::cout << std::endl;
+	}
+	for (auto &it :_skinVertexWeights) {
+		std::cout << "windex " << it.first << " size " << it.second.size() << std::endl; 	
+		for (int i=0; i < it.second.size(); i++)
+		std::cout << " " << it.second[i] ;
+		std::cout << std::endl;
+	}*/
 	return (positions) ;
 }
 
@@ -229,6 +271,38 @@ void gltfwriterVBO::GetLayerElements (bool bInGeometry /*=true*/) {
 			// In a controller, export the control points.
 			FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
 			_in_positions.push_back (position) ;
+
+			if (_skinJointIndexes.size() && _skinVertexWeights.size()) {
+				FbxVector4 indices;
+				int jsize = _skinJointIndexes[vertexID].size();
+				for(int j=0; j < jsize && j < 4; j++) {
+					indices[j] = _skinJointIndexes[vertexID][j];
+
+				}
+				if (jsize < 4) { // append 0's
+					for(int k=jsize; k < 4; k++) {
+						indices[k] = 0;
+
+					}
+				}
+
+				_in_joints.push_back (indices) ;
+
+				FbxVector4 w;
+				int size = _skinVertexWeights[vertexID].size();
+				for(int j=0; j < size && j < 4; j++) {
+					w[j] = _skinVertexWeights[vertexID][j];
+
+				}
+				if (size < 4) { // append 0's
+					for(int k=size; k < 4; k++) {
+						w[k] = 0;
+
+					}
+				}
+				_in_weights.push_back (w) ;
+				//std::cout << "VBO vertexID " << vertexID << std::endl;
+			}
 
 			GetLayerElement (pLayerElementNormals, normalIndex, FbxVector4, normal, index, [this] (FbxVector4 &V) {
 				_in_normals.push_back (V) ;
@@ -570,10 +644,12 @@ void gltfwriterVBOT<T>::GetLayerElements (bool bInGeometry /*=true*/) {
 			// In a controller, export the control points.
 			FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
 			_in_positions.push_back (position) ;
+std::cout<<"before GetLayerElement" << std::endl;
 
 			GetLayerElement (pLayerElementNormals, normalIndex, FbxVector4, normal, index, [this] (FbxVector4 &V) {
 				_in_normals.push_back (V) ;
 			}) ;
+std::cout<<"after GetLayerElement" << std::endl;
 			FbxLayerElementUV *pLayerElementUVs =channels [FbxLayerElement::eTextureDiffuse] ;
 			GetLayerElement (pLayerElementUVs, uvIndex, FbxVector2, uv, index, [this] (FbxVector2 &V) {
 				V [1] =1.0 - V [1] ;

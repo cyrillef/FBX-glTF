@@ -62,8 +62,6 @@ private:
 	std::vector<utility::string_t> _registeredNames ;
 	std::map<utility::string_t, utility::string_t> _uvSets ;
 	web::json::value _jointNames;
-	std::map<int, std::vector<double>> _skinJointIndexes;
-        std::map<int, std::vector<double>> _skinVertexWeights;
 #ifdef _DEBUG
 	std::vector<utility::string_t> _path ;
 #endif

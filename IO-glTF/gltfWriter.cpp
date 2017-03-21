@@ -479,6 +479,25 @@ web::json::value gltfWriter::WriteSceneNodeRecursive (FbxNode *pNode, FbxPose *p
 	return (node) ;
 }
 
+web::json::value gltfWriter::WriteSkinArray(FbxNode *pNode, std::vector<FbxAMatrix> inverseBindMatrices, int skinAccessorCount, utility::string_t suffix) {
+
+   utility::string_t skinAccName;
+   web::json::value ret;
+   web::json::value accessorsAndBufferViews =web::json::value::object ({
+                { U("accessors"), web::json::value::object () },
+                { U("bufferViews"), web::json::value::object () }
+        }) ;
+
+    skinAccName = utility::conversions::to_string_t (U("_skinAccessor_")) ;
+    skinAccName += utility::conversions::to_string_t (suffix) ;
+    skinAccName += utility::conversions::to_string_t ((int)skinAccessorCount);
+    web::json::value skinAccessor =WriteMatrixArray <FbxAMatrix, float>(inverseBindMatrices, pNode, skinAccName.c_str()) ;
+    ret = web::json::value::string (GetJsonFirstKey (skinAccessor [U("accessors")])) ;
+    MergeJsonObjects (accessorsAndBufferViews, skinAccessor) ;
+    MergeJsonObjects (_json, accessorsAndBufferViews) ;
+return ret;
+}
+
 web::json::value gltfWriter::WriteSceneNode (FbxNode *pNode, FbxPose *pPose) {
 
 	//utility::string_t id =nodeId (pNode) ; 

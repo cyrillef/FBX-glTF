@@ -99,38 +99,33 @@ web::json::value gltfWriter::WriteMesh (FbxNode *pNode) {
 	std::vector<FbxColor> out_vcolors =vbo.getVertexColors () ;
 	std::vector<FbxAMatrix> inverseBindMatrices = vbo.getInverseBindMatrices();
 
-	std::cout << "inverseBindMatrices.size() " << inverseBindMatrices.size() << std::endl;
 	_uvSets =vbo.getUvSets () ;
 
 	//skin
 	if (pMesh->GetDeformerCount(FbxDeformer::eSkin)) {
-	
-        web::json::value skins = web::json::value::object ();
-	FbxAMatrix globalPosition;
-	web::json::value shapeMat;
-	for (int row=0; row<4; row++) 
-		for(int col=0;col<4;col++) 
-			shapeMat[shapeMat.size()] = web::json::value::number((int)globalPosition.Get(row,col));
 
-	utility::string_t skinName;
-        skinName  = utility::conversions::to_string_t (nodeId(pMesh->GetNode()));
-        skinName += utility::conversions::to_string_t (U("_skin")) ;
-	skins[skinName][U("bindShapeMatrix")] = shapeMat;
-	skins[skinName][U("inverseBindMatrices")] = WriteSkinArray(pMesh->GetNode(), inverseBindMatrices, 1, "skin");
-	skins[skinName][U("jointNames")] = _jointNames;
-	_json[U("skins")] = skins;
+		web::json::value skins = web::json::value::object ();
+		FbxAMatrix globalPosition;
+		web::json::value shapeMat;
+		for (int row=0; row<4; row++) 
+			for(int col=0;col<4;col++) 
+				shapeMat[shapeMat.size()] = web::json::value::number((int)globalPosition.Get(row,col));
 
-	std::cout << "out_joints.size() " << out_joints.size() << std::endl;
-	std::cout << "out_weights.size() " << out_weights.size() << std::endl;
-	std::cout << "out_positions.size() " << out_positions.size() << std::endl;
+		utility::string_t skinName;
+		skinName  = utility::conversions::to_string_t (nodeId(pMesh->GetNode()));
+		skinName += utility::conversions::to_string_t (U("_skin")) ;
+		skins[skinName][U("bindShapeMatrix")] = shapeMat;
+		skins[skinName][U("inverseBindMatrices")] = WriteSkinArray(pMesh->GetNode(), inverseBindMatrices, 1, "skin");
+		skins[skinName][U("jointNames")] = _jointNames;
+		_json[U("skins")] = skins;
 
-	web::json::value vertexJoints =WriteArrayWithMinMax<FbxDouble4, float> (out_joints, pMesh->GetNode (), U("_Joints")) ;
-	MergeJsonObjects (localAccessorsAndBufferViews, vertexJoints);
-	primitive [U("attributes")] [U("JOINT")] =web::json::value::string (GetJsonFirstKey (vertexJoints [U("accessors")])) ;
+		web::json::value vertexJoints =WriteArrayWithMinMax<FbxDouble4, float> (out_joints, pMesh->GetNode (), U("_Joints")) ;
+		MergeJsonObjects (localAccessorsAndBufferViews, vertexJoints);
+		primitive [U("attributes")] [U("JOINT")] =web::json::value::string (GetJsonFirstKey (vertexJoints [U("accessors")])) ;
 
-	web::json::value vertexWeights =WriteArrayWithMinMax<FbxDouble4, float> (out_weights, pMesh->GetNode (), U("_Weights")) ;
-	MergeJsonObjects (localAccessorsAndBufferViews, vertexWeights);
-	primitive [U("attributes")] [U("WEIGHT")] =web::json::value::string (GetJsonFirstKey (vertexWeights [U("accessors")])) ;
+		web::json::value vertexWeights =WriteArrayWithMinMax<FbxDouble4, float> (out_weights, pMesh->GetNode (), U("_Weights")) ;
+		MergeJsonObjects (localAccessorsAndBufferViews, vertexWeights);
+		primitive [U("attributes")] [U("WEIGHT")] =web::json::value::string (GetJsonFirstKey (vertexWeights [U("accessors")])) ;
 	}
 
 	web::json::value vertex =WriteArrayWithMinMax<FbxDouble3, float> (out_positions, pMesh->GetNode (), U("_Positions")) ;

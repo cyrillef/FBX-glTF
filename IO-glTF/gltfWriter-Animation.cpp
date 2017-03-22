@@ -244,8 +244,6 @@ bool gltfWriter::WriteAnimation (FbxScene *pScene)
 {
     int nAnimStack, nAnimLayer;
     
-    std::cout << "Animation frames "<< GetNumberOfAnimationFrames(pScene) << "\n";
-
     for (nAnimStack = 0; nAnimStack < pScene->GetSrcObjectCount<FbxAnimStack>(); nAnimStack++)
     {
         FbxAnimStack* lAnimStack = pScene->GetSrcObject<FbxAnimStack>(nAnimStack);

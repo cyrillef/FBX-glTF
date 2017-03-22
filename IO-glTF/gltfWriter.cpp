@@ -569,18 +569,18 @@ web::json::value gltfWriter::GetTransform (FbxNode *pNode) {
 
 	// If the mesh is a skin binded to a skeleton, the bind pose will include its transformations.
 	// In that case, do not export the transforms twice.
-	//if (   pNode->GetNodeAttribute ()
-	//	&& pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eMesh
-	//) {
-	//	int deformerCount =FbxCast<FbxMesh>(pNode->GetNodeAttribute ())->GetDeformerCount (FbxDeformer::eSkin) ;
-	//	_ASSERTE( deformerCount <= 1 ) ; // "Unexpected number of skin greater than 1") ;
-	//	int clusterCount =0 ;
-	//	// It is expected for deformerCount to be equal to 1
-	//	for ( int i =0 ; i < deformerCount ; ++i )
-	//		clusterCount +=FbxCast<FbxSkin>(FbxCast<FbxMesh>(pNode->GetNodeAttribute ())->GetDeformer (i, FbxDeformer::eSkin))->GetClusterCount () ;
-	//	if ( clusterCount )
-	//		return (true) ;
-	//}
+	/*if (   pNode->GetNodeAttribute ()
+		&& pNode->GetNodeAttribute ()->GetAttributeType () == FbxNodeAttribute::eSkeleton
+	) {
+		int deformerCount =FbxCast<FbxMesh>(pNode->GetNodeAttribute ())->GetDeformerCount (FbxDeformer::eSkin) ;
+		_ASSERTE( deformerCount <= 1 ) ; // "Unexpected number of skin greater than 1") ;
+		int clusterCount =0 ;
+		// It is expected for deformerCount to be equal to 1
+		for ( int i =0 ; i < deformerCount ; ++i )
+			clusterCount +=FbxCast<FbxSkin>(FbxCast<FbxMesh>(pNode->GetNodeAttribute ())->GetDeformer (i, FbxDeformer::eSkin))->GetClusterCount () ;
+		if ( clusterCount )
+			return (true) ;
+	}*/
 
 	FbxAMatrix identity ;
 	identity.SetIdentity () ;
@@ -617,9 +617,13 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 	
 	// A floating-point 4x4 transformation matrix stored in column-major order.
 	// A node will have either a matrix property defined or any combination of rotation, scale, and translation properties defined.
-	web::json::value nodeTransform =GetTransform (pNode) ;
-	//if ( !nodeTransform.is_boolean () || nodeTransform != true )
+	// If the mesh is a skin binded to a skeleton, the bind pose will include its transformations.
+	// In that case, do not export the transforms twice.
+	const FbxNodeAttribute *nodeAttr =pNode->GetNodeAttribute () ;
+	if ( nodeAttr && nodeAttr->GetAttributeType () != FbxNodeAttribute::eSkeleton ) {
+		web::json::value nodeTransform =GetTransform (pNode) ;
 		nodeDef [U("matrix")] =nodeTransform ;
+	}
 	//nodeDef [U("rotation")] =web::json::value::array ({{ 1., 0., 0., 0. }}) ;
 	//nodeDef [U("scale")] =web::json::value::array ({{ 1., 1., 1. }}) ;
 	//nodeDef [U("translation")] =web::json::value::array ({{ 0., 0., 0. }}) ;
@@ -641,14 +645,15 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 		FbxDouble3 R =  pNode->LclRotation.Get();
 		FbxDouble3 S =  pNode->LclScaling.Get();
 
-                        // Store
-                        for (int i = 0; i < 3; i++) translation[translation.size()] = T[i];
-                        for (int i = 0; i < 3; i++) rotation[rotation.size()]= R[i];
-                        for (int i = 0; i < 3; i++) scale[scale.size()] = S[i];
+		// Store
+		for (int i = 0; i < 3; i++) translation[translation.size()] = T[i];
+		for (int i = 0; i < 3; i++) rotation[rotation.size()]= R[i];
+		for (int i = 0; i < 3; i++) scale[scale.size()] = S[i];
+
 		nodeDef [U("translation")] =translation;
 		nodeDef [U("rotation")] =rotation;
 		nodeDef [U("scale")] =scale;
-	
+
 
 		//FbxSkeleton* lSkeleton = (FbxSkeleton*) pNode->GetNodeAttribute();
 		//if (lSkeleton->GetSkeletonType() == FbxSkeleton::eRoot){

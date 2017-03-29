@@ -641,14 +641,23 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 		web::json::value rotation;
 		web::json::value scale;
 
-		FbxDouble3 T =  pNode->LclTranslation.Get();
-		FbxDouble3 R =  pNode->LclRotation.Get();
-		FbxDouble3 S =  pNode->LclScaling.Get();
+
+		FbxAMatrix localAffineMtx = pNode->EvaluateGlobalTransform();
+		FbxMatrix localMtx(localAffineMtx);
+
+		// Decompose.
+		double sign; 
+		FbxVector4 T, S, Sh;
+		FbxQuaternion Rq;
+		localMtx.GetElements(T, Rq, Sh, S, sign);
+		FbxDouble3 trans, scale1;
+		FbxDouble4 rot;
 
 		// Store
 		for (int i = 0; i < 3; i++) translation[translation.size()] = T[i];
-		for (int i = 0; i < 3; i++) rotation[rotation.size()]= R[i];
+		for (int i = 0; i < 4; i++) rotation[rotation.size()]= Rq.GetAt(i);
 		for (int i = 0; i < 3; i++) scale[scale.size()] = S[i];
+
 
 		nodeDef [U("translation")] =translation;
 		nodeDef [U("rotation")] =rotation;

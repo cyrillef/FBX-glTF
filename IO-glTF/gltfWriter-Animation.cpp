@@ -43,17 +43,15 @@ int GetNumberOfAnimationFrames(FbxScene* pScene)
 }
 
 web::json::value gltfWriter::WriteSkeleton(FbxNode *pNode) {
+	const FbxNodeAttribute *nodeAttribute =pNode->GetParent()->GetNodeAttribute () ;
+	web::json::value node = WriteNode (pNode) ;
+	web::json::value ret  = web::json::value::object ({ { U("nodes"), node } }) ;
 
-	//if (pNode->GetParent()->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton) {
-		web::json::value node = WriteNode (pNode) ;
-		web::json::value ret  = web::json::value::object ({ { U("nodes"), node } }) ;
-
-		utility::string_t id =nodeId (pNode, false, true) ;
-		spaceToUnderscore(id);
+	utility::string_t id =nodeId (pNode, false, true) ;
+	spaceToUnderscore(id);
+	if ( nodeAttribute && nodeAttribute->GetAttributeType () == FbxNodeAttribute::eSkeleton ) 
 		_jointNames[_jointNames.size()] = web::json::value::string (id);
 	return ret;	
-	//}
-//return web::json::value::null();
 }
 
 void gltfWriter::WriteAnimationLayer(FbxAnimLayer* pAnimLayer, FbxNode* pNode, bool isSwitcher)

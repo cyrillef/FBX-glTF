@@ -491,7 +491,15 @@ web::json::value gltfWriter::WriteSkinArray(FbxNode *pNode, std::vector<FbxAMatr
     skinAccName = utility::conversions::to_string_t (U("_skinAccessor_")) ;
     skinAccName += utility::conversions::to_string_t (suffix) ;
     skinAccName += utility::conversions::to_string_t ((int)skinAccessorCount);
-    web::json::value skinAccessor =WriteMatrixArray <FbxAMatrix, float>(inverseBindMatrices, pNode, skinAccName.c_str()) ;
+
+    std::vector<float> inverseBindMatricesValues;
+
+    for(auto i=0; i < inverseBindMatrices.size(); i++)
+	for(auto j=0; j< 4; j++)
+		for (auto k=0;k<4;k++)
+			inverseBindMatricesValues.push_back(inverseBindMatrices[i].mData[j][k]);
+	
+    web::json::value skinAccessor =WriteArray <float>(inverseBindMatricesValues, 16, pNode, skinAccName.c_str(), 2) ;
     ret = web::json::value::string (GetJsonFirstKey (skinAccessor [U("accessors")])) ;
     MergeJsonObjects (accessorsAndBufferViews, skinAccessor) ;
     MergeJsonObjects (_json, accessorsAndBufferViews) ;
@@ -656,7 +664,7 @@ web::json::value gltfWriter::WriteNode (FbxNode *pNode) {
 		// Store
 		for (int i = 0; i < 3; i++) translation[translation.size()] = T[i];
 		for (int i = 0; i < 4; i++) rotation[rotation.size()]= Rq.GetAt(i);
-		for (int i = 0; i < 3; i++) scale[scale.size()] = S[i];
+		for (int i = 0; i < 3; i++) scale[scale.size()] = 1;
 
 
 		nodeDef [U("translation")] =translation;

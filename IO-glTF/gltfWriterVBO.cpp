@@ -89,7 +89,7 @@ FbxArray<FbxVector4> gltfwriterVBO::GetVertexPositions (bool bInGeometry, bool b
 	// In an ordinary geometry, export the control points.
 	// In a binded geometry, export transformed control points...
 	// In a controller, export the control points.
-	// bExportControlPoints =true ;
+	 //bExportControlPoints =true ;
 
 	FbxArray<FbxVector4> controlPoints ;
 	// Get Control points.
@@ -107,79 +107,48 @@ FbxArray<FbxVector4> gltfwriterVBO::GetVertexPositions (bool bInGeometry, bool b
 		}
 		return (controlPoints) ;
 	}
+
+	FbxAMatrix globalPosition;
+	FbxTime pTime;
+	FbxPose *pPose;
+	const int pVertexCount = _pMesh->GetControlPointsCount();
+	FbxVector4* pVertexArray = NULL;
+	if (pVertexCount) {
+		pVertexArray = new FbxVector4[pVertexCount];
+		memcpy(pVertexArray, _pMesh->GetControlPoints(), pVertexCount * sizeof(FbxVector4));
+	}
+	const int pSkinCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
+	int pClusterCount = 0;
+	for (int pSkinIndex = 0; pSkinIndex < pSkinCount; ++pSkinIndex)
+	{
+		pClusterCount += ((FbxSkin *)(_pMesh->GetDeformer(pSkinIndex, FbxDeformer::eSkin)))->GetClusterCount();
+	}
+	if (pClusterCount)
+	{
+		// Deform the vertex array with the skin deformer.
+		ComputeSkinDeformation(globalPosition, _pMesh, pTime, pVertexArray, pPose);
+	}
+
 	// Initialize positions
 	FbxArray<FbxVector4> positions (nbControlPoints) ;
-	std::cout << "position size "<< positions.Size() << std::endl;
-	// Get the transformed control points.
-	int deformerCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
-        for ( int lSkinIndex=0; lSkinIndex<deformerCount; ++lSkinIndex)
-        {
-		FbxSkin * lSkinDeformer = (FbxSkin *)_pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
-                int clusterCount = lSkinDeformer->GetClusterCount();
+	for(auto i=0; i < pVertexCount; i++)
+		positions.InsertAt(i, pVertexArray[i]);
 
-		for ( int indexLink =0 ; indexLink < clusterCount ; indexLink++ ) {
-			FbxCluster* pLink = lSkinDeformer->GetCluster(indexLink);
-			FbxAMatrix jointPosition = pLink->GetLink ()->EvaluateGlobalTransform () ;
-			FbxAMatrix transformLink ;
-			pLink->GetTransformLinkMatrix (transformLink) ;
-			FbxAMatrix m =transformLink.Inverse () * jointPosition ;
-
-			_inverseBindMatrices.push_back(m);
-
-			for ( int j =0 ; j < pLink->GetControlPointIndicesCount () ; j++ ) {
-                        	int jointIndex = -1;
-				int index =pLink->GetControlPointIndices () [j] ;
-				FbxVector4 controlPoint =controlPoints [index] ;
-				double weight =pLink->GetControlPointWeights () [j] ;
-
-				FbxVector4 pos =m.MultT (controlPoint) ;
-				pos =pos * weight ;
-				//positions [index] =positions [index] + pos ;
-				positions.InsertAt(index, positions [index] + pos) ;
-
-				std::string findString(pLink->GetLink()->GetName());
-                                std::transform (findString.begin(), findString.end(), findString.begin(), [](char ch) {
-                                return ch == ' ' ? '_' : ch;
-                                });
-                                auto it = std::find(_jointNames.begin(), _jointNames.end(), findString);
-                                if (it != _jointNames.end())
-                                        jointIndex = std::distance(_jointNames.begin(), it);
-				if (jointIndex == -1)
-                                    jointIndex = 0;
-                                _skinJointIndexes[index].push_back(jointIndex);
-                                _skinVertexWeights[index].push_back(weight);
-			}
-		}
-	}
-	/*std::cout << "before return positions size " << positions.Size() << std::endl;
-	std::cout << "_skinJointIndexes " << _skinJointIndexes.size() << std::endl;
-	for (auto &it :_skinJointIndexes) {
-		std::cout << "jindex " << it.first << " size " << it.second.size() << std::endl; 	
-		for (int i=0; i < it.second.size(); i++)
-		std::cout << " " << it.second[i] ;
-		std::cout << std::endl;
-	}
-	for (auto &it :_skinVertexWeights) {
-		std::cout << "windex " << it.first << " size " << it.second.size() << std::endl; 	
-		for (int i=0; i < it.second.size(); i++)
-		std::cout << " " << it.second[i] ;
-		std::cout << std::endl;
-	}*/
 	return (positions) ;
 }
 
 // Function : GetLayerElements
-FbxArray<FbxLayerElement::EType> myGetAllChannelUV (FbxMesh *pMesh) {
+FbxArray<FbxLayerElement::EType> myGetAllChannelUV (FbxMesh *_pMesh) {
 	FbxArray<FbxLayerElement::EType> ret ;
-	//FbxLayer *pLayer =gltfwriterVBO::getLayer (pMesh, FbxLayerElement::eMaterial) ;
+	//FbxLayer *pLayer =gltfwriterVBO::getLayer (_pMesh, FbxLayerElement::eMaterial) ;
 	//if ( pLayer == nullptr )
 	//	return (ret) ;
 	//FbxLayerElementMaterial *pLayerElementMaterial =pLayer->GetMaterials () ;
-	//int materialCount =pLayerElementMaterial ? pMesh->GetNode ()->GetMaterialCount () : 0 ;
+	//int materialCount =pLayerElementMaterial ? _pMesh->GetNode ()->GetMaterialCount () : 0 ;
 	////if ( materialCount > 1 ) { // See gltfWriter-Mesh.cpp #169 - WriteMesh (FbxNode *pNode)
 	//materialCount =materialCount == 0 ? 0 : 1 ;
 	//for ( int i =0 ; i < materialCount ; i++ ) {
-	//	FbxSurfaceMaterial *pMaterial =pMesh->GetNode ()->GetMaterial (i) ;
+	//	FbxSurfaceMaterial *pMaterial =_pMesh->GetNode ()->GetMaterial (i) ;
 	//	FbxSurfaceLambert *pLambertSurface =FbxCast<FbxSurfaceLambert> (pMaterial) ;
 	//	if ( pLambertSurface == nullptr )
 	//		continue ;
@@ -269,7 +238,7 @@ void gltfwriterVBO::GetLayerElements (bool bInGeometry /*=true*/) {
 			// In an ordinary geometry, export the control points.
 			// In a binded geometry, export transformed control points...
 			// In a controller, export the control points.
-			FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
+			FbxVector4 position =vertices [vertexID] ; // _pMesh->GetControlPoints () [vertexID] ;
 			_in_positions.push_back (position) ;
 
 			if (_skinJointIndexes.size() && _skinVertexWeights.size()) {
@@ -416,21 +385,518 @@ FbxLayerElementVertexColor *gltfwriterVBO::elementVcolors (int iLayer /*=-1*/) {
 	return (nullptr) ;
 }
 
-/*static*/ FbxLayer *gltfwriterVBO::getLayer (FbxMesh *pMesh, FbxLayerElement::EType pType) {
-	int nbLayers =pMesh->GetLayerCount () ;
+/*static*/ FbxLayer *gltfwriterVBO::getLayer (FbxMesh *_pMesh, FbxLayerElement::EType pType) {
+	int nbLayers =_pMesh->GetLayerCount () ;
 	for ( int iLayer =0 ; iLayer < nbLayers ; iLayer++ ) {
-		FbxLayer *pLayer =pMesh->GetLayer (iLayer, FbxLayerElement::eMaterial) ;
+		FbxLayer *pLayer =_pMesh->GetLayer (iLayer, FbxLayerElement::eMaterial) ;
 		if ( pLayer != nullptr )
 			return (pLayer) ;
 	}
 	return (nullptr) ;
 }
 
+// Get the matrix of the given pose
+FbxAMatrix gltfwriterVBO::GetPoseMatrix(FbxPose* pPose, int pNodeIndex)
+{
+    FbxAMatrix lPoseMatrix;
+    FbxMatrix lMatrix = pPose->GetMatrix(pNodeIndex);
+
+    memcpy((double*)lPoseMatrix, (double*)lMatrix, sizeof(lMatrix.mData));
+
+    return lPoseMatrix;
+}
+
+// Get the geometry offset to a node. It is never inherited by the children.
+FbxAMatrix gltfwriterVBO::GetGeometry(FbxNode* pNode)
+{
+    const FbxVector4 lT = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+    const FbxVector4 lR = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+    const FbxVector4 lS = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+
+    return FbxAMatrix(lT, lR, lS);
+}
+
+FbxAMatrix gltfwriterVBO::GetGlobalPosition(FbxNode* pNode, const FbxTime& pTime, FbxPose* pPose, FbxAMatrix* pParentGlobalPosition)
+{
+    FbxAMatrix lGlobalPosition;
+    bool        lPositionFound = false;
+
+    if (pPose)
+    {
+	    int lNodeIndex;
+	    try {
+		    lNodeIndex = pPose->Find(pNode);// __CRASH__ ???
+	    } catch(...) {
+		    std::cout<< "Unable to find the node" << __LINE__ << " : " << __FILE__ << std::endl; 
+		    lNodeIndex = -1;	
+	    } 
+
+        if (lNodeIndex > -1)
+        {
+            // The bind pose is always a global matrix.
+            // If we have a rest pose, we need to check if it is
+            // stored in global or local space.
+            if (pPose->IsBindPose() || !pPose->IsLocalMatrix(lNodeIndex))
+            {
+                lGlobalPosition = GetPoseMatrix(pPose, lNodeIndex);
+            }
+            else
+            {
+                // We have a local matrix, we need to convert it to
+                // a global space matrix.
+                FbxAMatrix lParentGlobalPosition;
+
+                if (pParentGlobalPosition)
+                {
+                    lParentGlobalPosition = *pParentGlobalPosition;
+                }
+                else
+                {
+                    if (pNode->GetParent())
+                    {
+                        lParentGlobalPosition = GetGlobalPosition(pNode->GetParent(), pTime, pPose);
+                    }
+                }
+
+                FbxAMatrix lLocalPosition = GetPoseMatrix(pPose, lNodeIndex);
+                lGlobalPosition = lParentGlobalPosition * lLocalPosition;
+            }
+
+            lPositionFound = true;
+        }
+    }
+
+    if (!lPositionFound)
+    {
+        // There is no pose entry for that node, get the current global position instead.
+
+        // Ideally this would use parent global position and local position to compute the global position.
+        // Unfortunately the equation 
+        //    lGlobalPosition = pParentGlobalPosition * lLocalPosition
+        // does not hold when inheritance type is other than "Parent" (RSrs).
+        // To compute the parent rotation and scaling is tricky in the RrSs and Rrs cases.
+        lGlobalPosition = pNode->EvaluateGlobalTransform(pTime);
+    }
+
+    return lGlobalPosition;
+}
+
+// Scale all the elements of a matrix.
+void gltfwriterVBO::MatrixScale(FbxAMatrix& pMatrix, double pValue)
+{
+    int i,j;
+
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 4; j++)
+        {
+            pMatrix[i][j] *= pValue;
+        }
+    }
+}
+
+
+// Add a value to all the elements in the diagonal of the matrix.
+void gltfwriterVBO::MatrixAddToDiagonal(FbxAMatrix& pMatrix, double pValue)
+{
+    pMatrix[0][0] += pValue;
+    pMatrix[1][1] += pValue;
+    pMatrix[2][2] += pValue;
+    pMatrix[3][3] += pValue;
+}
+
+
+// Sum two matrices element by element.
+void gltfwriterVBO::MatrixAdd(FbxAMatrix& pDstMatrix, FbxAMatrix& pSrcMatrix)
+{
+    int i,j;
+
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 4; j++)
+        {
+            pDstMatrix[i][j] += pSrcMatrix[i][j];
+        }
+    }
+}
+//Compute the transform matrix that the cluster will transform the vertex.
+void gltfwriterVBO::ComputeClusterDeformation(FbxAMatrix& pGlobalPosition, 
+							   FbxMesh* _pMesh,
+							   FbxCluster* pCluster, 
+							   FbxAMatrix& pVertexTransformMatrix,
+							   FbxTime &pTime, 
+							   FbxPose* pPose)
+{
+    FbxCluster::ELinkMode lClusterMode = pCluster->GetLinkMode();
+
+	FbxAMatrix lReferenceGlobalInitPosition;
+	FbxAMatrix lReferenceGlobalCurrentPosition;
+	FbxAMatrix lAssociateGlobalInitPosition;
+	FbxAMatrix lAssociateGlobalCurrentPosition;
+	FbxAMatrix lClusterGlobalInitPosition;
+	FbxAMatrix lClusterGlobalCurrentPosition;
+
+	FbxAMatrix lReferenceGeometry;
+	FbxAMatrix lAssociateGeometry;
+	FbxAMatrix lClusterGeometry;
+
+	FbxAMatrix lClusterRelativeInitPosition;
+	FbxAMatrix lClusterRelativeCurrentPositionInverse;
+	
+	if (lClusterMode == FbxCluster::eAdditive && pCluster->GetAssociateModel())
+	{
+		pCluster->GetTransformAssociateModelMatrix(lAssociateGlobalInitPosition);
+		// Geometric transform of the model
+		lAssociateGeometry = GetGeometry(pCluster->GetAssociateModel());
+		lAssociateGlobalInitPosition *= lAssociateGeometry;
+		lAssociateGlobalCurrentPosition = GetGlobalPosition(pCluster->GetAssociateModel(), pTime, pPose);
+
+		pCluster->GetTransformMatrix(lReferenceGlobalInitPosition);
+		// Multiply lReferenceGlobalInitPosition by Geometric Transformation
+		lReferenceGeometry = GetGeometry(_pMesh->GetNode());
+		lReferenceGlobalInitPosition *= lReferenceGeometry;
+		lReferenceGlobalCurrentPosition = pGlobalPosition;
+
+		// Get the link initial global position and the link current global position.
+		pCluster->GetTransformLinkMatrix(lClusterGlobalInitPosition);
+		// Multiply lClusterGlobalInitPosition by Geometric Transformation
+		lClusterGeometry = GetGeometry(pCluster->GetLink());
+		lClusterGlobalInitPosition *= lClusterGeometry;
+		lClusterGlobalCurrentPosition = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
+
+		// Compute the shift of the link relative to the reference.
+		//ModelM-1 * AssoM * AssoGX-1 * LinkGX * LinkM-1*ModelM
+		pVertexTransformMatrix = lReferenceGlobalInitPosition.Inverse() * lAssociateGlobalInitPosition * lAssociateGlobalCurrentPosition.Inverse() *
+			lClusterGlobalCurrentPosition * lClusterGlobalInitPosition.Inverse() * lReferenceGlobalInitPosition;
+	}
+	else
+	{
+		pCluster->GetTransformMatrix(lReferenceGlobalInitPosition);
+		lReferenceGlobalCurrentPosition = pGlobalPosition;
+		// Multiply lReferenceGlobalInitPosition by Geometric Transformation
+		lReferenceGeometry = GetGeometry(_pMesh->GetNode());
+		lReferenceGlobalInitPosition *= lReferenceGeometry;
+
+		// Get the link initial global position and the link current global position.
+		pCluster->GetTransformLinkMatrix(lClusterGlobalInitPosition);
+		lClusterGlobalCurrentPosition = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
+
+		// Compute the initial position of the link relative to the reference.
+		lClusterRelativeInitPosition = lClusterGlobalInitPosition.Inverse() * lReferenceGlobalInitPosition;
+
+		// Compute the current position of the link relative to the reference.
+		lClusterRelativeCurrentPositionInverse = lReferenceGlobalCurrentPosition.Inverse() * lClusterGlobalCurrentPosition;
+
+		// Compute the shift of the link relative to the reference.
+		pVertexTransformMatrix = lClusterRelativeCurrentPositionInverse * lClusterRelativeInitPosition;
+
+	}
+			_inverseBindMatrices.push_back(pVertexTransformMatrix);
+}
+// Deform the vertex array in classic linear way.
+void gltfwriterVBO::ComputeLinearDeformation(FbxAMatrix& pGlobalPosition, 
+                               FbxMesh* _pMesh, 
+                               FbxTime& pTime, 
+                               FbxVector4* pVertexArray,
+			       FbxPose* pPose)
+{
+	// All the links must have the same link mode.
+	FbxCluster::ELinkMode lClusterMode = ((FbxSkin*)_pMesh->GetDeformer(0, FbxDeformer::eSkin))->GetCluster(0)->GetLinkMode();
+
+	int lVertexCount = _pMesh->GetControlPointsCount();
+	FbxAMatrix* lClusterDeformation = new FbxAMatrix[lVertexCount];
+	memset(lClusterDeformation, 0, lVertexCount * sizeof(FbxAMatrix));
+
+	double* lClusterWeight = new double[lVertexCount];
+	memset(lClusterWeight, 0, lVertexCount * sizeof(double));
+
+	if (lClusterMode == FbxCluster::eAdditive)
+	{
+		for (int i = 0; i < lVertexCount; ++i)
+		{
+			lClusterDeformation[i].SetIdentity();
+		}
+	}
+
+	// For all skins and all clusters, accumulate their deformation and weight
+	// on each vertices and store them in lClusterDeformation and lClusterWeight.
+	int lSkinCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
+	for ( int lSkinIndex=0; lSkinIndex<lSkinCount; ++lSkinIndex)
+	{
+		FbxSkin * lSkinDeformer = (FbxSkin *)_pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
+		
+		int lClusterCount = lSkinDeformer->GetClusterCount();
+		for ( int lClusterIndex=0; lClusterIndex<lClusterCount; ++lClusterIndex)
+		{
+			FbxCluster* lCluster = lSkinDeformer->GetCluster(lClusterIndex);
+			if (!lCluster->GetLink())
+				continue;
+
+			FbxAMatrix lVertexTransformMatrix;
+			ComputeClusterDeformation(pGlobalPosition, _pMesh, lCluster, lVertexTransformMatrix, pTime, pPose);
+
+
+			int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
+			for (int k = 0; k < lVertexIndexCount; ++k) 
+			{            
+				auto jointIndex=-1;
+				int lIndex = lCluster->GetControlPointIndices()[k];
+				double lWeight = lCluster->GetControlPointWeights()[k];
+
+				// Sometimes, the mesh can have less points than at the time of the skinning
+				// because a smooth operator was active when skinning but has been deactivated during export.
+				if (lIndex >= lVertexCount)
+					continue;
+				if (lWeight == 0.0)
+				{
+					continue;
+				}
+				std::string findString(lCluster->GetLink()->GetName());
+				std::transform (findString.begin(), findString.end(), findString.begin(), [](char ch) {
+						return ch == ' ' ? '_' : ch;
+						});
+				auto it = std::find(_jointNames.begin(), _jointNames.end(), findString);
+				if (it != _jointNames.end())
+					jointIndex = std::distance(_jointNames.begin(), it);
+				if (jointIndex == -1)
+					jointIndex = 0;
+				_skinJointIndexes[lIndex].push_back(jointIndex);
+				_skinVertexWeights[lIndex].push_back(lWeight);
+
+				// Compute the influence of the link on the vertex.
+				FbxAMatrix lInfluence = lVertexTransformMatrix;
+				MatrixScale(lInfluence, lWeight);
+
+				if (lClusterMode == FbxCluster::eAdditive)
+				{    
+					// Multiply with the product of the deformations on the vertex.
+					MatrixAddToDiagonal(lInfluence, 1.0 - lWeight);
+					lClusterDeformation[lIndex] = lInfluence * lClusterDeformation[lIndex];
+
+					// Set the link to 1.0 just to know this vertex is influenced by a link.
+					lClusterWeight[lIndex] = 1.0;
+				}
+				else // lLinkMode == FbxCluster::eNormalize || lLinkMode == FbxCluster::eTotalOne
+				{
+					// Add to the sum of the deformations on the vertex.
+					MatrixAdd(lClusterDeformation[lIndex], lInfluence);
+
+					// Add to the sum of weights to either normalize or complete the vertex.
+					lClusterWeight[lIndex] += lWeight;
+				}
+			}//For each vertex			
+		}//lClusterCount
+	}
+
+	//Actually deform each vertices here by information stored in lClusterDeformation and lClusterWeight
+	for (int i = 0; i < lVertexCount; i++) 
+	{
+		FbxVector4 lSrcVertex = pVertexArray[i];
+		FbxVector4& lDstVertex = pVertexArray[i];
+		double lWeight = lClusterWeight[i];
+
+		// Deform the vertex if there was at least a link with an influence on the vertex,
+		if (lWeight != 0.0) 
+		{
+			lDstVertex = lClusterDeformation[i].MultT(lSrcVertex);
+			if (lClusterMode == FbxCluster::eNormalize)
+			{
+				// In the normalized link mode, a vertex is always totally influenced by the links. 
+				lDstVertex /= lWeight;
+			}
+			else if (lClusterMode == FbxCluster::eTotalOne)
+			{
+				// In the total 1 link mode, a vertex can be partially influenced by the links. 
+				lSrcVertex *= (1.0 - lWeight);
+				lDstVertex += lSrcVertex;
+			}
+		} 
+	}
+
+	delete [] lClusterDeformation;
+	delete [] lClusterWeight;
+}
+
+// Deform the vertex array in Dual Quaternion Skinning way.
+void gltfwriterVBO::ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition, 
+									 FbxMesh* _pMesh, 
+									 FbxTime& pTime, 
+									 FbxVector4* pVertexArray,
+									 FbxPose* pPose)
+{
+	// All the links must have the same link mode.
+	FbxCluster::ELinkMode lClusterMode = ((FbxSkin*)_pMesh->GetDeformer(0, FbxDeformer::eSkin))->GetCluster(0)->GetLinkMode();
+
+	int lVertexCount = _pMesh->GetControlPointsCount();
+	int lSkinCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
+
+	FbxDualQuaternion* lDQClusterDeformation = new FbxDualQuaternion[lVertexCount];
+	memset(lDQClusterDeformation, 0, lVertexCount * sizeof(FbxDualQuaternion));
+
+	double* lClusterWeight = new double[lVertexCount];
+	memset(lClusterWeight, 0, lVertexCount * sizeof(double));
+
+	// For all skins and all clusters, accumulate their deformation and weight
+	// on each vertices and store them in lClusterDeformation and lClusterWeight.
+	for ( int lSkinIndex=0; lSkinIndex<lSkinCount; ++lSkinIndex)
+	{
+		FbxSkin * lSkinDeformer = (FbxSkin *)_pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
+		int lClusterCount = lSkinDeformer->GetClusterCount();
+		for ( int lClusterIndex=0; lClusterIndex<lClusterCount; ++lClusterIndex)
+		{
+			FbxCluster* lCluster = lSkinDeformer->GetCluster(lClusterIndex);
+			if (!lCluster->GetLink())
+				continue;
+
+			FbxAMatrix lVertexTransformMatrix;
+			ComputeClusterDeformation(pGlobalPosition, _pMesh, lCluster, lVertexTransformMatrix, pTime, pPose);
+
+			FbxQuaternion lQ = lVertexTransformMatrix.GetQ();
+			FbxVector4 lT = lVertexTransformMatrix.GetT();
+			FbxDualQuaternion lDualQuaternion(lQ, lT);
+
+			int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
+			for (int k = 0; k < lVertexIndexCount; ++k) 
+			{ 
+				int jointIndex = -1;
+				int lIndex = lCluster->GetControlPointIndices()[k];
+				double lWeight = lCluster->GetControlPointWeights()[k];
+
+				// Sometimes, the mesh can have less points than at the time of the skinning
+				// because a smooth operator was active when skinning but has been deactivated during export.
+				if (lIndex >= lVertexCount)
+					continue;
+				if (lWeight == 0.0)
+					continue;
+
+				std::string findString(lCluster->GetLink()->GetName());
+                                std::transform (findString.begin(), findString.end(), findString.begin(), [](char ch) {
+                                                return ch == ' ' ? '_' : ch;
+                                                });
+                                auto it = std::find(_jointNames.begin(), _jointNames.end(), findString);
+                                if (it != _jointNames.end())
+                                        jointIndex = std::distance(_jointNames.begin(), it);
+                                if (jointIndex == -1)
+                                        jointIndex = 0;
+                                _skinJointIndexes[lIndex].push_back(jointIndex);
+                                _skinVertexWeights[lIndex].push_back(lWeight);
+				// Compute the influence of the link on the vertex.
+				FbxDualQuaternion lInfluence = lDualQuaternion * lWeight;
+				if (lClusterMode == FbxCluster::eAdditive)
+				{    
+					// Simply influenced by the dual quaternion.
+					lDQClusterDeformation[lIndex] = lInfluence;
+
+					// Set the link to 1.0 just to know this vertex is influenced by a link.
+					lClusterWeight[lIndex] = 1.0;
+				}
+				else // lLinkMode == FbxCluster::eNormalize || lLinkMode == FbxCluster::eTotalOne
+				{
+					if(lClusterIndex == 0)
+					{
+						lDQClusterDeformation[lIndex] = lInfluence;
+					}
+					else
+					{
+						// Add to the sum of the deformations on the vertex.
+						// Make sure the deformation is accumulated in the same rotation direction. 
+						// Use dot product to judge the sign.
+						double lSign = lDQClusterDeformation[lIndex].GetFirstQuaternion().DotProduct(lDualQuaternion.GetFirstQuaternion());
+						if( lSign >= 0.0 )
+						{
+							lDQClusterDeformation[lIndex] += lInfluence;
+						}
+						else
+						{
+							lDQClusterDeformation[lIndex] -= lInfluence;
+						}
+					}
+					// Add to the sum of weights to either normalize or complete the vertex.
+					lClusterWeight[lIndex] += lWeight;
+				}
+			}//For each vertex
+		}//lClusterCount
+	}
+
+	//Actually deform each vertices here by information stored in lClusterDeformation and lClusterWeight
+	for (int i = 0; i < lVertexCount; i++) 
+	{
+		FbxVector4 lSrcVertex = pVertexArray[i];
+		FbxVector4& lDstVertex = pVertexArray[i];
+		double lWeightSum = lClusterWeight[i];
+
+		// Deform the vertex if there was at least a link with an influence on the vertex,
+		if (lWeightSum != 0.0) 
+		{
+			lDQClusterDeformation[i].Normalize();
+			lDstVertex = lDQClusterDeformation[i].Deform(lDstVertex);
+
+			if (lClusterMode == FbxCluster::eNormalize)
+			{
+				// In the normalized link mode, a vertex is always totally influenced by the links. 
+				lDstVertex /= lWeightSum;
+			}
+			else if (lClusterMode == FbxCluster::eTotalOne)
+			{
+				// In the total 1 link mode, a vertex can be partially influenced by the links. 
+				lSrcVertex *= (1.0 - lWeightSum);
+				lDstVertex += lSrcVertex;
+			}
+		} 
+	}
+
+	delete [] lDQClusterDeformation;
+	delete [] lClusterWeight;
+}
+// Deform the vertex array according to the links contained in the mesh and the skinning type.
+void gltfwriterVBO::ComputeSkinDeformation(FbxAMatrix& pGlobalPosition, 
+									 FbxMesh* _pMesh, 
+									 FbxTime& pTime, 
+									 FbxVector4* pVertexArray,
+									 FbxPose* pPose)
+{
+	FbxSkin * lSkinDeformer = (FbxSkin *)_pMesh->GetDeformer(0, FbxDeformer::eSkin);
+	FbxSkin::EType lSkinningType = lSkinDeformer->GetSkinningType();
+
+	if(lSkinningType == FbxSkin::eLinear || lSkinningType == FbxSkin::eRigid)
+	{
+		ComputeLinearDeformation(pGlobalPosition, _pMesh, pTime, pVertexArray, pPose);
+	}
+	else if(lSkinningType == FbxSkin::eDualQuaternion)
+	{
+		ComputeDualQuaternionDeformation(pGlobalPosition, _pMesh, pTime, pVertexArray, pPose);
+	}
+	else if(lSkinningType == FbxSkin::eBlend)
+	{
+		int lVertexCount = _pMesh->GetControlPointsCount();
+
+		FbxVector4* lVertexArrayLinear = new FbxVector4[lVertexCount];
+		memcpy(lVertexArrayLinear, _pMesh->GetControlPoints(), lVertexCount * sizeof(FbxVector4));
+
+		FbxVector4* lVertexArrayDQ = new FbxVector4[lVertexCount];
+		memcpy(lVertexArrayDQ, _pMesh->GetControlPoints(), lVertexCount * sizeof(FbxVector4));
+
+		ComputeLinearDeformation(pGlobalPosition, _pMesh, pTime, lVertexArrayLinear, pPose);
+		ComputeDualQuaternionDeformation(pGlobalPosition, _pMesh, pTime, lVertexArrayDQ, pPose);
+
+		// To blend the skinning according to the blend weights
+		// Final vertex = DQSVertex * blend weight + LinearVertex * (1- blend weight)
+		// DQSVertex: vertex that is deformed by dual quaternion skinning method;
+		// LinearVertex: vertex that is deformed by classic linear skinning method;
+		int lBlendWeightsCount = lSkinDeformer->GetControlPointIndicesCount();
+		for(int lBWIndex = 0; lBWIndex<lBlendWeightsCount; ++lBWIndex)
+		{
+			double lBlendWeight = lSkinDeformer->GetControlPointBlendWeights()[lBWIndex];
+			pVertexArray[lBWIndex] = lVertexArrayDQ[lBWIndex] * lBlendWeight + lVertexArrayLinear[lBWIndex] * (1 - lBlendWeight);
+		}
+	}
+}
+
 #ifdef __XX__
 //-----------------------------------------------------------------------------
 template<class T>
-gltfwriterVBOT<T>::gltfwriterVBO (T *pMesh) {
-	_pMesh =pMesh ;
+gltfwriterVBOT<T>::gltfwriterVBO (T *_pMesh) {
+	_pMesh =_pMesh ;
 }
 
 // Function    : getSimilarVertexIndex
@@ -541,17 +1007,17 @@ FbxArray<FbxVector4> gltfwriterVBOT<T>::GetVertexPositions (bool bInGeometry, bo
 
 // Function : GetLayerElements
 template<class T>
-FbxArray<FbxLayerElement<T>::EType> myGetAllChannelUVT (T *pMesh) {
+FbxArray<FbxLayerElement<T>::EType> myGetAllChannelUVT (T *_pMesh) {
 	FbxArray<FbxLayerElement::EType> ret ;
-	//FbxLayer *pLayer =gltfwriterVBO::getLayer (pMesh, FbxLayerElement::eMaterial) ;
+	//FbxLayer *pLayer =gltfwriterVBO::getLayer (_pMesh, FbxLayerElement::eMaterial) ;
 	//if ( pLayer == nullptr )
 	//	return (ret) ;
 	//FbxLayerElementMaterial *pLayerElementMaterial =pLayer->GetMaterials () ;
-	//int materialCount =pLayerElementMaterial ? pMesh->GetNode ()->GetMaterialCount () : 0 ;
+	//int materialCount =pLayerElementMaterial ? _pMesh->GetNode ()->GetMaterialCount () : 0 ;
 	////if ( materialCount > 1 ) { // See gltfWriter-Mesh.cpp #169 - WriteMesh (FbxNode *pNode)
 	//materialCount =materialCount == 0 ? 0 : 1 ;
 	//for ( int i =0 ; i < materialCount ; i++ ) {
-	//	FbxSurfaceMaterial *pMaterial =pMesh->GetNode ()->GetMaterial (i) ;
+	//	FbxSurfaceMaterial *pMaterial =_pMesh->GetNode ()->GetMaterial (i) ;
 	//	FbxSurfaceLambert *pLambertSurface =FbxCast<FbxSurfaceLambert> (pMaterial) ;
 	//	if ( pLambertSurface == nullptr )
 	//		continue ;
@@ -642,7 +1108,7 @@ void gltfwriterVBOT<T>::GetLayerElements (bool bInGeometry /*=true*/) {
 			// In an ordinary geometry, export the control points.
 			// In a binded geometry, export transformed control points...
 			// In a controller, export the control points.
-			FbxVector4 position =vertices [vertexID] ; // pMesh->GetControlPoints () [vertexID] ;
+			FbxVector4 position =vertices [vertexID] ; // _pMesh->GetControlPoints () [vertexID] ;
 			_in_positions.push_back (position) ;
 std::cout<<"before GetLayerElement" << std::endl;
 
@@ -765,10 +1231,10 @@ FbxLayerElementVertexColor *gltfwriterVBOT<T>::elementVcolors (int iLayer /*=-1*
 }
 
 template<T>
-/*static*/ FbxLayer *gltfwriterVBOT<T>::getLayer (T *pMesh, FbxLayerElement::EType pType) {
-	int nbLayers =pMesh->GetLayerCount () ;
+/*static*/ FbxLayer *gltfwriterVBOT<T>::getLayer (T *_pMesh, FbxLayerElement::EType pType) {
+	int nbLayers =_pMesh->GetLayerCount () ;
 	for ( int iLayer =0 ; iLayer < nbLayers ; iLayer++ ) {
-		FbxLayer *pLayer =pMesh->GetLayer (iLayer, FbxLayerElement::eMaterial) ;
+		FbxLayer *pLayer =_pMesh->GetLayer (iLayer, FbxLayerElement::eMaterial) ;
 		if ( pLayer != nullptr )
 			return (pLayer) ;
 	}

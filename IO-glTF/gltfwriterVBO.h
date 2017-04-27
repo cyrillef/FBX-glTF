@@ -64,6 +64,12 @@ class gltfwriterVBO {
 	std::vector<FbxAMatrix> _inverseBindMatrices;
 	std::map<int, std::vector<double>> _skinJointIndexes;
         std::map<int, std::vector<double>> _skinVertexWeights;
+	void MatrixAdd(FbxAMatrix& pDstMatrix, FbxAMatrix& pSrcMatrix);
+	void MatrixAddToDiagonal(FbxAMatrix& pMatrix, double pValue);
+	void MatrixScale(FbxAMatrix& pMatrix, double pValue);
+	FbxAMatrix GetGeometry(FbxNode* pNode);
+	FbxAMatrix GetPoseMatrix(FbxPose* pPose, int pNodeIndex);
+	FbxAMatrix GetGlobalPosition(FbxNode* pNode, const FbxTime& pTime, FbxPose* pPose = NULL, FbxAMatrix* pParentGlobalPosition = NULL);
 
 public:
 	gltfwriterVBO (FbxMesh *pMesh) { _pMesh =pMesh ; }
@@ -83,7 +89,7 @@ public:
 	std::vector<FbxDouble3> getBinormals () { return (_out_binormals) ; }
 	std::vector<FbxColor> getVertexColors () { return (_out_vcolors) ; }
 	std::map<utility::string_t, utility::string_t> getUvSets () { return (_uvSets) ; }
-	void setJointNames(std::vector<std::string> &jointNames) { _jointNames = jointNames; }
+	void setJointNames(std::vector<std::string> jointNames) { _jointNames = jointNames; }
 	std::vector<std::string> getJointNames() { return _jointNames; }
 	std::vector<FbxAMatrix> getInverseBindMatrices() { return _inverseBindMatrices;}
 	
@@ -96,9 +102,11 @@ protected:
 	FbxLayerElementVertexColor *elementVcolors (int iLayer =-1) ;
 public:
 	static FbxLayer *getLayer (FbxMesh *pMesh, FbxLayerElement::EType pType) ;
-
-} ;
-
+	void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxCluster* pCluster, FbxAMatrix& pVertexTransformMatrix, FbxTime &pTime, FbxPose* pPose);
+	void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxTime& pTime, FbxVector4* pVertexArray, FbxPose* pPose);
+	void ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxTime& pTime, FbxVector4* pVertexArray, FbxPose* pPose);
+	void ComputeSkinDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxTime& pTime, FbxVector4* pVertexArray, FbxPose* pPose);
+};
 #ifdef __XX__
 template<class T>
 class gltfwriterVBOT {
